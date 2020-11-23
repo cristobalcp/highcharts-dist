@@ -1,5 +1,5 @@
 /**
- * @license Highcharts JS v8.2.2 (2020-10-22)
+ * @license Highcharts JS v8.2.2 (2020-11-23)
  *
  * Accessibility module
  *
@@ -904,7 +904,7 @@
                         }
                         e.stopPropagation();
                         e.preventDefault();
-                    });
+                    }, { passive: false });
                 });
             },
             /**
@@ -2059,7 +2059,7 @@
 
         return MenuComponent;
     });
-    _registerModule(_modules, 'Accessibility/Components/SeriesComponent/SeriesKeyboardNavigation.js', [_modules['Core/Series/Series.js'], _modules['Core/Series/CartesianSeries.js'], _modules['Core/Chart/Chart.js'], _modules['Core/Series/Point.js'], _modules['Core/Utilities.js'], _modules['Accessibility/KeyboardNavigationHandler.js'], _modules['Accessibility/Utils/EventProvider.js'], _modules['Accessibility/Utils/ChartUtilities.js']], function (Series, CartesianSeries, Chart, Point, U, KeyboardNavigationHandler, EventProvider, ChartUtilities) {
+    _registerModule(_modules, 'Accessibility/Components/SeriesComponent/SeriesKeyboardNavigation.js', [_modules['Core/Series/Series.js'], _modules['Core/Chart/Chart.js'], _modules['Series/Line/LineSeries.js'], _modules['Core/Series/Point.js'], _modules['Core/Utilities.js'], _modules['Accessibility/KeyboardNavigationHandler.js'], _modules['Accessibility/Utils/EventProvider.js'], _modules['Accessibility/Utils/ChartUtilities.js']], function (Series, Chart, LineSeries, Point, U, KeyboardNavigationHandler, EventProvider, ChartUtilities) {
         /* *
          *
          *  (c) 2009-2020 Øystein Moseng
@@ -2073,7 +2073,8 @@
          * */
         var seriesTypes = Series.seriesTypes;
         var defined = U.defined,
-            extend = U.extend;
+            extend = U.extend,
+            fireEvent = U.fireEvent;
         var getPointFromXY = ChartUtilities.getPointFromXY,
             getSeriesFromName = ChartUtilities.getSeriesFromName,
             scrollToPoint = ChartUtilities.scrollToPoint;
@@ -2082,7 +2083,7 @@
          * Set for which series types it makes sense to move to the closest point with
          * up/down arrows, and which series types should just move to next series.
          */
-        CartesianSeries.prototype.keyboardMoveVertical = true;
+        LineSeries.prototype.keyboardMoveVertical = true;
         ['column', 'pie'].forEach(function (type) {
             if (seriesTypes[type]) {
                 seriesTypes[type].prototype.keyboardMoveVertical = false;
@@ -2308,7 +2309,7 @@
          *
          * @return {boolean|Highcharts.Point}
          */
-        CartesianSeries.prototype.highlightFirstValidPoint = function () {
+        LineSeries.prototype.highlightFirstValidPoint = function () {
             var curPoint = this.chart.highlightedPoint,
                 start = (curPoint && curPoint.series) === this ?
                     getPointIndex(curPoint) :
@@ -2491,7 +2492,7 @@
                 var keyboardNavigation = this,
                     chart = this.chart,
                     e = this.eventProvider = new EventProvider();
-                e.addEvent(CartesianSeries, 'destroy', function () {
+                e.addEvent(LineSeries, 'destroy', function () {
                     return keyboardNavigation.onSeriesDestroy(this);
                 });
                 e.addEvent(chart, 'afterDrilldown', function () {
@@ -2550,9 +2551,13 @@
                         [inverted ? [keys.left, keys.right] : [keys.up, keys.down], function (keyCode) {
                                 return keyboardNavigation.onKbdVertical(this, keyCode);
                             }],
-                        [[keys.enter, keys.space], function () {
-                                if (chart.highlightedPoint) {
-                                    chart.highlightedPoint.firePointEvent('click');
+                        [[keys.enter, keys.space], function (keyCode, event) {
+                                var point = chart.highlightedPoint;
+                                if (point) {
+                                    fireEvent(point.series, 'click', extend(event, {
+                                        point: point
+                                    }));
+                                    point.firePointEvent('click');
                                 }
                                 return this.response.success;
                             }]
@@ -3283,7 +3288,9 @@
          *  !!!!!!! SOURCE GETS TRANSPILED BY TYPESCRIPT. EDIT TS FILE ONLY. !!!!!!!
          *
          * */
-        var visuallyHideElement = HTMLUtilities.visuallyHideElement;
+        var doc = H.doc;
+        var setElAttrs = HTMLUtilities.setElAttrs,
+            visuallyHideElement = HTMLUtilities.visuallyHideElement;
         var Announcer = /** @class */ (function () {
                 function Announcer(chart, type) {
                     this.chart = chart;
@@ -3307,13 +3314,27 @@
                 }, 1000);
             };
             Announcer.prototype.addAnnounceRegion = function (type) {
-                var chartContainer = this.chart.renderTo;
+                var chartContainer = this.chart.announcerContainer || this.createAnnouncerContainer();
                 var div = this.domElementProvider.createElement('div');
-                div.setAttribute('aria-hidden', false);
-                div.setAttribute('aria-live', type);
+                setElAttrs(div, {
+                    'aria-hidden': false,
+                    'aria-live': type
+                });
                 visuallyHideElement(div);
-                chartContainer.insertBefore(div, chartContainer.firstChild);
+                chartContainer.appendChild(div);
                 return div;
+            };
+            Announcer.prototype.createAnnouncerContainer = function () {
+                var chart = this.chart;
+                var container = doc.createElement('div');
+                setElAttrs(container, {
+                    'aria-hidden': false,
+                    style: 'position:relative',
+                    'class': 'highcharts-announcer-container'
+                });
+                chart.renderTo.insertBefore(container, chart.renderTo.firstChild);
+                chart.announcerContainer = container;
+                return container;
             };
             return Announcer;
         }());
@@ -3321,7 +3342,7 @@
 
         return Announcer;
     });
-    _registerModule(_modules, 'Accessibility/Components/SeriesComponent/NewDataAnnouncer.js', [_modules['Core/Globals.js'], _modules['Core/Series/CartesianSeries.js'], _modules['Core/Utilities.js'], _modules['Accessibility/Utils/ChartUtilities.js'], _modules['Accessibility/Components/SeriesComponent/SeriesDescriber.js'], _modules['Accessibility/Utils/Announcer.js'], _modules['Accessibility/Utils/EventProvider.js']], function (H, CartesianSeries, U, ChartUtilities, SeriesDescriber, Announcer, EventProvider) {
+    _registerModule(_modules, 'Accessibility/Components/SeriesComponent/NewDataAnnouncer.js', [_modules['Core/Globals.js'], _modules['Series/Line/LineSeries.js'], _modules['Core/Utilities.js'], _modules['Accessibility/Utils/ChartUtilities.js'], _modules['Accessibility/Components/SeriesComponent/SeriesDescriber.js'], _modules['Accessibility/Utils/Announcer.js'], _modules['Accessibility/Utils/EventProvider.js']], function (H, LineSeries, U, ChartUtilities, SeriesDescriber, Announcer, EventProvider) {
         /* *
          *
          *  (c) 2009-2020 Øystein Moseng
@@ -3414,13 +3435,13 @@
                 e.addEvent(chart, 'afterDrilldown', function () {
                     announcer.lastAnnouncementTime = 0;
                 });
-                e.addEvent(CartesianSeries, 'updatedData', function () {
+                e.addEvent(LineSeries, 'updatedData', function () {
                     announcer.onSeriesUpdatedData(this);
                 });
                 e.addEvent(chart, 'afterAddSeries', function (e) {
                     announcer.onSeriesAdded(e.series);
                 });
-                e.addEvent(CartesianSeries, 'addPoint', function (e) {
+                e.addEvent(LineSeries, 'addPoint', function (e) {
                     announcer.onPointAdded(e.point);
                 });
                 e.addEvent(chart, 'redraw', function () {
@@ -3584,7 +3605,7 @@
 
         return NewDataAnnouncer;
     });
-    _registerModule(_modules, 'Accessibility/Components/SeriesComponent/ForcedMarkers.js', [_modules['Core/Series/CartesianSeries.js'], _modules['Core/Utilities.js']], function (CartesianSeries, U) {
+    _registerModule(_modules, 'Accessibility/Components/SeriesComponent/ForcedMarkers.js', [_modules['Series/Line/LineSeries.js'], _modules['Core/Utilities.js']], function (LineSeries, U) {
         /* *
          *
          *  (c) 2009-2020 Øystein Moseng
@@ -3708,7 +3729,7 @@
              * Keep track of forcing markers.
              * @private
              */
-            addEvent(CartesianSeries, 'render', function () {
+            addEvent(LineSeries, 'render', function () {
                 var series = this,
                     options = series.options;
                 if (shouldForceMarkers(series)) {
@@ -3729,14 +3750,14 @@
              * Keep track of options to reset markers to if no longer forced.
              * @private
              */
-            addEvent(CartesianSeries, 'afterSetOptions', function (e) {
+            addEvent(LineSeries, 'afterSetOptions', function (e) {
                 this.resetA11yMarkerOptions = merge(e.options.marker || {}, this.userOptions.marker || {});
             });
             /**
              * Process marker graphics after render
              * @private
              */
-            addEvent(CartesianSeries, 'afterRender', function () {
+            addEvent(LineSeries, 'afterRender', function () {
                 var series = this;
                 // For styled mode the rendered graphic does not reflect the style
                 // options, and we need to add/remove classes to achieve the same.
@@ -4190,11 +4211,10 @@
          * @private
          */
         function shouldRunInputNavigation(chart) {
-            var inputVisible = (chart.rangeSelector &&
-                    chart.rangeSelector.inputGroup &&
-                    chart.rangeSelector.inputGroup.element
-                        .getAttribute('visibility') !== 'hidden');
-            return (inputVisible &&
+            return Boolean(chart.rangeSelector &&
+                chart.rangeSelector.inputGroup &&
+                chart.rangeSelector.inputGroup.element
+                    .getAttribute('visibility') !== 'hidden' &&
                 chart.options.rangeSelector.inputEnabled !== false &&
                 chart.rangeSelector.minInput &&
                 chart.rangeSelector.maxInput);
@@ -4210,18 +4230,25 @@
          * @return {boolean}
          */
         H.Chart.prototype.highlightRangeSelectorButton = function (ix) {
-            var buttons = this.rangeSelector.buttons,
-                curSelectedIx = this.highlightedRangeSelectorItemIx;
+            var _a,
+                _b;
+            var buttons = ((_a = this.rangeSelector) === null || _a === void 0 ? void 0 : _a.buttons) || [];
+            var curHighlightedIx = this.highlightedRangeSelectorItemIx;
+            var curSelectedIx = (_b = this.rangeSelector) === null || _b === void 0 ? void 0 : _b.selected;
             // Deselect old
-            if (typeof curSelectedIx !== 'undefined' && buttons[curSelectedIx]) {
-                buttons[curSelectedIx].setState(this.oldRangeSelectorItemState || 0);
+            if (typeof curHighlightedIx !== 'undefined' &&
+                buttons[curHighlightedIx] &&
+                curHighlightedIx !== curSelectedIx) {
+                buttons[curHighlightedIx].setState(this.oldRangeSelectorItemState || 0);
             }
             // Select new
             this.highlightedRangeSelectorItemIx = ix;
             if (buttons[ix]) {
                 this.setFocusToElement(buttons[ix].box, buttons[ix].element);
-                this.oldRangeSelectorItemState = buttons[ix].state;
-                buttons[ix].setState(2);
+                if (ix !== curSelectedIx) {
+                    this.oldRangeSelectorItemState = buttons[ix].state;
+                    buttons[ix].setState(1);
+                }
                 return true;
             }
             return false;
@@ -4240,13 +4267,14 @@
              * Called on first render/updates to the chart, including options changes.
              */
             onChartUpdate: function () {
+                var _a;
                 var chart = this.chart,
                     component = this,
                     rangeSelector = chart.rangeSelector;
                 if (!rangeSelector) {
                     return;
                 }
-                if (rangeSelector.buttons && rangeSelector.buttons.length) {
+                if ((_a = rangeSelector.buttons) === null || _a === void 0 ? void 0 : _a.length) {
                     rangeSelector.buttons.forEach(function (button) {
                         unhideChartElementFromAT(chart, button.element);
                         component.setRangeButtonAttrs(button);
@@ -4269,15 +4297,9 @@
              * @param {Highcharts.SVGElement} button
              */
             setRangeButtonAttrs: function (button) {
-                var chart = this.chart,
-                    label = chart.langFormat('accessibility.rangeSelector.buttonText', {
-                        chart: chart,
-                        buttonText: button.text && button.text.textStr
-                    });
                 setElAttrs(button.element, {
                     tabindex: -1,
-                    role: 'button',
-                    'aria-label': label
+                    role: 'button'
                 });
             },
             /**
@@ -5184,9 +5206,9 @@
          *  !!!!!!! SOURCE GETS TRANSPILED BY TYPESCRIPT. EDIT TS FILE ONLY. !!!!!!!
          *
          * */
-        var isMS = H.isMS,
-            win = H.win,
-            doc = win.document;
+        var doc = H.doc,
+            isMS = H.isMS,
+            win = H.win;
         var whcm = {
                 /**
                  * Detect WHCM in the browser.
@@ -5471,7 +5493,7 @@
 
         return theme;
     });
-    _registerModule(_modules, 'Accessibility/Options/Options.js', [], function () {
+    _registerModule(_modules, 'Accessibility/Options/Options.js', [_modules['Core/Color/Palette.js']], function (palette) {
         /* *
          *
          *  (c) 2009-2020 Øystein Moseng
@@ -5953,7 +5975,7 @@
                              */
                             style: {
                                 /** @internal */
-                                color: '#335cad',
+                                color: palette.highlightColor80,
                                 /** @internal */
                                 lineWidth: 2,
                                 /** @internal */
@@ -6392,8 +6414,7 @@
                      */
                     rangeSelector: {
                         minInputLabel: 'Select start date.',
-                        maxInputLabel: 'Select end date.',
-                        buttonText: 'Select range {buttonText}'
+                        maxInputLabel: 'Select end date.'
                     },
                     /**
                      * Accessibility language options for the data table.
@@ -7366,7 +7387,7 @@
         };
 
     });
-    _registerModule(_modules, 'Accessibility/Accessibility.js', [_modules['Accessibility/Utils/ChartUtilities.js'], _modules['Core/Globals.js'], _modules['Accessibility/KeyboardNavigationHandler.js'], _modules['Core/Series/CartesianSeries.js'], _modules['Core/Options.js'], _modules['Core/Series/Point.js'], _modules['Core/Utilities.js'], _modules['Accessibility/AccessibilityComponent.js'], _modules['Accessibility/KeyboardNavigation.js'], _modules['Accessibility/Components/LegendComponent.js'], _modules['Accessibility/Components/MenuComponent.js'], _modules['Accessibility/Components/SeriesComponent/SeriesComponent.js'], _modules['Accessibility/Components/ZoomComponent.js'], _modules['Accessibility/Components/RangeSelectorComponent.js'], _modules['Accessibility/Components/InfoRegionsComponent.js'], _modules['Accessibility/Components/ContainerComponent.js'], _modules['Accessibility/HighContrastMode.js'], _modules['Accessibility/HighContrastTheme.js'], _modules['Accessibility/Options/Options.js'], _modules['Accessibility/Options/LangOptions.js'], _modules['Accessibility/Options/DeprecatedOptions.js']], function (ChartUtilities, H, KeyboardNavigationHandler, CartesianSeries, O, Point, U, AccessibilityComponent, KeyboardNavigation, LegendComponent, MenuComponent, SeriesComponent, ZoomComponent, RangeSelectorComponent, InfoRegionsComponent, ContainerComponent, whcm, highContrastTheme, defaultOptionsA11Y, defaultLangOptions, copyDeprecatedOptions) {
+    _registerModule(_modules, 'Accessibility/Accessibility.js', [_modules['Accessibility/Utils/ChartUtilities.js'], _modules['Core/Globals.js'], _modules['Accessibility/KeyboardNavigationHandler.js'], _modules['Series/Line/LineSeries.js'], _modules['Core/Options.js'], _modules['Core/Series/Point.js'], _modules['Core/Utilities.js'], _modules['Accessibility/AccessibilityComponent.js'], _modules['Accessibility/KeyboardNavigation.js'], _modules['Accessibility/Components/LegendComponent.js'], _modules['Accessibility/Components/MenuComponent.js'], _modules['Accessibility/Components/SeriesComponent/SeriesComponent.js'], _modules['Accessibility/Components/ZoomComponent.js'], _modules['Accessibility/Components/RangeSelectorComponent.js'], _modules['Accessibility/Components/InfoRegionsComponent.js'], _modules['Accessibility/Components/ContainerComponent.js'], _modules['Accessibility/HighContrastMode.js'], _modules['Accessibility/HighContrastTheme.js'], _modules['Accessibility/Options/Options.js'], _modules['Accessibility/Options/LangOptions.js'], _modules['Accessibility/Options/DeprecatedOptions.js']], function (ChartUtilities, H, KeyboardNavigationHandler, LineSeries, O, Point, U, AccessibilityComponent, KeyboardNavigation, LegendComponent, MenuComponent, SeriesComponent, ZoomComponent, RangeSelectorComponent, InfoRegionsComponent, ContainerComponent, whcm, highContrastTheme, defaultOptionsA11Y, defaultLangOptions, copyDeprecatedOptions) {
         /* *
          *
          *  (c) 2009-2020 Øystein Moseng
@@ -7611,7 +7632,7 @@
             });
         });
         ['update', 'updatedData', 'remove'].forEach(function (event) {
-            addEvent(CartesianSeries, event, function () {
+            addEvent(LineSeries, event, function () {
                 if (this.chart.accessibility) {
                     this.chart.a11yDirty = true;
                 }

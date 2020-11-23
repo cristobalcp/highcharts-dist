@@ -1,5 +1,5 @@
 /**
- * @license Highstock JS v8.2.2 (2020-10-22)
+ * @license Highstock JS v8.2.2 (2020-11-23)
  *
  * Indicator series type for Highstock
  *
@@ -275,7 +275,7 @@
 
         return reduceArrayMixin;
     });
-    _registerModule(_modules, 'Stock/Indicators/PCIndicator.js', [_modules['Core/Series/Series.js'], _modules['Mixins/MultipleLines.js'], _modules['Mixins/ReduceArray.js'], _modules['Core/Utilities.js']], function (BaseSeries, MultipleLinesMixin, ReduceArrayMixin, U) {
+    _registerModule(_modules, 'Stock/Indicators/PCIndicator.js', [_modules['Core/Series/Series.js'], _modules['Core/Color/Palette.js'], _modules['Mixins/MultipleLines.js'], _modules['Mixins/ReduceArray.js'], _modules['Core/Utilities.js']], function (BaseSeries, palette, MultipleLinesMixin, ReduceArrayMixin, U) {
         /* *
          *
          *  License: www.highcharts.com/license
@@ -330,7 +330,7 @@
                      *
                      * @type {Highcharts.ColorString}
                      */
-                    lineColor: '#7cb5ec #434348 #90ed7d #f7a35c #8085e9 #f15c80 #e4d354 #2b908f #f45b5b #91e8e1'.split(' ')[2],
+                    lineColor: palette.colors[2],
                     /**
                      * Pixel width of the line.
                      */
@@ -345,7 +345,7 @@
                      *
                      * @type {Highcharts.ColorString}
                      */
-                    lineColor: '#7cb5ec #434348 #90ed7d #f7a35c #8085e9 #f15c80 #e4d354 #2b908f #f45b5b #91e8e1'.split(' ')[8],
+                    lineColor: palette.colors[8],
                     /**
                      * Pixel width of the line.
                      */

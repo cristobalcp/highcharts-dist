@@ -1,5 +1,5 @@
 /**
- * @license Highmaps JS v8.2.2 (2020-10-22)
+ * @license Highmaps JS v8.2.2 (2020-11-23)
  *
  * (c) 2009-2019 Torstein Honsi
  *
@@ -114,7 +114,7 @@
 
         return exports;
     });
-    _registerModule(_modules, 'Core/Axis/ColorAxis.js', [_modules['Core/Axis/Axis.js'], _modules['Core/Chart/Chart.js'], _modules['Core/Color/Color.js'], _modules['Mixins/ColorSeries.js'], _modules['Core/Animation/Fx.js'], _modules['Core/Globals.js'], _modules['Core/Legend.js'], _modules['Mixins/LegendSymbol.js'], _modules['Series/LineSeries.js'], _modules['Core/Series/Point.js'], _modules['Core/Utilities.js']], function (Axis, Chart, Color, ColorSeriesModule, Fx, H, Legend, LegendSymbolMixin, LineSeries, Point, U) {
+    _registerModule(_modules, 'Core/Axis/ColorAxis.js', [_modules['Core/Axis/Axis.js'], _modules['Core/Chart/Chart.js'], _modules['Core/Color/Color.js'], _modules['Mixins/ColorSeries.js'], _modules['Core/Animation/Fx.js'], _modules['Core/Globals.js'], _modules['Core/Legend.js'], _modules['Mixins/LegendSymbol.js'], _modules['Series/Line/LineSeries.js'], _modules['Core/Color/Palette.js'], _modules['Core/Series/Point.js'], _modules['Core/Utilities.js']], function (Axis, Chart, Color, ColorSeriesModule, Fx, H, Legend, LegendSymbolMixin, LineSeries, palette, Point, U) {
         /* *
          *
          *  (c) 2010-2020 Torstein Honsi
@@ -1077,7 +1077,7 @@
                      * @type    {Highcharts.ColorString|Highcharts.GradientColorObject|Highcharts.PatternObject}
                      * @product highcharts highstock highmaps
                      */
-                    color: '#999999'
+                    color: palette.neutralColor40
                 },
                 /**
                  * The axis labels show the number for each tick.
@@ -1119,7 +1119,7 @@
                  * @type    {Highcharts.ColorString|Highcharts.GradientColorObject|Highcharts.PatternObject}
                  * @product highcharts highstock highmaps
                  */
-                minColor: '#e6ebf5',
+                minColor: palette.highlightColor10,
                 /**
                  * The color to represent the maximum of the color axis. Unless
                  * [dataClasses](#colorAxis.dataClasses) or
@@ -1138,7 +1138,7 @@
                  * @type    {Highcharts.ColorString|Highcharts.GradientColorObject|Highcharts.PatternObject}
                  * @product highcharts highstock highmaps
                  */
-                maxColor: '#003399',
+                maxColor: palette.highlightColor100,
                 /**
                  * Color stops for the gradient of a scalar color axis. Use this in
                  * cases where a linear gradient between a `minColor` and `maxColor`
@@ -1353,8 +1353,6 @@
                  * Color points have a value option that determines whether or not it is
                  * a null point
                  * @private
-                 * @function Highcharts.colorMapPointMixin.isValid
-                 * @return {boolean}
                  */
                 isValid: function () {
                     // undefined is allowed
@@ -1364,9 +1362,6 @@
             },
             /**
              * @private
-             * @function Highcharts.colorMapPointMixin.setState
-             * @param {string} state
-             * @return {void}
              */
             setState: function (state) {
                 Point.prototype.setState.call(this, state);
@@ -1413,7 +1408,7 @@
 
         return exports;
     });
-    _registerModule(_modules, 'Series/HeatmapSeries.js', [_modules['Core/Series/Series.js'], _modules['Mixins/ColorMapSeries.js'], _modules['Core/Globals.js'], _modules['Mixins/LegendSymbol.js'], _modules['Core/Renderer/SVG/SVGRenderer.js'], _modules['Core/Utilities.js']], function (BaseSeries, ColorMapMixin, H, LegendSymbolMixin, SVGRenderer, U) {
+    _registerModule(_modules, 'Series/HeatmapSeries.js', [_modules['Core/Series/Series.js'], _modules['Mixins/ColorMapSeries.js'], _modules['Core/Globals.js'], _modules['Core/Series/Point.js'], _modules['Mixins/LegendSymbol.js'], _modules['Series/Line/LineSeries.js'], _modules['Core/Color/Palette.js'], _modules['Core/Renderer/SVG/SVGRenderer.js'], _modules['Core/Utilities.js']], function (BaseSeries, ColorMapMixin, H, Point, LegendSymbolMixin, LineSeries, palette, SVGRenderer, U) {
         /* *
          *
          *  (c) 2010-2020 Torstein Honsi
@@ -1423,6 +1418,7 @@
          *  !!!!!!! SOURCE GETS TRANSPILED BY TYPESCRIPT. EDIT TS FILE ONLY. !!!!!!!
          *
          * */
+        var seriesTypes = BaseSeries.seriesTypes;
         var colorMapPointMixin = ColorMapMixin.colorMapPointMixin,
             colorMapSeriesMixin = ColorMapMixin.colorMapSeriesMixin;
         var noop = H.noop;
@@ -1432,9 +1428,7 @@
             isNumber = U.isNumber,
             merge = U.merge,
             pick = U.pick;
-        var Series = H.Series,
-            seriesTypes = BaseSeries.seriesTypes,
-            symbols = SVGRenderer.prototype.symbols;
+        var symbols = SVGRenderer.prototype.symbols;
         /* *
          * @interface Highcharts.PointOptionsObject in parts/Point.ts
          */ /**
@@ -1544,7 +1538,7 @@
              *
              * @type {Highcharts.ColorString|Highcharts.GradientColorObject|Highcharts.PatternObject}
              */
-            nullColor: '#f7f7f7',
+            nullColor: palette.neutralColor3,
             dataLabels: {
                 formatter: function () {
                     return this.point.value;
@@ -1734,7 +1728,7 @@
              */
             init: function () {
                 var options;
-                Series.prototype.init.apply(this, arguments);
+                LineSeries.prototype.init.apply(this, arguments);
                 options = this.options;
                 // #3758, prevent resetting in setData
                 options.pointRange = pick(options.pointRange, options.colsize || 1);
@@ -1746,7 +1740,7 @@
                     rect: symbols.square
                 });
             },
-            getSymbol: Series.prototype.getSymbol,
+            getSymbol: LineSeries.prototype.getSymbol,
             /**
              * @private
              * @function Highcharts.seriesTypes.heatmap#setClip
@@ -1755,7 +1749,7 @@
             setClip: function (animation) {
                 var series = this,
                     chart = series.chart;
-                Series.prototype.setClip.apply(series, arguments);
+                LineSeries.prototype.setClip.apply(series, arguments);
                 if (series.options.clip !== false || animation) {
                     series.markerGroup
                         .clip((animation || series.clipBox) && series.sharedClipKey ?
@@ -1826,8 +1820,7 @@
              */
             pointAttribs: function (point, state) {
                 var series = this,
-                    attr = Series.prototype.pointAttribs
-                        .call(series,
+                    attr = LineSeries.prototype.pointAttribs.call(series,
                     point,
                     state),
                     seriesOptions = series.options || {},
@@ -1914,7 +1907,7 @@
                 // sheet will take precedence over the fill attribute.
                 var seriesMarkerOptions = this.options.marker || {};
                 if (seriesMarkerOptions.enabled || this._hasPointMarkers) {
-                    Series.prototype.drawPoints.call(this);
+                    LineSeries.prototype.drawPoints.call(this);
                     this.points.forEach(function (point) {
                         point.graphic &&
                             point.graphic[_this.chart.styledMode ? 'css' : 'animate'](_this.colorAttribs(point));
@@ -1929,7 +1922,7 @@
             // Override to also allow null points, used when building the k-d-tree
             // for tooltips in boost mode.
             getValidPoints: function (points, insideOnly) {
-                return Series.prototype.getValidPoints.call(this, points, insideOnly, true);
+                return LineSeries.prototype.getValidPoints.call(this, points, insideOnly, true);
             },
             /**
              * @ignore
@@ -1954,7 +1947,7 @@
              */
             getExtremes: function () {
                 // Get the extremes from the value data
-                var _a = Series.prototype.getExtremes
+                var _a = LineSeries.prototype.getExtremes
                         .call(this,
                     this.valueData),
                     dataMin = _a.dataMin,
@@ -1966,7 +1959,7 @@
                     this.valueMax = dataMax;
                 }
                 // Get the extremes from the y data
-                return Series.prototype.getExtremes.call(this);
+                return LineSeries.prototype.getExtremes.call(this);
             }
             /* eslint-enable valid-jsdoc */
         }), merge(colorMapPointMixin, {
@@ -1990,7 +1983,7 @@
              * @return {Highcharts.SVGPathArray}
              */
             applyOptions: function (options, x) {
-                var point = H.Point.prototype
+                var point = Point.prototype
                         .applyOptions.call(this,
                     options,
                     x);

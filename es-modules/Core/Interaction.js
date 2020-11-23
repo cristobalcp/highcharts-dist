@@ -14,10 +14,10 @@ import Chart from './Chart/Chart.js';
 import H from './Globals.js';
 var hasTouch = H.hasTouch, svg = H.svg;
 import Legend from './Legend.js';
-import LineSeries from '../Series/LineSeries.js';
+import LineSeries from '../Series/Line/LineSeries.js';
 import O from './Options.js';
 var defaultOptions = O.defaultOptions;
-import Point from '../Core/Series/Point.js';
+import Point from './Series/Point.js';
 import U from './Utilities.js';
 var addEvent = U.addEvent, createElement = U.createElement, css = U.css, defined = U.defined, extend = U.extend, fireEvent = U.fireEvent, isArray = U.isArray, isFunction = U.isFunction, isNumber = U.isNumber, isObject = U.isObject, merge = U.merge, objectEach = U.objectEach, pick = U.pick;
 /**
@@ -513,8 +513,8 @@ extend(Chart.prototype, /** @lends Chart.prototype */ {
                         }
                         if (isNumber(dataExtremes.dataMin) &&
                             isNumber(dataExtremes.dataMax)) {
-                            panningState.startMin = Math.min(dataExtremes.dataMin, panningState.startMin);
-                            panningState.startMax = Math.max(dataExtremes.dataMax, panningState.startMax);
+                            panningState.startMin = Math.min(pick(series.options.threshold, Infinity), dataExtremes.dataMin, panningState.startMin);
+                            panningState.startMax = Math.max(pick(series.options.threshold, -Infinity), dataExtremes.dataMax, panningState.startMax);
                         }
                     }
                 });

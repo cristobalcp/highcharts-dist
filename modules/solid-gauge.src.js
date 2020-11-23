@@ -1,5 +1,5 @@
 /**
- * @license Highcharts JS v8.2.2 (2020-10-22)
+ * @license Highcharts JS v8.2.2 (2020-11-23)
  *
  * Solid angular gauge module
  *
@@ -303,7 +303,7 @@
                  * @sample {highcharts} highcharts/plotoptions/solidgauge-threshold/
                  *         Zero threshold with negative and positive values
                  *
-                 * @type      {number}
+                 * @type      {number|null}
                  * @since     5.0.3
                  * @product   highcharts
                  * @apioption plotOptions.solidgauge.threshold

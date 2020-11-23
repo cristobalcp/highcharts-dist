@@ -1,5 +1,5 @@
 /**
- * @license Highcharts JS v8.2.2 (2020-10-22)
+ * @license Highcharts JS v8.2.2 (2020-11-23)
  *
  * Annotations module
  *
@@ -62,7 +62,7 @@
             H.isTouchDevice ? 'touchstart' : 'mousedown',
             function (e) {
                             emitter.onMouseDown(e);
-                    });
+                    }, { passive: false });
                 };
                 addMouseDownEvent(this.graphic.element);
                 (emitter.labels || []).forEach(function (label) {
@@ -83,7 +83,7 @@
                         emitter.graphic.on(type, eventHandler);
                     }
                     else {
-                        addEvent(emitter, type, eventHandler);
+                        addEvent(emitter, type, eventHandler, { passive: false });
                     }
                 });
                 if (emitter.options.draggable) {
@@ -147,7 +147,7 @@
                     fireEvent(emitter, 'drag', e);
                     prevChartX = e.chartX;
                     prevChartY = e.chartY;
-                });
+                }, H.isTouchDevice ? { passive: false } : void 0);
                 emitter.removeMouseUp = addEvent(H.doc, H.isTouchDevice ? 'touchend' : 'mouseup', function (e) {
                     emitter.cancelClick = emitter.hasDragged;
                     emitter.hasDragged = false;
@@ -155,7 +155,7 @@
                     // ControlPoints vs Annotation:
                     fireEvent(pick(emitter.target, emitter), 'afterUpdate');
                     emitter.onMouseUp(e);
-                });
+                }, H.isTouchDevice ? { passive: false } : void 0);
             },
             /**
              * Mouse up handler.
@@ -420,7 +420,7 @@
 
         return ControlPoint;
     });
-    _registerModule(_modules, 'Extensions/Annotations/MockPoint.js', [_modules['Core/Globals.js'], _modules['Core/Utilities.js'], _modules['Core/Axis/Axis.js']], function (H, U, Axis) {
+    _registerModule(_modules, 'Extensions/Annotations/MockPoint.js', [_modules['Series/Line/LineSeries.js'], _modules['Core/Utilities.js'], _modules['Core/Axis/Axis.js']], function (LineSeries, U, Axis) {
         /* *
          *
          *  !!!!!!! SOURCE GETS TRANSPILED BY TYPESCRIPT. EDIT TS FILE ONLY. !!!!!!!
@@ -517,7 +517,7 @@
                 this.series = {
                     visible: true,
                     chart: chart,
-                    getPlotBox: H.Series.prototype.getPlotBox
+                    getPlotBox: LineSeries.prototype.getPlotBox
                 };
                 /**
                  * @name Annotation.AnnotationMockPoint#target
@@ -6251,7 +6251,7 @@
                 });
                 objectEach(options.events || {}, function (callback, eventName) {
                     if (isFunction(callback)) {
-                        navigation.eventsToUnbind.push(addEvent(navigation, eventName, callback));
+                        navigation.eventsToUnbind.push(addEvent(navigation, eventName, callback, { passive: false }));
                     }
                 });
                 navigation.eventsToUnbind.push(addEvent(chart.container, 'click', function (e) {
@@ -6262,7 +6262,7 @@
                 }));
                 navigation.eventsToUnbind.push(addEvent(chart.container, H.isTouchDevice ? 'touchmove' : 'mousemove', function (e) {
                     navigation.bindingsContainerMouseMove(this, e);
-                }));
+                }, H.isTouchDevice ? { passive: false } : void 0));
             };
             /**
              * Common chart.update() delegation, shared between bindings and exporting.

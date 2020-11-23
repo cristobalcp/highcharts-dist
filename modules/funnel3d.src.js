@@ -1,5 +1,5 @@
 /**
- * @license Highcharts JS v8.2.2 (2020-10-22)
+ * @license Highcharts JS v8.2.2 (2020-11-23)
  *
  * Highcharts funnel module
  *
@@ -28,7 +28,7 @@
             obj[path] = fn.apply(null, args);
         }
     }
-    _registerModule(_modules, 'Series/Funnel3DSeries.js', [_modules['Core/Color/Color.js'], _modules['Core/Globals.js'], _modules['Extensions/Math3D.js'], _modules['Core/Series/Series.js'], _modules['Core/Utilities.js']], function (Color, H, Math3D, Series, U) {
+    _registerModule(_modules, 'Series/Funnel3DSeries.js', [_modules['Core/Series/Series.js'], _modules['Core/Color/Color.js'], _modules['Core/Globals.js'], _modules['Extensions/Math3D.js'], _modules['Core/Utilities.js']], function (BaseSeries, Color, H, Math3D, U) {
         /* *
          *
          *  Highcharts funnel3d series module
@@ -42,18 +42,41 @@
          *  !!!!!!! SOURCE GETS TRANSPILED BY TYPESCRIPT. EDIT TS FILE ONLY. !!!!!!!
          *
          * */
+        var __extends = (this && this.__extends) || (function () {
+                var extendStatics = function (d,
+            b) {
+                    extendStatics = Object.setPrototypeOf ||
+                        ({ __proto__: [] } instanceof Array && function (d,
+            b) { d.__proto__ = b; }) ||
+                        function (d,
+            b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+                return extendStatics(d, b);
+            };
+            return function (d, b) {
+                extendStatics(d, b);
+                function __() { this.constructor = d; }
+                d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+            };
+        })();
+        var _a = BaseSeries.seriesTypes,
+            ColumnSeries = _a.column,
+            LineSeries = _a.line;
         var color = Color.parse;
         var charts = H.charts,
-            RendererProto = H.Renderer.prototype;
+            _b = H.Renderer.prototype,
+            cuboidPath = _b.cuboidPath,
+            elements3d = _b.elements3d;
         var perspective = Math3D.perspective;
-        var seriesTypes = Series.seriesTypes;
         var error = U.error,
             extend = U.extend,
             merge = U.merge,
             pick = U.pick,
             relativeLength = U.relativeLength;
-        var cuboidPath = RendererProto.cuboidPath,
-            funnel3dMethods;
+        /* *
+         *
+         *  Class
+         *
+         * */
         /**
          * The funnel3d series type.
          *
@@ -63,98 +86,80 @@
          * @requires modules/cylinder
          * @requires modules/funnel3d
          */
-        Series.seriesType('funnel3d', 'column', 
-        /**
-         * A funnel3d is a 3d version of funnel series type. Funnel charts are
-         * a type of chart often used to visualize stages in a sales project,
-         * where the top are the initial stages with the most clients.
-         *
-         * It requires that the `highcharts-3d.js`, `cylinder.js` and
-         * `funnel3d.js` module are loaded.
-         *
-         * @sample highcharts/demo/funnel3d/
-         *         Funnel3d
-         *
-         * @extends      plotOptions.column
-         * @excluding    allAreas, boostThreshold, colorAxis, compare, compareBase,
-         *               dataSorting, boostBlending
-         * @product      highcharts
-         * @since        7.1.0
-         * @requires     highcharts-3d
-         * @requires     modules/cylinder
-         * @requires     modules/funnel3d
-         * @optionparent plotOptions.funnel3d
-         */
-        {
-            /** @ignore-option */
-            center: ['50%', '50%'],
-            /**
-             * The max width of the series compared to the width of the plot area,
-             * or the pixel width if it is a number.
-             *
-             * @type    {number|string}
-             * @sample  {highcharts} highcharts/demo/funnel3d/ Funnel3d demo
-             * @product highcharts
-             */
-            width: '90%',
-            /**
-             * The width of the neck, the lower part of the funnel. A number defines
-             * pixel width, a percentage string defines a percentage of the plot
-             * area width.
-             *
-             * @type    {number|string}
-             * @sample  {highcharts} highcharts/demo/funnel3d/ Funnel3d demo
-             * @product highcharts
-             */
-            neckWidth: '30%',
-            /**
-             * The height of the series. If it is a number it defines
-             * the pixel height, if it is a percentage string it is the percentage
-             * of the plot area height.
-             *
-             * @type    {number|string}
-             * @sample  {highcharts} highcharts/demo/funnel3d/ Funnel3d demo
-             * @product highcharts
-             */
-            height: '100%',
-            /**
-             * The height of the neck, the lower part of the funnel. A number
-             * defines pixel width, a percentage string defines a percentage
-             * of the plot area height.
-             *
-             * @type    {number|string}
-             * @sample  {highcharts} highcharts/demo/funnel3d/ Funnel3d demo
-             * @product highcharts
-             */
-            neckHeight: '25%',
-            /**
-             * A reversed funnel has the widest area down. A reversed funnel with
-             * no neck width and neck height is a pyramid.
-             *
-             * @product highcharts
-             */
-            reversed: false,
-            /**
-             * By deafult sides fill is set to a gradient through this option being
-             * set to `true`. Set to `false` to get solid color for the sides.
-             *
-             * @product highcharts
-             */
-            gradientForSides: true,
-            animation: false,
-            edgeWidth: 0,
-            colorByPoint: true,
-            showInLegend: false,
-            dataLabels: {
-                align: 'right',
-                crop: false,
-                inside: false,
-                overflow: 'allow'
+        var Funnel3DSeries = /** @class */ (function (_super) {
+                __extends(Funnel3DSeries, _super);
+            function Funnel3DSeries() {
+                var _this = _super !== null && _super.apply(this,
+                    arguments) || this;
+                /* *
+                 *
+                 *  Properties
+                 *
+                 * */
+                _this.center = void 0;
+                _this.data = void 0;
+                _this.options = void 0;
+                _this.points = void 0;
+                return _this;
+                /* eslint-enable valid-jsdoc */
             }
-        }, {
-            // Override default axis options with series required options for axes
-            bindAxes: function () {
-                H.Series.prototype.bindAxes.apply(this, arguments);
+            /* *
+             *
+             *  Functions
+             *
+             * */
+            /* eslint-disable valid-jsdoc */
+            /**
+             * @private
+             */
+            Funnel3DSeries.prototype.alignDataLabel = function (point, _dataLabel, options) {
+                var series = this,
+                    dlBoxRaw = point.dlBoxRaw,
+                    inverted = series.chart.inverted,
+                    below = point.plotY > pick(series.translatedThreshold,
+                    series.yAxis.len),
+                    inside = pick(options.inside, !!series.options.stacking),
+                    dlBox = {
+                        x: dlBoxRaw.x,
+                        y: dlBoxRaw.y,
+                        height: 0
+                    };
+                options.align = pick(options.align, !inverted || inside ? 'center' : below ? 'right' : 'left');
+                options.verticalAlign = pick(options.verticalAlign, inverted || inside ? 'middle' : below ? 'top' : 'bottom');
+                if (options.verticalAlign !== 'top') {
+                    dlBox.y += dlBoxRaw.bottom /
+                        (options.verticalAlign === 'bottom' ? 1 : 2);
+                }
+                dlBox.width = series.getWidthAt(dlBox.y);
+                if (series.options.reversed) {
+                    dlBox.width = dlBoxRaw.fullWidth - dlBox.width;
+                }
+                if (inside) {
+                    dlBox.x -= dlBox.width / 2;
+                }
+                else {
+                    // swap for inside
+                    if (options.align === 'left') {
+                        options.align = 'right';
+                        dlBox.x -= dlBox.width * 1.5;
+                    }
+                    else if (options.align === 'right') {
+                        options.align = 'left';
+                        dlBox.x += dlBox.width / 2;
+                    }
+                    else {
+                        dlBox.x -= dlBox.width / 2;
+                    }
+                }
+                point.dlBox = dlBox;
+                ColumnSeries.prototype.alignDataLabel.apply(series, arguments);
+            };
+            /**
+             * Override default axis options with series required options for axes.
+             * @private
+             */
+            Funnel3DSeries.prototype.bindAxes = function () {
+                LineSeries.prototype.bindAxes.apply(this, arguments);
                 extend(this.xAxis.options, {
                     gridLineWidth: 0,
                     lineWidth: 0,
@@ -168,10 +173,12 @@
                         enabled: false
                     }
                 });
-            },
-            translate3dShapes: H.noop,
-            translate: function () {
-                H.Series.prototype.translate.apply(this, arguments);
+            };
+            /**
+             * @private
+             */
+            Funnel3DSeries.prototype.translate = function () {
+                LineSeries.prototype.translate.apply(this, arguments);
                 var sum = 0,
                     series = this,
                     chart = series.chart,
@@ -219,23 +226,23 @@
                 series.center = [centerX, centerY, height];
                 series.centerX = centerX;
                 /*
-                 * Individual point coordinate naming:
-                 *
-                 *  _________centerX,y1________
-                 *  \                         /
-                 *   \                       /
-                 *    \                     /
-                 *     \                   /
-                 *      \                 /
-                 *        ___centerX,y3___
-                 *
-                 * Additional for the base of the neck:
-                 *
-                 *       |               |
-                 *       |               |
-                 *       |               |
-                 *        ___centerX,y5___
-                 */
+                    * Individual point coordinate naming:
+                    *
+                    *  _________centerX,y1________
+                    *  \                         /
+                    *   \                       /
+                    *    \                     /
+                    *     \                   /
+                    *      \                 /
+                    *        ___centerX,y3___
+                    *
+                    * Additional for the base of the neck:
+                    *
+                    *       |               |
+                    *       |               |
+                    *       |               |
+                    *        ___centerX,y5___
+                    */
                 // get the total sum
                 data.forEach(function (point) {
                     if (!ignoreHiddenPoint || point.visible !== false) {
@@ -325,128 +332,134 @@
                         cumulative += fraction;
                     }
                 });
-            },
-            alignDataLabel: function (point, dataLabel, options) {
-                var series = this,
-                    dlBoxRaw = point.dlBoxRaw,
-                    inverted = series.chart.inverted,
-                    below = point.plotY > pick(series.translatedThreshold,
-                    series.yAxis.len),
-                    inside = pick(options.inside, !!series.options.stacking),
-                    dlBox = {
-                        x: dlBoxRaw.x,
-                        y: dlBoxRaw.y,
-                        height: 0
-                    };
-                options.align = pick(options.align, !inverted || inside ? 'center' : below ? 'right' : 'left');
-                options.verticalAlign = pick(options.verticalAlign, inverted || inside ? 'middle' : below ? 'top' : 'bottom');
-                if (options.verticalAlign !== 'top') {
-                    dlBox.y += dlBoxRaw.bottom /
-                        (options.verticalAlign === 'bottom' ? 1 : 2);
+            };
+            /**
+             * A funnel3d is a 3d version of funnel series type. Funnel charts are
+             * a type of chart often used to visualize stages in a sales project,
+             * where the top are the initial stages with the most clients.
+             *
+             * It requires that the `highcharts-3d.js`, `cylinder.js` and
+             * `funnel3d.js` module are loaded.
+             *
+             * @sample highcharts/demo/funnel3d/
+             *         Funnel3d
+             *
+             * @extends      plotOptions.column
+             * @excluding    allAreas, boostThreshold, colorAxis, compare, compareBase,
+             *               dataSorting, boostBlending
+             * @product      highcharts
+             * @since        7.1.0
+             * @requires     highcharts-3d
+             * @requires     modules/cylinder
+             * @requires     modules/funnel3d
+             * @optionparent plotOptions.funnel3d
+             */
+            Funnel3DSeries.defaultOptions = merge(ColumnSeries.defaultOptions, {
+                /** @ignore-option */
+                center: ['50%', '50%'],
+                /**
+                 * The max width of the series compared to the width of the plot area,
+                 * or the pixel width if it is a number.
+                 *
+                 * @type    {number|string}
+                 * @sample  {highcharts} highcharts/demo/funnel3d/ Funnel3d demo
+                 * @product highcharts
+                 */
+                width: '90%',
+                /**
+                 * The width of the neck, the lower part of the funnel. A number defines
+                 * pixel width, a percentage string defines a percentage of the plot
+                 * area width.
+                 *
+                 * @type    {number|string}
+                 * @sample  {highcharts} highcharts/demo/funnel3d/ Funnel3d demo
+                 * @product highcharts
+                 */
+                neckWidth: '30%',
+                /**
+                 * The height of the series. If it is a number it defines
+                 * the pixel height, if it is a percentage string it is the percentage
+                 * of the plot area height.
+                 *
+                 * @type    {number|string}
+                 * @sample  {highcharts} highcharts/demo/funnel3d/ Funnel3d demo
+                 * @product highcharts
+                 */
+                height: '100%',
+                /**
+                 * The height of the neck, the lower part of the funnel. A number
+                 * defines pixel width, a percentage string defines a percentage
+                 * of the plot area height.
+                 *
+                 * @type    {number|string}
+                 * @sample  {highcharts} highcharts/demo/funnel3d/ Funnel3d demo
+                 * @product highcharts
+                 */
+                neckHeight: '25%',
+                /**
+                 * A reversed funnel has the widest area down. A reversed funnel with
+                 * no neck width and neck height is a pyramid.
+                 *
+                 * @product highcharts
+                 */
+                reversed: false,
+                /**
+                 * By deafult sides fill is set to a gradient through this option being
+                 * set to `true`. Set to `false` to get solid color for the sides.
+                 *
+                 * @product highcharts
+                 */
+                gradientForSides: true,
+                animation: false,
+                edgeWidth: 0,
+                colorByPoint: true,
+                showInLegend: false,
+                dataLabels: {
+                    align: 'right',
+                    crop: false,
+                    inside: false,
+                    overflow: 'allow'
                 }
-                dlBox.width = series.getWidthAt(dlBox.y);
-                if (series.options.reversed) {
-                    dlBox.width = dlBoxRaw.fullWidth - dlBox.width;
-                }
-                if (inside) {
-                    dlBox.x -= dlBox.width / 2;
-                }
-                else {
-                    // swap for inside
-                    if (options.align === 'left') {
-                        options.align = 'right';
-                        dlBox.x -= dlBox.width * 1.5;
-                    }
-                    else if (options.align === 'right') {
-                        options.align = 'left';
-                        dlBox.x += dlBox.width / 2;
-                    }
-                    else {
-                        dlBox.x -= dlBox.width / 2;
-                    }
-                }
-                point.dlBox = dlBox;
-                seriesTypes.column.prototype.alignDataLabel.apply(series, arguments);
-            }
-        }, /** @lends seriesTypes.funnel3d.prototype.pointClass.prototype */ {
-            shapeType: 'funnel3d',
-            hasNewShapeType: H
-                .seriesTypes.column.prototype
-                .pointClass.prototype
-                .hasNewShapeType
+            });
+            return Funnel3DSeries;
+        }(ColumnSeries));
+        extend(Funnel3DSeries.prototype, {
+            translate3dShapes: H.noop
         });
-        /**
-         * A `funnel3d` series. If the [type](#series.funnel3d.type) option is
-         * not specified, it is inherited from [chart.type](#chart.type).
+        /* *
          *
-         * @sample {highcharts} highcharts/demo/funnel3d/
-         *         Funnel3d demo
+         *  Class
          *
-         * @since     7.1.0
-         * @extends   series.funnel,plotOptions.funnel3d
-         * @excluding allAreas,boostThreshold,colorAxis,compare,compareBase
-         * @product   highcharts
-         * @requires  highcharts-3d
-         * @requires  modules/cylinder
-         * @requires  modules/funnel3d
-         * @apioption series.funnel3d
-         */
-        /**
-         * An array of data points for the series. For the `funnel3d` series
-         * type, points can be given in the following ways:
+         * */
+        var Funnel3DPoint = /** @class */ (function (_super) {
+                __extends(Funnel3DPoint, _super);
+            function Funnel3DPoint() {
+                /* *
+                 *
+                 *  Properties
+                 *
+                 * */
+                var _this = _super !== null && _super.apply(this,
+                    arguments) || this;
+                _this.dlBoxRaw = void 0;
+                _this.options = void 0;
+                _this.series = void 0;
+                _this.y = void 0;
+                return _this;
+            }
+            return Funnel3DPoint;
+        }(ColumnSeries.prototype.pointClass));
+        Funnel3DSeries.prototype.pointClass = Funnel3DPoint;
+        extend(Funnel3DPoint.prototype, {
+            shapeType: 'funnel3d'
+        });
+        /* *
          *
-         * 1.  An array of numerical values. In this case, the numerical values
-         * will be interpreted as `y` options. The `x` values will be automatically
-         * calculated, either starting at 0 and incremented by 1, or from `pointStart`
-         * and `pointInterval` given in the series options. If the axis has
-         * categories, these will be used. Example:
+         *  Composition
          *
-         *  ```js
-         *  data: [0, 5, 3, 5]
-         *  ```
-         *
-         * 2.  An array of objects with named values. The following snippet shows only a
-         * few settings, see the complete options set below. If the total number of data
-         * points exceeds the series' [turboThreshold](#series.funnel3d.turboThreshold),
-         * this option is not available.
-         *
-         *  ```js
-         *     data: [{
-         *         y: 2,
-         *         name: "Point2",
-         *         color: "#00FF00"
-         *     }, {
-         *         y: 4,
-         *         name: "Point1",
-         *         color: "#FF00FF"
-         *     }]
-         *  ```
-         *
-         * @sample {highcharts} highcharts/chart/reflow-true/
-         *         Numerical values
-         * @sample {highcharts} highcharts/series/data-array-of-arrays/
-         *         Arrays of numeric x and y
-         * @sample {highcharts} highcharts/series/data-array-of-arrays-datetime/
-         *         Arrays of datetime x and y
-         * @sample {highcharts} highcharts/series/data-array-of-name-value/
-         *         Arrays of point.name and y
-         * @sample {highcharts} highcharts/series/data-array-of-objects/
-         *         Config objects
-         *
-         * @type      {Array<number|Array<number>|*>}
-         * @extends   series.column.data
-         * @product   highcharts
-         * @apioption series.funnel3d.data
-         */
-        /**
-         * By deafult sides fill is set to a gradient through this option being
-         * set to `true`. Set to `false` to get solid color for the sides.
-         *
-         * @type      {boolean}
-         * @product   highcharts
-         * @apioption series.funnel3d.data.gradientForSides
-         */
-        funnel3dMethods = merge(RendererProto.elements3d.cuboid, {
+         * */
+        /* eslint-disable valid-jsdoc */
+        elements3d.funnel3d = merge(elements3d.cuboid, {
             parts: [
                 'top', 'bottom',
                 'frontUpper', 'backUpper',
@@ -649,8 +662,7 @@
                 this.finishedOnAdd = true;
             }
         });
-        RendererProto.elements3d.funnel3d = funnel3dMethods;
-        RendererProto.funnel3d = function (shapeArgs) {
+        H.Renderer.prototype.funnel3d = function (shapeArgs) {
             var renderer = this,
                 funnel3d = renderer.element3d('funnel3d',
                 shapeArgs),
@@ -690,12 +702,11 @@
             funnel3d.gradientForSides = shapeArgs.gradientForSides;
             return funnel3d;
         };
-        // eslint-disable-next-line valid-jsdoc
         /**
          * Generates paths and zIndexes.
          * @private
          */
-        RendererProto.funnel3dPath = function (shapeArgs) {
+        H.Renderer.prototype.funnel3dPath = function (shapeArgs) {
             // Check getCylinderEnd for better error message if
             // the cylinder module is missing
             if (!this.getCylinderEnd) {
@@ -797,7 +808,91 @@
             }
             return ret;
         };
+        BaseSeries.registerSeriesType('funnel3d', Funnel3DSeries);
+        /* *
+         *
+         *  Default Export
+         *
+         * */
+        /* *
+         *
+         *  API Options
+         *
+         * */
+        /**
+         * A `funnel3d` series. If the [type](#series.funnel3d.type) option is
+         * not specified, it is inherited from [chart.type](#chart.type).
+         *
+         * @sample {highcharts} highcharts/demo/funnel3d/
+         *         Funnel3d demo
+         *
+         * @since     7.1.0
+         * @extends   series.funnel,plotOptions.funnel3d
+         * @excluding allAreas,boostThreshold,colorAxis,compare,compareBase
+         * @product   highcharts
+         * @requires  highcharts-3d
+         * @requires  modules/cylinder
+         * @requires  modules/funnel3d
+         * @apioption series.funnel3d
+         */
+        /**
+         * An array of data points for the series. For the `funnel3d` series
+         * type, points can be given in the following ways:
+         *
+         * 1.  An array of numerical values. In this case, the numerical values
+         * will be interpreted as `y` options. The `x` values will be automatically
+         * calculated, either starting at 0 and incremented by 1, or from `pointStart`
+         * and `pointInterval` given in the series options. If the axis has
+         * categories, these will be used. Example:
+         *
+         *  ```js
+         *  data: [0, 5, 3, 5]
+         *  ```
+         *
+         * 2.  An array of objects with named values. The following snippet shows only a
+         * few settings, see the complete options set below. If the total number of data
+         * points exceeds the series' [turboThreshold](#series.funnel3d.turboThreshold),
+         * this option is not available.
+         *
+         *  ```js
+         *     data: [{
+         *         y: 2,
+         *         name: "Point2",
+         *         color: "#00FF00"
+         *     }, {
+         *         y: 4,
+         *         name: "Point1",
+         *         color: "#FF00FF"
+         *     }]
+         *  ```
+         *
+         * @sample {highcharts} highcharts/chart/reflow-true/
+         *         Numerical values
+         * @sample {highcharts} highcharts/series/data-array-of-arrays/
+         *         Arrays of numeric x and y
+         * @sample {highcharts} highcharts/series/data-array-of-arrays-datetime/
+         *         Arrays of datetime x and y
+         * @sample {highcharts} highcharts/series/data-array-of-name-value/
+         *         Arrays of point.name and y
+         * @sample {highcharts} highcharts/series/data-array-of-objects/
+         *         Config objects
+         *
+         * @type      {Array<number|Array<number>|*>}
+         * @extends   series.column.data
+         * @product   highcharts
+         * @apioption series.funnel3d.data
+         */
+        /**
+         * By deafult sides fill is set to a gradient through this option being
+         * set to `true`. Set to `false` to get solid color for the sides.
+         *
+         * @type      {boolean}
+         * @product   highcharts
+         * @apioption series.funnel3d.data.gradientForSides
+         */
+        ''; // keeps doclets above in transpiled file
 
+        return Funnel3DSeries;
     });
     _registerModule(_modules, 'masters/modules/funnel3d.src.js', [], function () {
 

@@ -1,5 +1,5 @@
 /**
- * @license Highcharts JS v8.2.2 (2020-10-22)
+ * @license Highcharts JS v8.2.2 (2020-11-23)
  *
  * (c) 2009-2019 Torstein Honsi
  *
@@ -26,7 +26,7 @@
             obj[path] = fn.apply(null, args);
         }
     }
-    _registerModule(_modules, 'Extensions/DraggablePoints.js', [_modules['Core/Chart/Chart.js'], _modules['Core/Globals.js'], _modules['Core/Series/Point.js'], _modules['Core/Utilities.js']], function (Chart, H, Point, U) {
+    _registerModule(_modules, 'Extensions/DraggablePoints.js', [_modules['Core/Chart/Chart.js'], _modules['Core/Globals.js'], _modules['Series/Line/LineSeries.js'], _modules['Core/Series/Point.js'], _modules['Core/Utilities.js']], function (Chart, H, LineSeries, Point, U) {
         /* *
          *
          *  (c) 2009-2020 Highsoft AS
@@ -1881,7 +1881,7 @@
          * @return {Highcharts.SVGElement}
          *         An SVG element for the guide box, not added to DOM.
          */
-        H.Series.prototype.getGuideBox = function (points) {
+        LineSeries.prototype.getGuideBox = function (points) {
             var chart = this.chart,
                 minX = Infinity,
                 maxX = -Infinity,
@@ -2043,7 +2043,7 @@
                     // Add events
                     addEvents(handle.element, ['touchstart', 'mousedown'], function (e) {
                         onResizeHandleMouseDown(getNormalizedEvent(e, chart), point, key);
-                    });
+                    }, { passive: false });
                     addEvent(chart.dragHandles.group.element, 'mouseover', function () {
                         chart.dragDropData = chart.dragDropData || {};
                         chart.dragDropData.isHoveringHandle = point.id;
@@ -2353,13 +2353,13 @@
                 });
                 addEvents(container, ['mousemove', 'touchmove'], function (e) {
                     mouseMove(getNormalizedEvent(e, chart), chart);
-                });
+                }, { passive: false });
                 addEvent(container, 'mouseleave', function (e) {
                     mouseUp(getNormalizedEvent(e, chart), chart);
                 });
                 chart.unbindDragDropMouseUp = addEvents(doc, ['mouseup', 'touchend'], function (e) {
                     mouseUp(getNormalizedEvent(e, chart), chart);
-                });
+                }, { passive: false });
                 // Add flag to avoid doing this again
                 chart.hasAddedDragDropEvents = true;
                 // Add cleanup to make sure we don't pollute document

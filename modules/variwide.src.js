@@ -1,5 +1,5 @@
 /**
- * @license Highcharts JS v8.2.2 (2020-10-22)
+ * @license Highcharts JS v8.2.2 (2020-11-23)
  *
  * Highcharts variwide module
  *
@@ -45,6 +45,11 @@
             isNumber = U.isNumber,
             pick = U.pick,
             wrap = U.wrap;
+        /* *
+         *
+         *  Class
+         *
+         * */
         /**
          * @private
          * @class

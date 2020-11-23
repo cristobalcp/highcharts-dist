@@ -1,5 +1,5 @@
 /**
- * @license Highcharts JS v8.2.2 (2020-10-22)
+ * @license Highcharts JS v8.2.2 (2020-11-23)
  *
  * Wind barb series module
  *
@@ -28,7 +28,7 @@
             obj[path] = fn.apply(null, args);
         }
     }
-    _registerModule(_modules, 'Mixins/OnSeries.js', [_modules['Core/Globals.js'], _modules['Core/Utilities.js']], function (H, U) {
+    _registerModule(_modules, 'Mixins/OnSeries.js', [_modules['Series/Column/ColumnSeries.js'], _modules['Series/Line/LineSeries.js'], _modules['Core/Utilities.js']], function (ColumnSeries, LineSeries, U) {
         /* *
          *
          *  (c) 2010-2020 Torstein Honsi
@@ -38,9 +38,10 @@
          *  !!!!!!! SOURCE GETS TRANSPILED BY TYPESCRIPT. EDIT TS FILE ONLY. !!!!!!!
          *
          * */
+        var columnProto = ColumnSeries.prototype;
+        var seriesProto = LineSeries.prototype;
         var defined = U.defined,
             stableSort = U.stableSort;
-        var seriesTypes = H.seriesTypes;
         /**
          * @private
          * @mixin onSeriesMixin
@@ -58,7 +59,7 @@
                  * @return {Highcharts.SeriesPlotBoxObject}
                  */
                 getPlotBox: function () {
-                    return H.Series.prototype.getPlotBox.call((this.options.onSeries &&
+                    return seriesProto.getPlotBox.call((this.options.onSeries &&
                         this.chart.get(this.options.onSeries)) || this);
             },
             /**
@@ -69,7 +70,7 @@
              * @return {void}
              */
             translate: function () {
-                seriesTypes.column.prototype.translate.apply(this);
+                columnProto.translate.apply(this);
                 var series = this,
                     options = series.options,
                     chart = series.chart,
@@ -186,7 +187,7 @@
 
         return onSeriesMixin;
     });
-    _registerModule(_modules, 'Series/WindbarbSeries.js', [_modules['Core/Animation/AnimationUtilities.js'], _modules['Core/Series/Series.js'], _modules['Core/Globals.js'], _modules['Mixins/OnSeries.js'], _modules['Core/Utilities.js']], function (A, BaseSeries, H, OnSeriesMixin, U) {
+    _registerModule(_modules, 'Series/WindbarbSeries.js', [_modules['Core/Animation/AnimationUtilities.js'], _modules['Core/Series/Series.js'], _modules['Core/Globals.js'], _modules['Series/Line/LineSeries.js'], _modules['Mixins/OnSeries.js'], _modules['Core/Utilities.js']], function (A, BaseSeries, H, LineSeries, OnSeriesMixin, U) {
         /* *
          *
          *  Wind barb series module
@@ -358,7 +359,7 @@
             trackerGroups: ['markerGroup'],
             init: function (chart, options) {
                 registerApproximation();
-                H.Series.prototype.init.call(this, chart, options);
+                LineSeries.prototype.init.call(this, chart, options);
             },
             // Get presentational attributes.
             pointAttribs: function (point, state) {

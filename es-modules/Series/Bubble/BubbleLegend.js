@@ -14,7 +14,10 @@ import Chart from '../../Core/Chart/Chart.js';
 import Color from '../../Core/Color/Color.js';
 var color = Color.parse;
 import H from '../../Core/Globals.js';
+var noop = H.noop;
 import Legend from '../../Core/Legend.js';
+import LineSeries from '../Line/LineSeries.js';
+import palette from '../../Core/Color/Palette.js';
 import U from '../../Core/Utilities.js';
 var addEvent = U.addEvent, arrayMax = U.arrayMax, arrayMin = U.arrayMin, isNumber = U.isNumber, merge = U.merge, objectEach = U.objectEach, pick = U.pick, setOptions = U.setOptions, stableSort = U.stableSort, wrap = U.wrap;
 /**
@@ -34,7 +37,6 @@ var addEvent = U.addEvent, arrayMax = U.arrayMax, arrayMin = U.arrayMin, isNumbe
 */
 ''; // detach doclets above
 import './BubbleSeries.js';
-var Series = H.Series, noop = H.noop;
 setOptions({
     legend: {
         /**
@@ -443,7 +445,7 @@ var BubbleLegend = /** @class */ (function () {
         });
         return merge(false, additionalLabelsStyle, {
             'font-size': options.labels.style.fontSize,
-            fill: pick(options.labels.style.color, '#000000'),
+            fill: pick(options.labels.style.color, palette.neutralColor100),
             'z-index': options.zIndex,
             align: rtl || labelsOnLeft ? 'right' : 'left'
         });
@@ -830,7 +832,7 @@ Legend.prototype.retranslateItems = function (lines) {
     });
 };
 // Toggle bubble legend depending on the visible status of bubble series.
-addEvent(Series, 'legendItemClick', function () {
+addEvent(LineSeries, 'legendItemClick', function () {
     var series = this, chart = series.chart, visible = series.visible, legend = series.chart.legend, status;
     if (legend && legend.bubbleLegend) {
         // Temporary correct 'visible' property

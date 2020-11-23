@@ -1,5 +1,5 @@
 /**
- * @license Highcharts Gantt JS v8.2.2 (2020-10-22)
+ * @license Highcharts Gantt JS v8.2.2 (2020-11-23)
  *
  * Tree Grid
  *
@@ -162,7 +162,7 @@
 
         return Tree;
     });
-    _registerModule(_modules, 'Core/Axis/TreeGridTick.js', [_modules['Core/Utilities.js']], function (U) {
+    _registerModule(_modules, 'Core/Axis/TreeGridTick.js', [_modules['Core/Color/Palette.js'], _modules['Core/Utilities.js']], function (palette, U) {
         /* *
          *
          *  (c) 2016 Highsoft AS
@@ -285,7 +285,7 @@
                     icon
                         .attr({
                         'stroke-width': 1,
-                        'fill': pick(params.color, '#666666')
+                        'fill': pick(params.color, palette.neutralColor60)
                     })
                         .css({
                         cursor: 'pointer',
@@ -743,7 +743,7 @@
 
         return result;
     });
-    _registerModule(_modules, 'Core/Axis/GridAxis.js', [_modules['Core/Axis/Axis.js'], _modules['Core/Globals.js'], _modules['Core/Options.js'], _modules['Core/Axis/Tick.js'], _modules['Core/Utilities.js']], function (Axis, H, O, Tick, U) {
+    _registerModule(_modules, 'Core/Axis/GridAxis.js', [_modules['Core/Axis/Axis.js'], _modules['Core/Globals.js'], _modules['Core/Axis/Tick.js'], _modules['Core/Utilities.js']], function (Axis, H, Tick, U) {
         /* *
          *
          *  (c) 2016 Highsoft AS
@@ -754,7 +754,6 @@
          *  !!!!!!! SOURCE GETS TRANSPILED BY TYPESCRIPT. EDIT TS FILE ONLY. !!!!!!!
          *
          * */
-        var dateFormat = O.dateFormat;
         var addEvent = U.addEvent,
             defined = U.defined,
             erase = U.erase,
@@ -1763,7 +1762,7 @@
 
         return GridAxis;
     });
-    _registerModule(_modules, 'Core/Axis/BrokenAxis.js', [_modules['Core/Axis/Axis.js'], _modules['Series/LineSeries.js'], _modules['Extensions/Stacking.js'], _modules['Core/Utilities.js']], function (Axis, LineSeries, StackItem, U) {
+    _registerModule(_modules, 'Core/Axis/BrokenAxis.js', [_modules['Core/Axis/Axis.js'], _modules['Series/Line/LineSeries.js'], _modules['Extensions/Stacking.js'], _modules['Core/Utilities.js']], function (Axis, LineSeries, StackItem, U) {
         /* *
          *
          *  (c) 2009-2020 Torstein Honsi
@@ -1982,8 +1981,8 @@
                         }
                         Axis.prototype.setExtremes.call(this, newMin, newMax, redraw, animation, eventArguments);
                     };
-                    axis.setAxisTranslation = function (saveOld) {
-                        Axis.prototype.setAxisTranslation.call(this, saveOld);
+                    axis.setAxisTranslation = function () {
+                        Axis.prototype.setAxisTranslation.call(this);
                         brokenAxis.unitLength = null;
                         if (brokenAxis.hasBreaks) {
                             var breaks = axis.options.breaks || [], 
@@ -2920,7 +2919,7 @@
                     fireEvent(axis, 'foundExtremes');
                     // setAxisTranslation modifies the min and max according to
                     // axis breaks.
-                    axis.setAxisTranslation(true);
+                    axis.setAxisTranslation();
                     axis.tickmarkOffset = 0.5;
                     axis.tickInterval = 1;
                     axis.tickPositions = axis.treeGrid.mapOfPosToGridNode ?

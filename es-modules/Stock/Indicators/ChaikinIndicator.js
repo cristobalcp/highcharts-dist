@@ -5,14 +5,12 @@
  *  !!!!!!! SOURCE GETS TRANSPILED BY TYPESCRIPT. EDIT TS FILE ONLY. !!!!!!!
  *
  * */
+'use strict';
 import BaseSeries from '../../Core/Series/Series.js';
-var seriesTypes = BaseSeries.seriesTypes;
+var _a = BaseSeries.seriesTypes, AD = _a.ad, EMA = _a.ema;
 import RequiredIndicatorMixin from '../../Mixins/IndicatorRequired.js';
 import U from '../../Core/Utilities.js';
 var correctFloat = U.correctFloat, error = U.error;
-import './ADIndicator.js';
-// im port './EMAIndicator.js';
-var EMA = seriesTypes.ema, AD = seriesTypes.ad;
 /**
  * The Chaikin series type.
  *

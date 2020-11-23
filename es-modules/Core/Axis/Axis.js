@@ -12,6 +12,9 @@ import A from '../Animation/AnimationUtilities.js';
 var animObject = A.animObject;
 import Color from '../Color/Color.js';
 import H from '../Globals.js';
+import palette from '../Color/Palette.js';
+import O from '../Options.js';
+var defaultOptions = O.defaultOptions;
 import Tick from './Tick.js';
 import U from '../Utilities.js';
 var addEvent = U.addEvent, arrayMax = U.arrayMax, arrayMin = U.arrayMin, clamp = U.clamp, correctFloat = U.correctFloat, defined = U.defined, destroyObjectProperties = U.destroyObjectProperties, error = U.error, extend = U.extend, fireEvent = U.fireEvent, format = U.format, getMagnitude = U.getMagnitude, isArray = U.isArray, isFunction = U.isFunction, isNumber = U.isNumber, isString = U.isString, merge = U.merge, normalizeTickInterval = U.normalizeTickInterval, objectEach = U.objectEach, pick = U.pick, relativeLength = U.relativeLength, removeEvent = U.removeEvent, splat = U.splat, syncTimeout = U.syncTimeout;
@@ -220,8 +223,7 @@ var addEvent = U.addEvent, arrayMax = U.arrayMax, arrayMin = U.arrayMin, clamp =
  *
  * @return {string}
  */
-import O from '../Options.js';
-var defaultOptions = O.defaultOptions;
+''; // detach doclets above
 var deg2rad = H.deg2rad;
 /**
  * Create a new axis object. Called internally when instanciating a new chart or
@@ -733,7 +735,7 @@ var Axis = /** @class */ (function () {
      */
     Axis.prototype.translate = function (val, backwards, cvsCoord, old, handleLog, pointPlacement) {
         var axis = this.linkedParent || this, // #1417
-        sign = 1, cvsOffset = 0, localA = old ? axis.oldTransA : axis.transA, localMin = old ? axis.oldMin : axis.min, returnValue = 0, minPixelPadding = axis.minPixelPadding, doPostTranslate = (axis.isOrdinal ||
+        sign = 1, cvsOffset = 0, localA = old && axis.old ? axis.old.transA : axis.transA, localMin = old && axis.old ? axis.old.min : axis.min, returnValue = 0, minPixelPadding = axis.minPixelPadding, doPostTranslate = (axis.isOrdinal ||
             axis.brokenAxis && axis.brokenAxis.hasBreaks ||
             (axis.logarithmic && handleLog)) && axis.lin2val;
         if (!localA) {
@@ -882,7 +884,7 @@ var Axis = /** @class */ (function () {
         return evt.path;
     };
     /**
-     * Internal function to et the tick positions of a linear axis to round
+     * Internal function to get the tick positions of a linear axis to round
      * values like whole tens or every five.
      *
      * @function Highcharts.Axis#getLinearTickPositions
@@ -1003,7 +1005,7 @@ var Axis = /** @class */ (function () {
      * @function Highcharts.Axis#adjustForMinRange
      */
     Axis.prototype.adjustForMinRange = function () {
-        var axis = this, options = axis.options, min = axis.min, max = axis.max, log = axis.logarithmic, zoomOffset, spaceAvailable, closestDataRange, i, distance, xData, loopLength, minArgs, maxArgs, minRange;
+        var axis = this, options = axis.options, min = axis.min, max = axis.max, log = axis.logarithmic, zoomOffset, spaceAvailable, closestDataRange = 0, i, distance, xData, loopLength, minArgs, maxArgs, minRange;
         // Set the automatic minimum range based on the closest point distance
         if (axis.isXAxis &&
             typeof axis.minRange === 'undefined' &&
@@ -1018,11 +1020,12 @@ var Axis = /** @class */ (function () {
                 axis.series.forEach(function (series) {
                     xData = series.xData;
                     loopLength = series.xIncrement ? 1 : xData.length - 1;
-                    for (i = loopLength; i > 0; i--) {
-                        distance = xData[i] - xData[i - 1];
-                        if (typeof closestDataRange === 'undefined' ||
-                            distance < closestDataRange) {
-                            closestDataRange = distance;
+                    if (xData.length > 1) {
+                        for (i = loopLength; i > 0; i--) {
+                            distance = xData[i] - xData[i - 1];
+                            if (!closestDataRange || distance < closestDataRange) {
+                                closestDataRange = distance;
+                            }
                         }
                     }
                 });
@@ -1187,12 +1190,9 @@ var Axis = /** @class */ (function () {
      * @private
      * @function Highcharts.Axis#setAxisTranslation
      *
-     * @param {boolean} [saveOld]
-     * TO-DO: parameter description
-     *
      * @fires Highcharts.Axis#event:afterSetAxisTranslation
      */
-    Axis.prototype.setAxisTranslation = function (saveOld) {
+    Axis.prototype.setAxisTranslation = function () {
         var axis = this, range = axis.max - axis.min, pointRange = axis.axisPointRange || 0, closestPointRange, minPointOffset = 0, pointRangePadding = 0, linkedParent = axis.linkedParent, ordinalCorrection, hasCategories = !!axis.categories, transA = axis.transA, isXAxis = axis.isXAxis;
         // Adjust translation for padding. Y axis with categories need to go
         // through the same (#1784).
@@ -1252,9 +1252,6 @@ var Axis = /** @class */ (function () {
             }
         }
         // Secondary values
-        if (saveOld) {
-            axis.oldTransA = transA;
-        }
         axis.translationSlope = axis.transA = transA =
             axis.staticScale ||
                 axis.len / ((range + pointRangePadding) || 1);
@@ -1409,6 +1406,19 @@ var Axis = /** @class */ (function () {
                     threshold;
             }
         }
+        // If min is bigger than highest, or if max less than lowest value, the
+        // chart should not render points. (#14417)
+        if (isNumber(axis.min) &&
+            isNumber(axis.max) &&
+            !this.chart.polar &&
+            (axis.min > axis.max)) {
+            if (defined(axis.options.min)) {
+                axis.max = axis.min;
+            }
+            else if (defined(axis.options.max)) {
+                axis.min = axis.max;
+            }
+        }
         // get tickInterval
         if (axis.min === axis.max ||
             typeof axis.min === 'undefined' ||
@@ -1441,11 +1451,12 @@ var Axis = /** @class */ (function () {
         // axes.
         if (isXAxis && !secondPass) {
             axis.series.forEach(function (series) {
-                series.processData(axis.min !== axis.oldMin || axis.max !== axis.oldMax);
+                var _a, _b;
+                series.processData(axis.min !== ((_a = axis.old) === null || _a === void 0 ? void 0 : _a.min) || axis.max !== ((_b = axis.old) === null || _b === void 0 ? void 0 : _b.max));
             });
         }
         // set the translation factor used in translate function
-        axis.setAxisTranslation(true);
+        axis.setAxisTranslation();
         // hook for ordinal axes and radial axes
         fireEvent(this, 'initialAxisTranslation');
         // In column-like charts, don't cramp in more ticks than there are
@@ -1771,6 +1782,7 @@ var Axis = /** @class */ (function () {
      * @fires Highcharts.Axis#event:afterSetScale
      */
     Axis.prototype.setScale = function () {
+        var _a, _b, _c, _d, _e;
         var axis = this, isDirtyAxisLength, isDirtyData = false, isXAxisDirty = false;
         axis.series.forEach(function (series) {
             var _a;
@@ -1779,20 +1791,17 @@ var Axis = /** @class */ (function () {
             // well:
             isXAxisDirty = isXAxisDirty || ((_a = series.xAxis) === null || _a === void 0 ? void 0 : _a.isDirty) || false;
         });
-        axis.oldMin = axis.min;
-        axis.oldMax = axis.max;
-        axis.oldAxisLength = axis.len;
         // set the new axisLength
         axis.setAxisSize();
-        isDirtyAxisLength = axis.len !== axis.oldAxisLength;
+        isDirtyAxisLength = axis.len !== ((_a = axis.old) === null || _a === void 0 ? void 0 : _a.len);
         // do we really need to go through all this?
         if (isDirtyAxisLength ||
             isDirtyData ||
             isXAxisDirty ||
             axis.isLinked ||
             axis.forceRedraw ||
-            axis.userMin !== axis.oldUserMin ||
-            axis.userMax !== axis.oldUserMax ||
+            axis.userMin !== ((_b = axis.old) === null || _b === void 0 ? void 0 : _b.userMin) ||
+            axis.userMax !== ((_c = axis.old) === null || _c === void 0 ? void 0 : _c.userMax) ||
             axis.alignToOthers()) {
             if (axis.stacking) {
                 axis.stacking.resetStacks();
@@ -1802,17 +1811,13 @@ var Axis = /** @class */ (function () {
             axis.getSeriesExtremes();
             // get fixed positions based on tickInterval
             axis.setTickInterval();
-            // record old values to decide whether a rescale is necessary later
-            // on (#540)
-            axis.oldUserMin = axis.userMin;
-            axis.oldUserMax = axis.userMax;
             // Mark as dirty if it is not already set to dirty and extremes have
             // changed. #595.
             if (!axis.isDirty) {
                 axis.isDirty =
                     isDirtyAxisLength ||
-                        axis.min !== axis.oldMin ||
-                        axis.max !== axis.oldMax;
+                        axis.min !== ((_d = axis.old) === null || _d === void 0 ? void 0 : _d.min) ||
+                        axis.max !== ((_e = axis.old) === null || _e === void 0 ? void 0 : _e.max);
             }
         }
         else if (axis.stacking) {
@@ -2098,7 +2103,7 @@ var Axis = /** @class */ (function () {
         var labelOptions = this.options.labels, horiz = this.horiz, tickInterval = this.tickInterval, newTickInterval = tickInterval, slotSize = this.len / (((this.categories ? 1 : 0) +
             this.max -
             this.min) /
-            tickInterval), rotation, rotationOption = labelOptions.rotation, labelMetrics = this.labelMetrics(), step, bestScore = Number.MAX_VALUE, autoRotation, range = this.max - this.min, 
+            tickInterval), rotation, rotationOption = labelOptions.rotation, labelMetrics = this.labelMetrics(), step, bestScore = Number.MAX_VALUE, autoRotation, range = Math.max(this.max - this.min, 0), 
         // Return the multiple of tickInterval that is needed to avoid
         // collision
         getStep = function (spaceNeeded) {
@@ -2416,6 +2421,7 @@ var Axis = /** @class */ (function () {
      * @fires Highcharts.Axis#event:afterGetOffset
      */
     Axis.prototype.getOffset = function () {
+        var _this = this;
         var axis = this, chart = axis.chart, renderer = chart.renderer, options = axis.options, tickPositions = axis.tickPositions, ticks = axis.ticks, horiz = axis.horiz, side = axis.side, invertedSide = chart.inverted &&
             !axis.isZAxis ? [1, 0, 3, 2][side] : side, hasData, showAxis, titleOffset = 0, titleOffsetOption, titleMargin = 0, axisTitleOptions = options.title, labelOptions = options.labels, labelOffset = 0, // reset
         labelOffsetPadded, axisOffset = chart.axisOffset, clipOffset = chart.clipOffset, clip, directionFactor = [-1, 1, 1, -1][side], className = options.className, axisParent = axis.axisParent, // Used in color axis
@@ -2427,21 +2433,15 @@ var Axis = /** @class */ (function () {
         axis.staggerLines = axis.horiz && labelOptions.staggerLines;
         // Create the axisGroup and gridGroup elements on first iteration
         if (!axis.axisGroup) {
-            axis.gridGroup = renderer.g('grid')
-                .attr({ zIndex: options.gridZIndex || 1 })
-                .addClass('highcharts-' + this.coll.toLowerCase() + '-grid ' +
+            var createGroup = function (name, suffix, zIndex) { return renderer.g(name)
+                .attr({ zIndex: zIndex })
+                .addClass("highcharts-" + _this.coll.toLowerCase() + suffix + " " +
+                (_this.isRadial ? "highcharts-radial-axis" + suffix + " " : '') +
                 (className || ''))
-                .add(axisParent);
-            axis.axisGroup = renderer.g('axis')
-                .attr({ zIndex: options.zIndex || 2 })
-                .addClass('highcharts-' + this.coll.toLowerCase() + ' ' +
-                (className || ''))
-                .add(axisParent);
-            axis.labelGroup = renderer.g('axis-labels')
-                .attr({ zIndex: labelOptions.zIndex || 7 })
-                .addClass('highcharts-' + axis.coll.toLowerCase() + '-labels ' +
-                (className || ''))
-                .add(axisParent);
+                .add(axisParent); };
+            axis.gridGroup = createGroup('grid', '-grid', options.gridZIndex || 1);
+            axis.axisGroup = createGroup('axis', '', options.zIndex || 2);
+            axis.labelGroup = createGroup('axis-labels', '-labels', labelOptions.zIndex || 7);
         }
         if (hasData || axis.isLinked) {
             // Generate ticks
@@ -2645,7 +2645,7 @@ var Axis = /** @class */ (function () {
      */
     Axis.prototype.renderMinorTick = function (pos) {
         var axis = this;
-        var slideInTicks = axis.chart.hasRendered && isNumber(axis.oldMin);
+        var slideInTicks = axis.chart.hasRendered && axis.old;
         var minorTicks = axis.minorTicks;
         if (!minorTicks[pos]) {
             minorTicks[pos] = new Tick(axis, pos, 'minor');
@@ -2673,7 +2673,7 @@ var Axis = /** @class */ (function () {
         var axis = this;
         var isLinked = axis.isLinked;
         var ticks = axis.ticks;
-        var slideInTicks = axis.chart.hasRendered && isNumber(axis.oldMin);
+        var slideInTicks = axis.chart.hasRendered && axis.old;
         // Linked axes need an extra check to find out if
         if (!isLinked ||
             (pos >= axis.min && pos <= axis.max) || ((_a = axis.grid) === null || _a === void 0 ? void 0 : _a.isColumn)) {
@@ -2827,6 +2827,15 @@ var Axis = /** @class */ (function () {
             axis.stacking.renderStackTotals();
         }
         // End stacked totals
+        // Record old scaling for updating/animation
+        axis.old = {
+            len: axis.len,
+            max: axis.max,
+            min: axis.min,
+            transA: axis.transA,
+            userMax: axis.userMax,
+            userMin: axis.userMin
+        };
         axis.isDirty = false;
         fireEvent(this, 'afterRender');
     };
@@ -2998,10 +3007,10 @@ var Axis = /** @class */ (function () {
                         stroke: options.color ||
                             (categorized ?
                                 Color
-                                    .parse('#ccd6eb')
+                                    .parse(palette.highlightColor20)
                                     .setOpacity(0.25)
                                     .get() :
-                                '#cccccc'),
+                                palette.neutralColor20),
                         'stroke-width': pick(options.width, 1)
                     }).css({
                         'pointer-events': 'none'
@@ -4000,7 +4009,7 @@ var Axis = /** @class */ (function () {
              */
             style: {
                 /** @internal */
-                color: '#666666',
+                color: palette.neutralColor60,
                 /** @internal */
                 cursor: 'default',
                 /** @internal */
@@ -4846,7 +4855,7 @@ var Axis = /** @class */ (function () {
              */
             style: {
                 /** @internal */
-                color: '#666666'
+                color: palette.neutralColor60
             }
         },
         /**
@@ -4967,7 +4976,7 @@ var Axis = /** @class */ (function () {
          * @type    {Highcharts.ColorType}
          * @default #f2f2f2
          */
-        minorGridLineColor: '#f2f2f2',
+        minorGridLineColor: palette.neutralColor5,
         /**
          * Width of the minor, secondary grid lines.
          *
@@ -4993,7 +5002,7 @@ var Axis = /** @class */ (function () {
          * @type    {Highcharts.ColorType}
          * @default #999999
          */
-        minorTickColor: '#999999',
+        minorTickColor: palette.neutralColor40,
         /**
          * The color of the line marking the axis itself.
          *
@@ -5014,7 +5023,7 @@ var Axis = /** @class */ (function () {
          * @type    {Highcharts.ColorType}
          * @default #ccd6eb
          */
-        lineColor: '#ccd6eb',
+        lineColor: palette.highlightColor20,
         /**
          * The width of the line marking the axis itself.
          *
@@ -5051,7 +5060,7 @@ var Axis = /** @class */ (function () {
          * @type    {Highcharts.ColorType}
          * @default #e6e6e6
          */
-        gridLineColor: '#e6e6e6',
+        gridLineColor: palette.neutralColor10,
         // gridLineDashStyle: 'solid',
         /**
          * The width of the grid lines extending the ticks across the plot area.
@@ -5109,7 +5118,7 @@ var Axis = /** @class */ (function () {
          * @type    {Highcharts.ColorType}
          * @default #ccd6eb
          */
-        tickColor: '#ccd6eb'
+        tickColor: palette.highlightColor20
         // tickWidth: 1
     };
     /**
@@ -5881,7 +5890,7 @@ var Axis = /** @class */ (function () {
              */
             style: {
                 /** @internal */
-                color: '#000000',
+                color: palette.neutralColor100,
                 /** @internal */
                 fontSize: '11px',
                 /** @internal */

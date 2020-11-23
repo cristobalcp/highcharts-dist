@@ -5,6 +5,7 @@
  *  !!!!!!! SOURCE GETS TRANSPILED BY TYPESCRIPT. EDIT TS FILE ONLY. !!!!!!!
  *
  * */
+'use strict';
 import BaseSeries from '../../Core/Series/Series.js';
 import H from '../../Core/Globals.js';
 var noop = H.noop;
@@ -63,6 +64,9 @@ BaseSeries.seriesType('ao', 'sma',
      * @since 7.0.0
      */
     lowerBarColor: '#F21313',
+    /**
+     * @type {number|null}
+     */
     threshold: 0,
     groupPadding: 0.2,
     pointPadding: 0.2,

@@ -1,5 +1,5 @@
 /**
- * @license Highcharts JS v8.2.2 (2020-10-22)
+ * @license Highcharts JS v8.2.2 (2020-11-23)
  *
  * Module for adding patterns and images as point fills.
  *
@@ -29,7 +29,7 @@
             obj[path] = fn.apply(null, args);
         }
     }
-    _registerModule(_modules, 'Extensions/PatternFill.js', [_modules['Core/Animation/AnimationUtilities.js'], _modules['Core/Chart/Chart.js'], _modules['Core/Globals.js'], _modules['Core/Series/Point.js'], _modules['Core/Renderer/SVG/SVGRenderer.js'], _modules['Core/Utilities.js']], function (A, Chart, H, Point, SVGRenderer, U) {
+    _registerModule(_modules, 'Extensions/PatternFill.js', [_modules['Core/Animation/AnimationUtilities.js'], _modules['Core/Chart/Chart.js'], _modules['Series/Line/LineSeries.js'], _modules['Core/Series/Point.js'], _modules['Core/Renderer/SVG/SVGRenderer.js'], _modules['Core/Utilities.js']], function (A, Chart, LineSeries, Point, SVGRenderer, U) {
         /* *
          *
          *  Module for using patterns or images as point fills.
@@ -416,7 +416,7 @@
             return pattern;
         };
         // Make sure we have a series color
-        wrap(H.Series.prototype, 'getColor', function (proceed) {
+        wrap(LineSeries.prototype, 'getColor', function (proceed) {
             var oldColor = this.options.color;
             // Temporarely remove color options to get defaults
             if (oldColor &&
@@ -436,7 +436,7 @@
             }
         });
         // Calculate pattern dimensions on points that have their own pattern.
-        addEvent(H.Series, 'render', function () {
+        addEvent(LineSeries, 'render', function () {
             var isResizing = this.chart.isResizing;
             if (this.isDirtyData || isResizing || !this.chart.hasRendered) {
                 (this.points || []).forEach(function (point) {

@@ -13,6 +13,7 @@ import Chart from '../Core/Chart/Chart.js';
 import H from '../Core/Globals.js';
 import O from '../Core/Options.js';
 var defaultOptions = O.defaultOptions;
+import palette from '../Core/Color/Palette.js';
 import SVGElement from '../Core/Renderer/SVG/SVGElement.js';
 import U from '../Core/Utilities.js';
 var addEvent = U.addEvent, createElement = U.createElement, css = U.css, defined = U.defined, destroyObjectProperties = U.destroyObjectProperties, discardElement = U.discardElement, extend = U.extend, fireEvent = U.fireEvent, isNumber = U.isNumber, merge = U.merge, objectEach = U.objectEach, pick = U.pick, pInt = U.pInt, splat = U.splat;
@@ -80,25 +81,31 @@ extend(defaultOptions, {
          * buttons: [{
          *     type: 'month',
          *     count: 1,
-         *     text: '1m'
+         *     text: '1m',
+         *     title: 'View 1 month'
          * }, {
          *     type: 'month',
          *     count: 3,
-         *     text: '3m'
+         *     text: '3m',
+         *     title: 'View 3 months'
          * }, {
          *     type: 'month',
          *     count: 6,
-         *     text: '6m'
+         *     text: '6m',
+         *     title: 'View 6 months'
          * }, {
          *     type: 'ytd',
-         *     text: 'YTD'
+         *     text: 'YTD',
+         *     title: 'View year to date'
          * }, {
          *     type: 'year',
          *     count: 1,
-         *     text: '1y'
+         *     text: '1y',
+         *     title: 'View 1 year'
          * }, {
          *     type: 'all',
-         *     text: 'All'
+         *     text: 'All',
+         *     title: 'View all'
          * }]
          * ```
          *
@@ -189,6 +196,13 @@ extend(defaultOptions, {
          *
          * @type      {string}
          * @apioption rangeSelector.buttons.text
+         */
+        /**
+         * Explanation for the button, shown as a tooltip on hover, and used by
+         * assistive technology.
+         *
+         * @type      {string}
+         * @apioption rangeSelector.buttons.title
          */
         /**
          * Defined the time span for the button. Can be one of `millisecond`,
@@ -468,7 +482,7 @@ extend(defaultOptions, {
          */
         labelStyle: {
             /** @ignore */
-            color: '#666666'
+            color: palette.neutralColor60
         }
     }
 });
@@ -838,15 +852,23 @@ var RangeSelector = /** @class */ (function () {
      * @return {void}
      */
     RangeSelector.prototype.setInputValue = function (name, inputTime) {
-        var options = this.chart.options.rangeSelector, time = this.chart.time, input = this[name + 'Input'];
-        if (defined(inputTime)) {
-            input.previousValue = input.HCTime;
-            input.HCTime = inputTime;
+        var options = this.chart.options.rangeSelector, time = this.chart.time, input = name === 'min' ? this.minInput : this.maxInput;
+        if (input) {
+            var hcTimeAttr = input.getAttribute('data-hc-time');
+            var updatedTime = defined(hcTimeAttr) ? Number(hcTimeAttr) : void 0;
+            if (defined(inputTime)) {
+                var previousTime = updatedTime;
+                if (previousTime) {
+                    input.setAttribute('data-hc-time-previous', previousTime);
+                }
+                input.setAttribute('data-hc-time', inputTime);
+                updatedTime = inputTime;
+            }
+            input.value = time.dateFormat(options.inputEditDateFormat || '%Y-%m-%d', updatedTime);
+            this[name + 'DateBox'].attr({
+                text: time.dateFormat(options.inputDateFormat || '%b %e, %Y', updatedTime)
+            });
         }
-        input.value = time.dateFormat(options.inputEditDateFormat || '%Y-%m-%d', input.HCTime);
-        this[name + 'DateBox'].attr({
-            text: time.dateFormat(options.inputDateFormat || '%b %e, %Y', input.HCTime)
-        });
     };
     /**
      * @private
@@ -882,15 +904,35 @@ var RangeSelector = /** @class */ (function () {
      * @private
      * @function Highcharts.RangeSelector#defaultInputDateParser
      */
-    RangeSelector.prototype.defaultInputDateParser = function (inputDate, useUTC) {
-        var date = new Date();
-        if (H.isSafari) {
-            return Date.parse(inputDate.split(' ').join('T'));
+    RangeSelector.prototype.defaultInputDateParser = function (inputDate, useUTC, time) {
+        var hasTimezone = function (str) {
+            return str.length > 6 &&
+                (str.lastIndexOf('-') === str.length - 6 ||
+                    str.lastIndexOf('+') === str.length - 6);
+        };
+        var input = inputDate.split('/').join('-').split(' ').join('T');
+        if (input.indexOf('T') === -1) {
+            input += 'T00:00';
         }
         if (useUTC) {
-            return Date.parse(inputDate + 'Z');
+            input += 'Z';
         }
-        return Date.parse(inputDate) - date.getTimezoneOffset() * 60 * 1000;
+        else if (H.isSafari && !hasTimezone(input)) {
+            var offset = new Date(input).getTimezoneOffset() / 60;
+            input += offset <= 0 ? "+" + H.pad(-offset) + ":00" : "-" + H.pad(offset) + ":00";
+        }
+        var date = Date.parse(input);
+        // If the value isn't parsed directly to a value by the
+        // browser's Date.parse method, like YYYY-MM-DD in IE8, try
+        // parsing it a different way
+        if (!isNumber(date)) {
+            var parts = inputDate.split('-');
+            date = Date.UTC(pInt(parts[0]), pInt(parts[1]) - 1, pInt(parts[2]));
+        }
+        if (time && useUTC) {
+            date += time.getTimezoneOffset(date) * 60 * 1000;
+        }
+        return date;
     };
     /**
      * Draw either the 'from' or the 'to' HTML input box of the range selector
@@ -901,7 +943,8 @@ var RangeSelector = /** @class */ (function () {
      * @return {void}
      */
     RangeSelector.prototype.drawInput = function (name) {
-        var rangeSelector = this, chart = rangeSelector.chart, chartStyle = chart.renderer.style || {}, renderer = chart.renderer, options = chart.options.rangeSelector, lang = defaultOptions.lang, div = rangeSelector.div, isMin = name === 'min', input, label, dateBox, inputGroup = this.inputGroup, defaultInputDateParser = this.defaultInputDateParser;
+        var _a = this, chart = _a.chart, defaultInputDateParser = _a.defaultInputDateParser, div = _a.div, inputGroup = _a.inputGroup;
+        var rangeSelector = this, chartStyle = chart.renderer.style || {}, renderer = chart.renderer, options = chart.options.rangeSelector, lang = defaultOptions.lang, isMin = name === 'min', input, label, dateBox;
         /**
          * @private
          */
@@ -909,44 +952,32 @@ var RangeSelector = /** @class */ (function () {
             var inputValue = input.value, value, chartAxis = chart.xAxis[0], dataAxis = chart.scroller && chart.scroller.xAxis ?
                 chart.scroller.xAxis :
                 chartAxis, dataMin = dataAxis.dataMin, dataMax = dataAxis.dataMax;
-            value = (options.inputDateParser || defaultInputDateParser)(inputValue, chart.time.useUTC);
-            if (value !== input.previousValue) {
-                input.previousValue = value;
-                // If the value isn't parsed directly to a value by the
-                // browser's Date.parse method, like YYYY-MM-DD in IE, try
-                // parsing it a different way
-                if (!isNumber(value)) {
-                    value = inputValue.split('-');
-                    value = Date.UTC(pInt(value[0]), pInt(value[1]) - 1, pInt(value[2]));
+            var maxInput = rangeSelector.maxInput, minInput = rangeSelector.minInput;
+            value = (options.inputDateParser || defaultInputDateParser)(inputValue, chart.time.useUTC, chart.time);
+            if (value !== Number(input.getAttribute('data-hc-time-previous')) &&
+                isNumber(value)) {
+                input.setAttribute('data-hc-time-previous', value);
+                // Validate the extremes. If it goes beyound the data min or
+                // max, use the actual data extreme (#2438).
+                if (isMin && maxInput && isNumber(dataMin)) {
+                    if (value > Number(maxInput.getAttribute('data-hc-time'))) {
+                        value = void 0;
+                    }
+                    else if (value < dataMin) {
+                        value = dataMin;
+                    }
                 }
-                if (isNumber(value)) {
-                    // Correct for timezone offset (#433)
-                    if (!chart.time.useUTC) {
-                        value =
-                            value + new Date().getTimezoneOffset() * 60 * 1000;
+                else if (minInput && isNumber(dataMax)) {
+                    if (value < Number(minInput.getAttribute('data-hc-time'))) {
+                        value = void 0;
                     }
-                    // Validate the extremes. If it goes beyound the data min or
-                    // max, use the actual data extreme (#2438).
-                    if (isMin) {
-                        if (value > rangeSelector.maxInput.HCTime) {
-                            value = void 0;
-                        }
-                        else if (value < dataMin) {
-                            value = dataMin;
-                        }
+                    else if (value > dataMax) {
+                        value = dataMax;
                     }
-                    else {
-                        if (value < rangeSelector.minInput.HCTime) {
-                            value = void 0;
-                        }
-                        else if (value > dataMax) {
-                            value = dataMax;
-                        }
-                    }
-                    // Set the extremes
-                    if (typeof value !== 'undefined') { // @todo typof undefined
-                        chartAxis.setExtremes(isMin ? value : chartAxis.min, isMin ? chartAxis.max : value, void 0, void 0, { trigger: 'rangeSelectorInput' });
-                    }
+                }
+                // Set the extremes
+                if (typeof value !== 'undefined') { // @todo typof undefined
+                    chartAxis.setExtremes(isMin ? value : chartAxis.min, isMin ? chartAxis.max : value, void 0, void 0, { trigger: 'rangeSelectorInput' });
                 }
             }
         }
@@ -978,7 +1009,7 @@ var RangeSelector = /** @class */ (function () {
         });
         if (!chart.styledMode) {
             dateBox.attr({
-                stroke: options.inputBoxBorderColor || '#cccccc',
+                stroke: options.inputBoxBorderColor || palette.neutralColor20,
                 'stroke-width': 1
             });
         }
@@ -997,7 +1028,7 @@ var RangeSelector = /** @class */ (function () {
             // Styles
             label.css(merge(chartStyle, options.labelStyle));
             dateBox.css(merge({
-                color: '#333333'
+                color: palette.neutralColor80
             }, chartStyle, options.inputStyle));
             css(input, extend({
                 position: 'absolute',
@@ -1140,6 +1171,9 @@ var RangeSelector = /** @class */ (function () {
                     'text-align': 'center'
                 })
                     .add(buttonGroup);
+                if (rangeOptions.title) {
+                    buttons[i].attr('title', rangeOptions.title);
+                }
             });
             // first create a wrapper outside the container in order to make
             // the inputs work and make export correct
@@ -1317,10 +1351,11 @@ var RangeSelector = /** @class */ (function () {
         }
         rangeSelector.group.translate(options.x, options.y + Math.floor(translateY));
         // translate HTML inputs
-        if (inputEnabled !== false) {
-            rangeSelector.minInput.style.marginTop =
+        var minInput = rangeSelector.minInput, maxInput = rangeSelector.maxInput;
+        if (inputEnabled !== false && minInput && maxInput) {
+            minInput.style.marginTop =
                 rangeSelector.group.translateY + 'px';
-            rangeSelector.maxInput.style.marginTop =
+            maxInput.style.marginTop =
                 rangeSelector.group.translateY + 'px';
         }
         rangeSelector.rendered = true;
@@ -1424,25 +1459,31 @@ var RangeSelector = /** @class */ (function () {
 RangeSelector.prototype.defaultButtons = [{
         type: 'month',
         count: 1,
-        text: '1m'
+        text: '1m',
+        title: 'View 1 month'
     }, {
         type: 'month',
         count: 3,
-        text: '3m'
+        text: '3m',
+        title: 'View 3 months'
     }, {
         type: 'month',
         count: 6,
-        text: '6m'
+        text: '6m',
+        title: 'View 6 months'
     }, {
         type: 'ytd',
-        text: 'YTD'
+        text: 'YTD',
+        title: 'View year to date'
     }, {
         type: 'year',
         count: 1,
-        text: '1y'
+        text: '1y',
+        title: 'View 1 year'
     }, {
         type: 'all',
-        text: 'All'
+        text: 'All',
+        title: 'View all'
     }];
 /**
  * Get the axis min value based on the range option and the current max. For

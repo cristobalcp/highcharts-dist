@@ -1,5 +1,5 @@
 /**
- * @license Highstock JS v8.2.2 (2020-10-22)
+ * @license Highstock JS v8.2.2 (2020-11-23)
  *
  * Advanced Highstock tools
  *
@@ -29,7 +29,7 @@
             obj[path] = fn.apply(null, args);
         }
     }
-    _registerModule(_modules, 'Extensions/PriceIndication.js', [_modules['Core/Globals.js'], _modules['Core/Utilities.js']], function (H, U) {
+    _registerModule(_modules, 'Extensions/PriceIndication.js', [_modules['Series/Line/LineSeries.js'], _modules['Core/Utilities.js']], function (LineSeries, U) {
         /**
          * (c) 2009-2020 Sebastian Bochann
          *
@@ -103,7 +103,7 @@
          *
          */
         /* eslint-disable no-invalid-this */
-        addEvent(H.Series, 'afterRender', function () {
+        addEvent(LineSeries, 'afterRender', function () {
             var serie = this,
                 seriesOptions = serie.options,
                 pointRange = seriesOptions.pointRange,
@@ -166,7 +166,7 @@
                     serie.crossLabel = yAxis.crossLabel;
                 }
                 // Restore crosshair:
-                yAxis.crosshair = origOptions;
+                yAxis.crosshair = yAxis.options.crosshair = origOptions;
                 yAxis.cross = origGraphic;
                 yAxis.crossLabel = origLabel;
             }

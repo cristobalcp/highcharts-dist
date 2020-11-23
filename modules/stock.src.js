@@ -1,5 +1,5 @@
 /**
- * @license Highstock JS v8.2.2 (2020-10-22)
+ * @license Highstock JS v8.2.2 (2020-11-23)
  *
  * Highstock as a plugin for Highcharts
  *
@@ -389,7 +389,7 @@
 
         return ScrollbarAxis;
     });
-    _registerModule(_modules, 'Core/Scrollbar.js', [_modules['Core/Axis/Axis.js'], _modules['Core/Globals.js'], _modules['Core/Axis/ScrollbarAxis.js'], _modules['Core/Utilities.js'], _modules['Core/Options.js']], function (Axis, H, ScrollbarAxis, U, O) {
+    _registerModule(_modules, 'Core/Scrollbar.js', [_modules['Core/Axis/Axis.js'], _modules['Core/Globals.js'], _modules['Core/Color/Palette.js'], _modules['Core/Axis/ScrollbarAxis.js'], _modules['Core/Utilities.js'], _modules['Core/Options.js']], function (Axis, H, palette, ScrollbarAxis, U, O) {
         /* *
          *
          *  (c) 2010-2020 Torstein Honsi
@@ -1153,7 +1153,7 @@
                  *
                  * @type {Highcharts.ColorString|Highcharts.GradientColorObject|Highcharts.PatternObject}
                  */
-                barBackgroundColor: '#cccccc',
+                barBackgroundColor: palette.neutralColor20,
                 /**
                  * The width of the bar's border.
                  *
@@ -1166,7 +1166,7 @@
                  *
                  * @type {Highcharts.ColorString|Highcharts.GradientColorObject|Highcharts.PatternObject}
                  */
-                barBorderColor: '#cccccc',
+                barBorderColor: palette.neutralColor20,
                 /**
                  * The color of the small arrow inside the scrollbar buttons.
                  *
@@ -1175,7 +1175,7 @@
                  *
                  * @type {Highcharts.ColorString|Highcharts.GradientColorObject|Highcharts.PatternObject}
                  */
-                buttonArrowColor: '#333333',
+                buttonArrowColor: palette.neutralColor80,
                 /**
                  * The color of scrollbar buttons.
                  *
@@ -1184,7 +1184,7 @@
                  *
                  * @type {Highcharts.ColorString|Highcharts.GradientColorObject|Highcharts.PatternObject}
                  */
-                buttonBackgroundColor: '#e6e6e6',
+                buttonBackgroundColor: palette.neutralColor10,
                 /**
                  * The color of the border of the scrollbar buttons.
                  *
@@ -1193,7 +1193,7 @@
                  *
                  * @type {Highcharts.ColorString|Highcharts.GradientColorObject|Highcharts.PatternObject}
                  */
-                buttonBorderColor: '#cccccc',
+                buttonBorderColor: palette.neutralColor20,
                 /**
                  * The border width of the scrollbar buttons.
                  *
@@ -1206,7 +1206,7 @@
                  *
                  * @type {Highcharts.ColorString|Highcharts.GradientColorObject|Highcharts.PatternObject}
                  */
-                rifleColor: '#333333',
+                rifleColor: palette.neutralColor80,
                 /**
                  * The color of the track background.
                  *
@@ -1215,7 +1215,7 @@
                  *
                  * @type {Highcharts.ColorString|Highcharts.GradientColorObject|Highcharts.PatternObject}
                  */
-                trackBackgroundColor: '#f2f2f2',
+                trackBackgroundColor: palette.neutralColor5,
                 /**
                  * The color of the border of the scrollbar track.
                  *
@@ -1224,7 +1224,7 @@
                  *
                  * @type {Highcharts.ColorString|Highcharts.GradientColorObject|Highcharts.PatternObject}
                  */
-                trackBorderColor: '#f2f2f2',
+                trackBorderColor: palette.neutralColor5,
                 /**
                  * The corner radius of the border of the scrollbar track.
                  *
@@ -1253,7 +1253,7 @@
 
         return H.Scrollbar;
     });
-    _registerModule(_modules, 'Core/Navigator.js', [_modules['Core/Axis/Axis.js'], _modules['Core/Series/Series.js'], _modules['Core/Chart/Chart.js'], _modules['Core/Color/Color.js'], _modules['Core/Globals.js'], _modules['Series/LineSeries.js'], _modules['Core/Axis/NavigatorAxis.js'], _modules['Core/Options.js'], _modules['Core/Scrollbar.js'], _modules['Core/Utilities.js']], function (Axis, BaseSeries, Chart, Color, H, LineSeries, NavigatorAxis, O, Scrollbar, U) {
+    _registerModule(_modules, 'Core/Navigator.js', [_modules['Core/Axis/Axis.js'], _modules['Core/Series/Series.js'], _modules['Core/Chart/Chart.js'], _modules['Core/Color/Color.js'], _modules['Core/Globals.js'], _modules['Series/Line/LineSeries.js'], _modules['Core/Axis/NavigatorAxis.js'], _modules['Core/Options.js'], _modules['Core/Color/Palette.js'], _modules['Core/Scrollbar.js'], _modules['Core/Utilities.js']], function (Axis, BaseSeries, Chart, Color, H, LineSeries, NavigatorAxis, O, palette, Scrollbar, U) {
         /* *
          *
          *  (c) 2010-2020 Torstein Honsi
@@ -1461,13 +1461,13 @@
                      *
                      * @type    {Highcharts.ColorString|Highcharts.GradientColorObject|Highcharts.PatternObject}
                      */
-                    backgroundColor: '#f2f2f2',
+                    backgroundColor: palette.neutralColor5,
                     /**
                      * The stroke for the handle border and the stripes inside.
                      *
                      * @type    {Highcharts.ColorString|Highcharts.GradientColorObject|Highcharts.PatternObject}
                      */
-                    borderColor: '#999999'
+                    borderColor: palette.neutralColor40
                 },
                 /**
                  * The color of the mask covering the areas of the navigator series
@@ -1484,7 +1484,7 @@
                  * @type    {Highcharts.ColorString|Highcharts.GradientColorObject|Highcharts.PatternObject}
                  * @default rgba(102,133,194,0.3)
                  */
-                maskFill: color('#6685c2').setOpacity(0.3).get(),
+                maskFill: color(palette.highlightColor60).setOpacity(0.3).get(),
                 /**
                  * The color of the line marking the currently zoomed area in the
                  * navigator.
@@ -1495,7 +1495,7 @@
                  * @type    {Highcharts.ColorString|Highcharts.GradientColorObject|Highcharts.PatternObject}
                  * @default #cccccc
                  */
-                outlineColor: '#cccccc',
+                outlineColor: palette.neutralColor20,
                 /**
                  * The width of the line marking the currently zoomed area in the
                  * navigator.
@@ -1683,7 +1683,7 @@
                     className: 'highcharts-navigator-xaxis',
                     tickLength: 0,
                     lineWidth: 0,
-                    gridLineColor: '#e6e6e6',
+                    gridLineColor: palette.neutralColor10,
                     gridLineWidth: 1,
                     tickPixelInterval: 200,
                     labels: {
@@ -1693,7 +1693,7 @@
                          */
                         style: {
                             /** @ignore */
-                            color: '#999999'
+                            color: palette.neutralColor40
                         },
                         x: 3,
                         y: -4
@@ -3322,7 +3322,7 @@
 
         return H.Navigator;
     });
-    _registerModule(_modules, 'Core/Axis/OrdinalAxis.js', [_modules['Core/Axis/Axis.js'], _modules['Core/Globals.js'], _modules['Core/Series/CartesianSeries.js'], _modules['Core/Utilities.js'], _modules['Core/Chart/Chart.js']], function (Axis, H, CartesianSeries, U, Chart) {
+    _registerModule(_modules, 'Core/Axis/OrdinalAxis.js', [_modules['Core/Axis/Axis.js'], _modules['Core/Globals.js'], _modules['Series/Line/LineSeries.js'], _modules['Core/Utilities.js'], _modules['Core/Chart/Chart.js']], function (Axis, H, LineSeries, U, Chart) {
         /* *
          *
          *  (c) 2010-2020 Torstein Honsi
@@ -3335,6 +3335,7 @@
         var addEvent = U.addEvent,
             css = U.css,
             defined = U.defined,
+            error = U.error,
             pick = U.pick,
             timeUnits = U.timeUnits;
         // Has a dependency on Navigator due to the use of Axis.toFixedRange
@@ -3568,7 +3569,7 @@
                                 xData: series.xData.slice(),
                                 chart: chart,
                                 destroyGroupedData: H.noop,
-                                getProcessedData: CartesianSeries.prototype.getProcessedData
+                                getProcessedData: LineSeries.prototype.getProcessedData
                             };
                             fakeSeries.xData = fakeSeries.xData.concat(ordinal.getOverscrollPositions());
                             fakeSeries.options = {
@@ -3810,29 +3811,34 @@
                     }
                     // Get the grouping info from the last of the segments. The info is
                     // the same for all segments.
-                    info = segmentPositions.info;
-                    // Optionally identify ticks with higher rank, for example when the
-                    // ticks have crossed midnight.
-                    if (findHigherRanks && info.unitRange <= timeUnits.hour) {
-                        end = groupPositions.length - 1;
-                        // Compare points two by two
-                        for (start = 1; start < end; start++) {
-                            if (time.dateFormat('%d', groupPositions[start]) !==
-                                time.dateFormat('%d', groupPositions[start - 1])) {
-                                higherRanks[groupPositions[start]] = 'day';
-                                hasCrossedHigherRank = true;
+                    if (segmentPositions) {
+                        info = segmentPositions.info;
+                        // Optionally identify ticks with higher rank, for example
+                        // when the ticks have crossed midnight.
+                        if (findHigherRanks && info.unitRange <= timeUnits.hour) {
+                            end = groupPositions.length - 1;
+                            // Compare points two by two
+                            for (start = 1; start < end; start++) {
+                                if (time.dateFormat('%d', groupPositions[start]) !==
+                                    time.dateFormat('%d', groupPositions[start - 1])) {
+                                    higherRanks[groupPositions[start]] = 'day';
+                                    hasCrossedHigherRank = true;
+                                }
                             }
+                            // If the complete array has crossed midnight, we want
+                            // to mark the first positions also as higher rank
+                            if (hasCrossedHigherRank) {
+                                higherRanks[groupPositions[0]] = 'day';
+                            }
+                            info.higherRanks = higherRanks;
                         }
-                        // If the complete array has crossed midnight, we want to mark
-                        // the first positions also as higher rank
-                        if (hasCrossedHigherRank) {
-                            higherRanks[groupPositions[0]] = 'day';
-                        }
-                        info.higherRanks = higherRanks;
+                        // Save the info
+                        info.segmentStarts = segmentStarts;
+                        groupPositions.info = info;
                     }
-                    // Save the info
-                    info.segmentStarts = segmentStarts;
-                    groupPositions.info = info;
+                    else {
+                        error(12, false, this.chart);
+                    }
                     // Don't show ticks within a gap in the ordinal axis, where the
                     // space between two points is greater than a portion of the tick
                     // pixel interval
@@ -4188,11 +4194,11 @@
             }
             OrdinalAxis.compose = compose;
         })(OrdinalAxis || (OrdinalAxis = {}));
-        OrdinalAxis.compose(Axis, Chart, CartesianSeries); // @todo move to StockChart, remove from master
+        OrdinalAxis.compose(Axis, Chart, LineSeries); // @todo move to StockChart, remove from master
 
         return OrdinalAxis;
     });
-    _registerModule(_modules, 'Core/Axis/BrokenAxis.js', [_modules['Core/Axis/Axis.js'], _modules['Series/LineSeries.js'], _modules['Extensions/Stacking.js'], _modules['Core/Utilities.js']], function (Axis, LineSeries, StackItem, U) {
+    _registerModule(_modules, 'Core/Axis/BrokenAxis.js', [_modules['Core/Axis/Axis.js'], _modules['Series/Line/LineSeries.js'], _modules['Extensions/Stacking.js'], _modules['Core/Utilities.js']], function (Axis, LineSeries, StackItem, U) {
         /* *
          *
          *  (c) 2009-2020 Torstein Honsi
@@ -4411,8 +4417,8 @@
                         }
                         Axis.prototype.setExtremes.call(this, newMin, newMax, redraw, animation, eventArguments);
                     };
-                    axis.setAxisTranslation = function (saveOld) {
-                        Axis.prototype.setAxisTranslation.call(this, saveOld);
+                    axis.setAxisTranslation = function () {
+                        Axis.prototype.setAxisTranslation.call(this);
                         brokenAxis.unitLength = null;
                         if (brokenAxis.hasBreaks) {
                             var breaks = axis.options.breaks || [], 
@@ -4775,7 +4781,7 @@
 
 
     });
-    _registerModule(_modules, 'Extensions/DataGrouping.js', [_modules['Core/Axis/Axis.js'], _modules['Core/Axis/DateTimeAxis.js'], _modules['Core/Globals.js'], _modules['Core/Options.js'], _modules['Core/Series/Point.js'], _modules['Core/Tooltip.js'], _modules['Core/Utilities.js']], function (Axis, DateTimeAxis, H, O, Point, Tooltip, U) {
+    _registerModule(_modules, 'Extensions/DataGrouping.js', [_modules['Core/Axis/Axis.js'], _modules['Core/Axis/DateTimeAxis.js'], _modules['Core/Globals.js'], _modules['Series/Line/LineSeries.js'], _modules['Core/Options.js'], _modules['Core/Series/Point.js'], _modules['Core/Tooltip.js'], _modules['Core/Utilities.js']], function (Axis, DateTimeAxis, H, LineSeries, O, Point, Tooltip, U) {
         /* *
          *
          *  (c) 2010-2020 Torstein Honsi
@@ -4785,6 +4791,18 @@
          *  !!!!!!! SOURCE GETS TRANSPILED BY TYPESCRIPT. EDIT TS FILE ONLY. !!!!!!!
          *
          * */
+        var seriesProto = LineSeries.prototype;
+        var addEvent = U.addEvent,
+            arrayMax = U.arrayMax,
+            arrayMin = U.arrayMin,
+            correctFloat = U.correctFloat,
+            defined = U.defined,
+            error = U.error,
+            extend = U.extend,
+            format = U.format,
+            isNumber = U.isNumber,
+            merge = U.merge,
+            pick = U.pick;
         /**
          * @typedef {"average"|"averages"|"open"|"high"|"low"|"close"|"sum"} Highcharts.DataGroupingApproximationValue
          */
@@ -4801,19 +4819,6 @@
         * @type {number}
         */
         ''; // detach doclets above
-        var defaultOptions = O.defaultOptions;
-        var addEvent = U.addEvent,
-            arrayMax = U.arrayMax,
-            arrayMin = U.arrayMin,
-            correctFloat = U.correctFloat,
-            defined = U.defined,
-            error = U.error,
-            extend = U.extend,
-            format = U.format,
-            isNumber = U.isNumber,
-            merge = U.merge,
-            pick = U.pick;
-        var Series = H.Series;
         /* ************************************************************************** *
          *  Start data grouping module                                                *
          * ************************************************************************** */
@@ -5066,7 +5071,7 @@
             };
         // -----------------------------------------------------------------------------
         // The following code applies to implementation of data grouping on a Series
-        var seriesProto = Series.prototype, baseProcessData = seriesProto.processData, baseGeneratePoints = seriesProto.generatePoints, 
+        var baseProcessData = seriesProto.processData, baseGeneratePoints = seriesProto.generatePoints, 
             /** @ignore */
             commonOptions = {
                 // enabled: null, // (true for stock charts, false for basic),
@@ -5441,10 +5446,10 @@
             }
         });
         // Destroy grouped data on series destroy
-        addEvent(Series, 'destroy', seriesProto.destroyGroupedData);
+        addEvent(LineSeries, 'destroy', seriesProto.destroyGroupedData);
         // Handle default options for data grouping. This must be set at runtime because
         // some series types are defined after this.
-        addEvent(Series, 'afterSetOptions', function (e) {
+        addEvent(LineSeries, 'afterSetOptions', function (e) {
             var options = e.options,
                 type = this.type,
                 plotOptions = this.chart.options.plotOptions,
@@ -5763,7 +5768,7 @@
 
         return dataGrouping;
     });
-    _registerModule(_modules, 'Series/OHLCSeries.js', [_modules['Core/Series/Series.js'], _modules['Core/Series/Point.js']], function (BaseSeries, Point) {
+    _registerModule(_modules, 'Series/OHLC/OHLCPoint.js', [_modules['Core/Series/Series.js']], function (BaseSeries) {
         /* *
          *
          *  (c) 2010-2020 Torstein Honsi
@@ -5773,7 +5778,111 @@
          *  !!!!!!! SOURCE GETS TRANSPILED BY TYPESCRIPT. EDIT TS FILE ONLY. !!!!!!!
          *
          * */
-        var seriesTypes = BaseSeries.seriesTypes;
+        var __extends = (this && this.__extends) || (function () {
+                var extendStatics = function (d,
+            b) {
+                    extendStatics = Object.setPrototypeOf ||
+                        ({ __proto__: [] } instanceof Array && function (d,
+            b) { d.__proto__ = b; }) ||
+                        function (d,
+            b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+                return extendStatics(d, b);
+            };
+            return function (d, b) {
+                extendStatics(d, b);
+                function __() { this.constructor = d; }
+                d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+            };
+        })();
+        var ColumnSeries = BaseSeries.seriesTypes.column;
+        /* *
+         *
+         *  Class
+         *
+         * */
+        var OHLCPoint = /** @class */ (function (_super) {
+                __extends(OHLCPoint, _super);
+            function OHLCPoint() {
+                /* *
+                 *
+                 *  Properties
+                 *
+                 * */
+                var _this = _super !== null && _super.apply(this,
+                    arguments) || this;
+                _this.close = void 0;
+                _this.high = void 0;
+                _this.low = void 0;
+                _this.open = void 0;
+                _this.options = void 0;
+                _this.plotClose = void 0;
+                _this.plotOpen = void 0;
+                _this.series = void 0;
+                return _this;
+                /* eslint-enable valid-jsdoc */
+            }
+            /* *
+             *
+             *  Functions
+             *
+             * */
+            /* eslint-disable valid-jsdoc */
+            /**
+             * Extend the parent method by adding up or down to the class name.
+             * @private
+             * @function Highcharts.seriesTypes.ohlc#getClassName
+             * @return {string}
+             */
+            OHLCPoint.prototype.getClassName = function () {
+                return _super.prototype.getClassName.call(this) +
+                    (this.open < this.close ?
+                        ' highcharts-point-up' :
+                        ' highcharts-point-down');
+            };
+            return OHLCPoint;
+        }(ColumnSeries.prototype.pointClass));
+        /* *
+         *
+         *  Default Export
+         *
+         * */
+
+        return OHLCPoint;
+    });
+    _registerModule(_modules, 'Series/OHLC/OHLCSeries.js', [_modules['Core/Series/Series.js'], _modules['Series/OHLC/OHLCPoint.js'], _modules['Core/Utilities.js']], function (BaseSeries, OHLCPoint, U) {
+        /* *
+         *
+         *  (c) 2010-2020 Torstein Honsi
+         *
+         *  License: www.highcharts.com/license
+         *
+         *  !!!!!!! SOURCE GETS TRANSPILED BY TYPESCRIPT. EDIT TS FILE ONLY. !!!!!!!
+         *
+         * */
+        var __extends = (this && this.__extends) || (function () {
+                var extendStatics = function (d,
+            b) {
+                    extendStatics = Object.setPrototypeOf ||
+                        ({ __proto__: [] } instanceof Array && function (d,
+            b) { d.__proto__ = b; }) ||
+                        function (d,
+            b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+                return extendStatics(d, b);
+            };
+            return function (d, b) {
+                extendStatics(d, b);
+                function __() { this.constructor = d; }
+                d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+            };
+        })();
+        var ColumnSeries = BaseSeries.seriesTypes.column;
+        var extend = U.extend,
+            merge = U.merge;
+        /* *
+         *
+         *  Class
+         *
+         * */
         /**
          * The ohlc series type.
          *
@@ -5783,192 +5892,39 @@
          *
          * @augments Highcharts.Series
          */
-        BaseSeries.seriesType('ohlc', 'column'
-        /**
-         * An OHLC chart is a style of financial chart used to describe price
-         * movements over time. It displays open, high, low and close values per
-         * data point.
-         *
-         * @sample stock/demo/ohlc/
-         *         OHLC chart
-         *
-         * @extends      plotOptions.column
-         * @excluding    borderColor, borderRadius, borderWidth, crisp, stacking,
-         *               stack
-         * @product      highstock
-         * @optionparent plotOptions.ohlc
-         */
-        , {
-            /**
-             * The approximate pixel width of each group. If for example a series
-             * with 30 points is displayed over a 600 pixel wide plot area, no
-             * grouping is performed. If however the series contains so many points
-             * that the spacing is less than the groupPixelWidth, Highcharts will
-             * try to group it into appropriate groups so that each is more or less
-             * two pixels wide. Defaults to `5`.
+        var OHLCSeries = /** @class */ (function (_super) {
+                __extends(OHLCSeries, _super);
+            function OHLCSeries() {
+                /* *
+                 *
+                 *  Static Properties
+                 *
+                 * */
+                var _this = _super !== null && _super.apply(this,
+                    arguments) || this;
+                /* *
+                 *
+                 *  Properties
+                 *
+                 * */
+                _this.data = void 0;
+                _this.options = void 0;
+                _this.points = void 0;
+                _this.yData = void 0;
+                return _this;
+                /* eslint-enable valid-jsdoc */
+            }
+            /* *
              *
-             * @type      {number}
-             * @default   5
-             * @product   highstock
-             * @apioption plotOptions.ohlc.dataGrouping.groupPixelWidth
-             */
-            /**
-             * The pixel width of the line/border. Defaults to `1`.
+             *  Functions
              *
-             * @sample {highstock} stock/plotoptions/ohlc-linewidth/
-             *         A greater line width
-             *
-             * @type    {number}
-             * @default 1
-             * @product highstock
-             *
-             * @private
-             */
-            lineWidth: 1,
-            tooltip: {
-                pointFormat: '<span style="color:{point.color}">\u25CF</span> ' +
-                    '<b> {series.name}</b><br/>' +
-                    'Open: {point.open}<br/>' +
-                    'High: {point.high}<br/>' +
-                    'Low: {point.low}<br/>' +
-                    'Close: {point.close}<br/>'
-            },
-            threshold: null,
-            states: {
-                /**
-                 * @extends plotOptions.column.states.hover
-                 * @product highstock
-                 */
-                hover: {
-                    /**
-                     * The pixel width of the line representing the OHLC point.
-                     *
-                     * @type    {number}
-                     * @default 3
-                     * @product highstock
-                     */
-                    lineWidth: 3
-                }
-            },
-            /**
-             * Determines which one of `open`, `high`, `low`, `close` values should
-             * be represented as `point.y`, which is later used to set dataLabel
-             * position and [compare](#plotOptions.series.compare).
-             *
-             * @sample {highstock} stock/plotoptions/ohlc-pointvalkey/
-             *         Possible values
-             *
-             * @type       {string}
-             * @default    close
-             * @validvalue ["open", "high", "low", "close"]
-             * @product    highstock
-             * @apioption  plotOptions.ohlc.pointValKey
-             */
-            /**
-             * @default   close
-             * @apioption plotOptions.ohlc.colorKey
-             */
-            /**
-             * Line color for up points.
-             *
-             * @type      {Highcharts.ColorString|Highcharts.GradientColorObject|Highcharts.PatternObject}
-             * @product   highstock
-             * @apioption plotOptions.ohlc.upColor
-             */
-            stickyTracking: true
-        }, 
-        /**
-         * @lends Highcharts.seriesTypes.ohlc
-         */
-        {
+             * */
             /* eslint-disable valid-jsdoc */
-            directTouch: false,
-            pointArrayMap: ['open', 'high', 'low', 'close'],
-            toYData: function (point) {
-                // return a plain array for speedy calculation
-                return [point.open, point.high, point.low, point.close];
-            },
-            pointValKey: 'close',
-            pointAttrToOptions: {
-                stroke: 'color',
-                'stroke-width': 'lineWidth'
-            },
-            /**
-             * @private
-             * @function Highcarts.seriesTypes.ohlc#init
-             * @return {void}
-             */
-            init: function () {
-                seriesTypes.column.prototype.init.apply(this, arguments);
-                this.options.stacking = void 0; // #8817
-            },
-            /**
-             * Postprocess mapping between options and SVG attributes
-             *
-             * @private
-             * @function Highcharts.seriesTypes.ohlc#pointAttribs
-             * @param {Highcharts.OHLCPoint} point
-             * @param {string} state
-             * @return {Highcharts.SVGAttributes}
-             */
-            pointAttribs: function (point, state) {
-                var attribs = seriesTypes.column.prototype.pointAttribs.call(this,
-                    point,
-                    state),
-                    options = this.options;
-                delete attribs.fill;
-                if (!point.options.color &&
-                    options.upColor &&
-                    point.open < point.close) {
-                    attribs.stroke = options.upColor;
-                }
-                return attribs;
-            },
-            /**
-             * Translate data points from raw values x and y to plotX and plotY
-             *
-             * @private
-             * @function Highcharts.seriesTypes.ohlc#translate
-             * @return {void}
-             */
-            translate: function () {
-                var series = this,
-                    yAxis = series.yAxis,
-                    hasModifyValue = !!series.modifyValue,
-                    translated = [
-                        'plotOpen',
-                        'plotHigh',
-                        'plotLow',
-                        'plotClose',
-                        'yBottom'
-                    ]; // translate OHLC for
-                    seriesTypes.column.prototype.translate.apply(series);
-                // Do the translation
-                series.points.forEach(function (point) {
-                    [point.open, point.high, point.low, point.close, point.low]
-                        .forEach(function (value, i) {
-                        if (value !== null) {
-                            if (hasModifyValue) {
-                                value = series.modifyValue(value);
-                            }
-                            point[translated[i]] =
-                                yAxis.toPixels(value, true);
-                        }
-                    });
-                    // Align the tooltip to the high value to avoid covering the
-                    // point
-                    point.tooltipPos[1] =
-                        point.plotHigh + yAxis.pos - series.chart.plotTop;
-                });
-            },
             /**
              * Draw the data points
-             *
              * @private
-             * @function Highcharts.seriesTypes.ohlc#drawPoints
-             * @return {void}
              */
-            drawPoints: function () {
+            OHLCSeries.prototype.drawPoints = function () {
                 var series = this,
                     points = series.points,
                     chart = series.chart, 
@@ -6035,29 +5991,191 @@
                             .addClass(point.getClassName(), true);
                     }
                 });
-            },
-            animate: null // Disable animation
-            /* eslint-enable valid-jsdoc */
-        }, 
-        /**
-         * @lends Highcharts.seriesTypes.ohlc.prototype.pointClass.prototype
-         */
-        {
-            /* eslint-disable valid-jsdoc */
+            };
             /**
-             * Extend the parent method by adding up or down to the class name.
              * @private
-             * @function Highcharts.seriesTypes.ohlc#getClassName
-             * @return {string}
+             * @function Highcarts.seriesTypes.ohlc#init
+             * @return {void}
              */
-            getClassName: function () {
-                return Point.prototype.getClassName.call(this) +
-                    (this.open < this.close ?
-                        ' highcharts-point-up' :
-                        ' highcharts-point-down');
-            }
-            /* eslint-enable valid-jsdoc */
+            OHLCSeries.prototype.init = function () {
+                _super.prototype.init.apply(this, arguments);
+                this.options.stacking = void 0; // #8817
+            };
+            /**
+             * Postprocess mapping between options and SVG attributes
+             * @private
+             */
+            OHLCSeries.prototype.pointAttribs = function (point, state) {
+                var attribs = _super.prototype.pointAttribs.call(this,
+                    point,
+                    state),
+                    options = this.options;
+                delete attribs.fill;
+                if (!point.options.color &&
+                    options.upColor &&
+                    point.open < point.close) {
+                    attribs.stroke = options.upColor;
+                }
+                return attribs;
+            };
+            OHLCSeries.prototype.toYData = function (point) {
+                // return a plain array for speedy calculation
+                return [point.open, point.high, point.low, point.close];
+            };
+            /**
+             * Translate data points from raw values x and y to plotX and plotY
+             *
+             * @private
+             * @function Highcharts.seriesTypes.ohlc#translate
+             * @return {void}
+             */
+            OHLCSeries.prototype.translate = function () {
+                var series = this,
+                    yAxis = series.yAxis,
+                    hasModifyValue = !!series.modifyValue,
+                    translated = [
+                        'plotOpen',
+                        'plotHigh',
+                        'plotLow',
+                        'plotClose',
+                        'yBottom'
+                    ]; // translate OHLC for
+                    _super.prototype.translate.apply(series);
+                // Do the translation
+                series.points.forEach(function (point) {
+                    [point.open, point.high, point.low, point.close, point.low]
+                        .forEach(function (value, i) {
+                        if (value !== null) {
+                            if (hasModifyValue) {
+                                value = series.modifyValue(value);
+                            }
+                            point[translated[i]] =
+                                yAxis.toPixels(value, true);
+                        }
+                    });
+                    // Align the tooltip to the high value to avoid covering the
+                    // point
+                    point.tooltipPos[1] =
+                        point.plotHigh + yAxis.pos - series.chart.plotTop;
+                });
+            };
+            /**
+             * An OHLC chart is a style of financial chart used to describe price
+             * movements over time. It displays open, high, low and close values per
+             * data point.
+             *
+             * @sample stock/demo/ohlc/
+             *         OHLC chart
+             *
+             * @extends      plotOptions.column
+             * @excluding    borderColor, borderRadius, borderWidth, crisp, stacking,
+             *               stack
+             * @product      highstock
+             * @optionparent plotOptions.ohlc
+             */
+            OHLCSeries.defaultOptions = merge(ColumnSeries.defaultOptions, {
+                /**
+                 * The approximate pixel width of each group. If for example a series
+                 * with 30 points is displayed over a 600 pixel wide plot area, no
+                 * grouping is performed. If however the series contains so many points
+                 * that the spacing is less than the groupPixelWidth, Highcharts will
+                 * try to group it into appropriate groups so that each is more or less
+                 * two pixels wide. Defaults to `5`.
+                 *
+                 * @type      {number}
+                 * @default   5
+                 * @product   highstock
+                 * @apioption plotOptions.ohlc.dataGrouping.groupPixelWidth
+                 */
+                /**
+                 * The pixel width of the line/border. Defaults to `1`.
+                 *
+                 * @sample {highstock} stock/plotoptions/ohlc-linewidth/
+                 *         A greater line width
+                 *
+                 * @type    {number}
+                 * @default 1
+                 * @product highstock
+                 *
+                 * @private
+                 */
+                lineWidth: 1,
+                tooltip: {
+                    pointFormat: '<span style="color:{point.color}">\u25CF</span> ' +
+                        '<b> {series.name}</b><br/>' +
+                        'Open: {point.open}<br/>' +
+                        'High: {point.high}<br/>' +
+                        'Low: {point.low}<br/>' +
+                        'Close: {point.close}<br/>'
+                },
+                threshold: null,
+                states: {
+                    /**
+                     * @extends plotOptions.column.states.hover
+                     * @product highstock
+                     */
+                    hover: {
+                        /**
+                         * The pixel width of the line representing the OHLC point.
+                         *
+                         * @type    {number}
+                         * @default 3
+                         * @product highstock
+                         */
+                        lineWidth: 3
+                    }
+                },
+                /**
+                 * Determines which one of `open`, `high`, `low`, `close` values should
+                 * be represented as `point.y`, which is later used to set dataLabel
+                 * position and [compare](#plotOptions.series.compare).
+                 *
+                 * @sample {highstock} stock/plotoptions/ohlc-pointvalkey/
+                 *         Possible values
+                 *
+                 * @type       {string}
+                 * @default    close
+                 * @validvalue ["open", "high", "low", "close"]
+                 * @product    highstock
+                 * @apioption  plotOptions.ohlc.pointValKey
+                 */
+                /**
+                 * @default   close
+                 * @apioption plotOptions.ohlc.colorKey
+                 */
+                /**
+                 * Line color for up points.
+                 *
+                 * @type      {Highcharts.ColorString|Highcharts.GradientColorObject|Highcharts.PatternObject}
+                 * @product   highstock
+                 * @apioption plotOptions.ohlc.upColor
+                 */
+                stickyTracking: true
+            });
+            return OHLCSeries;
+        }(ColumnSeries));
+        extend(OHLCSeries.prototype, {
+            animate: null,
+            directTouch: false,
+            pointArrayMap: ['open', 'high', 'low', 'close'],
+            pointAttrToOptions: {
+                stroke: 'color',
+                'stroke-width': 'lineWidth'
+            },
+            pointValKey: 'close'
         });
+        OHLCSeries.prototype.pointClass = OHLCPoint;
+        BaseSeries.registerSeriesType('ohlc', OHLCSeries);
+        /* *
+         *
+         *  Default Export
+         *
+         * */
+        /* *
+         *
+         *  API Options
+         *
+         * */
         /**
          * A `ohlc` series. If the [type](#series.ohlc.type) option is not
          * specified, it is inherited from [chart.type](#chart.type).
@@ -6133,8 +6251,9 @@
          */
         ''; // adds doclets above to transpilat
 
+        return OHLCSeries;
     });
-    _registerModule(_modules, 'Series/CandlestickSeries.js', [_modules['Core/Series/Series.js'], _modules['Core/Options.js'], _modules['Core/Utilities.js']], function (BaseSeries, O, U) {
+    _registerModule(_modules, 'Series/CandlestickSeries.js', [_modules['Core/Series/Series.js'], _modules['Series/Column/ColumnSeries.js'], _modules['Core/Options.js'], _modules['Core/Color/Palette.js'], _modules['Core/Utilities.js']], function (BaseSeries, ColumnSeries, O, palette, U) {
         /* *
          *
          *  (c) 2010-2020 Torstein Honsi
@@ -6144,9 +6263,14 @@
          *  !!!!!!! SOURCE GETS TRANSPILED BY TYPESCRIPT. EDIT TS FILE ONLY. !!!!!!!
          *
          * */
+        var columnProto = ColumnSeries.prototype;
         var defaultOptions = O.defaultOptions;
         var merge = U.merge;
-        var columnProto = BaseSeries.seriesTypes.column.prototype;
+        /* *
+         *
+         *  Code
+         *
+         * */
         /**
          * A candlestick chart is a style of financial chart used to describe price
          * movements over time.
@@ -6217,7 +6341,7 @@
                  * @default #000000
                  * @product highstock
                  */
-                lineColor: '#000000',
+                lineColor: palette.neutralColor100,
                 /**
                  * The pixel width of the candlestick line/border. Defaults to `1`.
                  *
@@ -6245,7 +6369,7 @@
                  * @default #ffffff
                  * @product highstock
                  */
-                upColor: '#ffffff',
+                upColor: palette.backgroundColor,
                 /**
                  * @product highstock
                  */
@@ -6271,9 +6395,6 @@
              *
              * @private
              * @function Highcharts.seriesTypes.candlestick#pointAttribs
-             * @param {Highcharts.Point} point
-             * @param {string} [state]
-             * @return {Highcharts.SVGAttributes}
              */
             pointAttribs: function (point, state) {
                 var attribs = columnProto.pointAttribs.call(this,
@@ -6449,7 +6570,7 @@
         ''; // adds doclets above to transpilat
 
     });
-    _registerModule(_modules, 'Mixins/OnSeries.js', [_modules['Core/Globals.js'], _modules['Core/Utilities.js']], function (H, U) {
+    _registerModule(_modules, 'Series/Flags/FlagsPoint.js', [_modules['Core/Series/Series.js'], _modules['Core/Utilities.js']], function (BaseSeries, U) {
         /* *
          *
          *  (c) 2010-2020 Torstein Honsi
@@ -6459,9 +6580,81 @@
          *  !!!!!!! SOURCE GETS TRANSPILED BY TYPESCRIPT. EDIT TS FILE ONLY. !!!!!!!
          *
          * */
+        var __extends = (this && this.__extends) || (function () {
+                var extendStatics = function (d,
+            b) {
+                    extendStatics = Object.setPrototypeOf ||
+                        ({ __proto__: [] } instanceof Array && function (d,
+            b) { d.__proto__ = b; }) ||
+                        function (d,
+            b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+                return extendStatics(d, b);
+            };
+            return function (d, b) {
+                extendStatics(d, b);
+                function __() { this.constructor = d; }
+                d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+            };
+        })();
+        var ColumnSeries = BaseSeries.seriesTypes.column;
+        var isNumber = U.isNumber;
+        /* *
+         *
+         *  Class
+         *
+         * */
+        var FlagsPoint = /** @class */ (function (_super) {
+                __extends(FlagsPoint, _super);
+            function FlagsPoint() {
+                /* *
+                 *
+                 *  Properties
+                 *
+                 * */
+                var _this = _super !== null && _super.apply(this,
+                    arguments) || this;
+                _this.options = void 0;
+                _this.series = void 0;
+                return _this;
+            }
+            /* *
+             *
+             *  Functions
+             *
+             * */
+            /* eslint-disable valid-jsdoc */
+            /**
+             * @private
+             */
+            FlagsPoint.prototype.isValid = function () {
+                // #9233 - Prevent from treating flags as null points (even if
+                // they have no y values defined).
+                return isNumber(this.y) || typeof this.y === 'undefined';
+            };
+            return FlagsPoint;
+        }(ColumnSeries.prototype.pointClass));
+        /* *
+         *
+         *  Default Export
+         *
+         * */
+
+        return FlagsPoint;
+    });
+    _registerModule(_modules, 'Mixins/OnSeries.js', [_modules['Series/Column/ColumnSeries.js'], _modules['Series/Line/LineSeries.js'], _modules['Core/Utilities.js']], function (ColumnSeries, LineSeries, U) {
+        /* *
+         *
+         *  (c) 2010-2020 Torstein Honsi
+         *
+         *  License: www.highcharts.com/license
+         *
+         *  !!!!!!! SOURCE GETS TRANSPILED BY TYPESCRIPT. EDIT TS FILE ONLY. !!!!!!!
+         *
+         * */
+        var columnProto = ColumnSeries.prototype;
+        var seriesProto = LineSeries.prototype;
         var defined = U.defined,
             stableSort = U.stableSort;
-        var seriesTypes = H.seriesTypes;
         /**
          * @private
          * @mixin onSeriesMixin
@@ -6479,7 +6672,7 @@
                  * @return {Highcharts.SeriesPlotBoxObject}
                  */
                 getPlotBox: function () {
-                    return H.Series.prototype.getPlotBox.call((this.options.onSeries &&
+                    return seriesProto.getPlotBox.call((this.options.onSeries &&
                         this.chart.get(this.options.onSeries)) || this);
             },
             /**
@@ -6490,7 +6683,7 @@
              * @return {void}
              */
             translate: function () {
-                seriesTypes.column.prototype.translate.apply(this);
+                columnProto.translate.apply(this);
                 var series = this,
                     options = series.options,
                     chart = series.chart,
@@ -6607,7 +6800,102 @@
 
         return onSeriesMixin;
     });
-    _registerModule(_modules, 'Series/FlagsSeries.js', [_modules['Core/Series/Series.js'], _modules['Core/Globals.js'], _modules['Mixins/OnSeries.js'], _modules['Core/Renderer/SVG/SVGElement.js'], _modules['Core/Renderer/SVG/SVGRenderer.js'], _modules['Core/Utilities.js']], function (BaseSeries, H, OnSeriesMixin, SVGElement, SVGRenderer, U) {
+    _registerModule(_modules, 'Series/Flags/FlagsSymbols.js', [_modules['Core/Globals.js'], _modules['Core/Renderer/SVG/SVGRenderer.js']], function (H, SVGRenderer) {
+        /* *
+         *
+         *  Imports
+         *
+         * */
+        var Renderer = H.Renderer,
+            VMLRenderer = H.VMLRenderer;
+        var symbols = SVGRenderer.prototype.symbols;
+        /* *
+         *
+         *  Symbols
+         *
+         * */
+        // create the flag icon with anchor
+        symbols.flag = function (x, y, w, h, options) {
+            var anchorX = (options && options.anchorX) || x,
+                anchorY = (options && options.anchorY) || y;
+            // To do: unwanted any cast because symbols.circle has wrong type, it
+            // actually returns an SVGPathArray
+            var path = symbols.circle(anchorX - 1,
+                anchorY - 1, 2, 2);
+            path.push(['M', anchorX, anchorY], ['L', x, y + h], ['L', x, y], ['L', x + w, y], ['L', x + w, y + h], ['L', x, y + h], ['Z']);
+            return path;
+        };
+        /**
+         * Create the circlepin and squarepin icons with anchor.
+         * @private
+         * @param {string} shape - circle or square
+         * @return {void}
+         */
+        function createPinSymbol(shape) {
+            symbols[shape + 'pin'] = function (x, y, w, h, options) {
+                var anchorX = options && options.anchorX,
+                    anchorY = options && options.anchorY,
+                    path;
+                // For single-letter flags, make sure circular flags are not taller
+                // than their width
+                if (shape === 'circle' && h > w) {
+                    x -= Math.round((h - w) / 2);
+                    w = h;
+                }
+                path = (symbols[shape])(x, y, w, h);
+                if (anchorX && anchorY) {
+                    /**
+                     * If the label is below the anchor, draw the connecting line from
+                     * the top edge of the label, otherwise start drawing from the
+                     * bottom edge
+                     */
+                    var labelX = anchorX;
+                    if (shape === 'circle') {
+                        labelX = x + w / 2;
+                    }
+                    else {
+                        var startSeg = path[0];
+                        var endSeg = path[1];
+                        if (startSeg[0] === 'M' && endSeg[0] === 'L') {
+                            labelX = (startSeg[1] + endSeg[1]) / 2;
+                        }
+                    }
+                    var labelY = (y > anchorY) ? y : y + h;
+                    path.push([
+                        'M',
+                        labelX,
+                        labelY
+                    ], [
+                        'L',
+                        anchorX,
+                        anchorY
+                    ]);
+                    path = path.concat(symbols.circle(anchorX - 1, anchorY - 1, 2, 2));
+                }
+                return path;
+            };
+        }
+        createPinSymbol('circle');
+        createPinSymbol('square');
+        /**
+         * The symbol callbacks are generated on the SVGRenderer object in all browsers.
+         * Even VML browsers need this in order to generate shapes in export. Now share
+         * them with the VMLRenderer.
+         */
+        if (Renderer === VMLRenderer) {
+            ['circlepin', 'flag', 'squarepin'].forEach(function (shape) {
+                VMLRenderer.prototype.symbols[shape] = symbols[shape];
+            });
+        }
+        /* *
+         *
+         *  Default Export
+         *
+         * */
+
+        return symbols;
+    });
+    _registerModule(_modules, 'Series/Flags/FlagsSeries.js', [_modules['Core/Series/Series.js'], _modules['Series/Flags/FlagsPoint.js'], _modules['Core/Globals.js'], _modules['Mixins/OnSeries.js'], _modules['Core/Color/Palette.js'], _modules['Core/Renderer/SVG/SVGElement.js'], _modules['Core/Utilities.js']], function (BaseSeries, FlagsPoint, H, OnSeriesMixin, palette, SVGElement, U) {
         /* *
          *
          *  (c) 2010-2020 Torstein Honsi
@@ -6617,298 +6905,83 @@
          *  !!!!!!! SOURCE GETS TRANSPILED BY TYPESCRIPT. EDIT TS FILE ONLY. !!!!!!!
          *
          * */
+        var __extends = (this && this.__extends) || (function () {
+                var extendStatics = function (d,
+            b) {
+                    extendStatics = Object.setPrototypeOf ||
+                        ({ __proto__: [] } instanceof Array && function (d,
+            b) { d.__proto__ = b; }) ||
+                        function (d,
+            b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+                return extendStatics(d, b);
+            };
+            return function (d, b) {
+                extendStatics(d, b);
+                function __() { this.constructor = d; }
+                d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+            };
+        })();
+        var _a = BaseSeries.seriesTypes,
+            ColumnSeries = _a.column,
+            LineSeries = _a.line;
         var noop = H.noop;
         var addEvent = U.addEvent,
             defined = U.defined,
-            isNumber = U.isNumber,
+            extend = U.extend,
             merge = U.merge,
             objectEach = U.objectEach,
             wrap = U.wrap;
-        var Renderer = H.Renderer,
-            Series = H.Series,
-            TrackerMixin = H.TrackerMixin, // Interaction
-            VMLRenderer = H.VMLRenderer,
-            symbols = SVGRenderer.prototype.symbols;
-        /**
-         * @typedef {"circlepin"|"flag"|"squarepin"} Highcharts.FlagsShapeValue
-         */
-        ''; // detach doclets above
-        /**
-         * The Flags series.
-         *
-         * @private
-         * @class
-         * @name Highcharts.seriesTypes.flags
-         *
-         * @augments Highcharts.Series
-         */
-        BaseSeries.seriesType('flags', 'column'
-        /**
-         * Flags are used to mark events in stock charts. They can be added on the
-         * timeline, or attached to a specific series.
-         *
-         * @sample stock/demo/flags-general/
-         *         Flags on a line series
-         *
-         * @extends      plotOptions.column
-         * @excluding    animation, borderColor, borderRadius, borderWidth,
-         *               colorByPoint, dataGrouping, pointPadding, pointWidth,
-         *               turboThreshold
-         * @product      highstock
-         * @optionparent plotOptions.flags
-         */
-        , {
+        var TrackerMixin = H.TrackerMixin; // Interaction
             /**
-             * In case the flag is placed on a series, on what point key to place
-             * it. Line and columns have one key, `y`. In range or OHLC-type series,
-             * however, the flag can optionally be placed on the `open`, `high`,
-             * `low` or `close` key.
+             * The Flags series.
              *
-             * @sample {highstock} stock/plotoptions/flags-onkey/
-             *         Range series, flag on high
+             * @private
+             * @class
+             * @name Highcharts.seriesTypes.flags
              *
-             * @type       {string}
-             * @default    y
-             * @since      4.2.2
-             * @product    highstock
-             * @validvalue ["y", "open", "high", "low", "close"]
-             * @apioption  plotOptions.flags.onKey
+             * @augments Highcharts.Series
              */
-            /**
-             * The id of the series that the flags should be drawn on. If no id
-             * is given, the flags are drawn on the x axis.
-             *
-             * @sample {highstock} stock/plotoptions/flags/
-             *         Flags on series and on x axis
-             *
-             * @type      {string}
-             * @product   highstock
-             * @apioption plotOptions.flags.onSeries
-             */
-            pointRange: 0,
-            /**
-             * Whether the flags are allowed to overlap sideways. If `false`, the
-             * flags are moved sideways using an algorithm that seeks to place every
-             * flag as close as possible to its original position.
-             *
-             * @sample {highstock} stock/plotoptions/flags-allowoverlapx
-             *         Allow sideways overlap
-             *
-             * @since 6.0.4
-             */
-            allowOverlapX: false,
-            /**
-             * The shape of the marker. Can be one of "flag", "circlepin",
-             * "squarepin", or an image of the format `url(/path-to-image.jpg)`.
-             * Individual shapes can also be set for each point.
-             *
-             * @sample {highstock} stock/plotoptions/flags/
-             *         Different shapes
-             *
-             * @type    {Highcharts.FlagsShapeValue}
-             * @product highstock
-             */
-            shape: 'flag',
-            /**
-             * When multiple flags in the same series fall on the same value, this
-             * number determines the vertical offset between them.
-             *
-             * @sample {highstock} stock/plotoptions/flags-stackdistance/
-             *         A greater stack distance
-             *
-             * @product highstock
-             */
-            stackDistance: 12,
-            /**
-             * Text alignment for the text inside the flag.
-             *
-             * @since      5.0.0
-             * @product    highstock
-             * @validvalue ["left", "center", "right"]
-             */
-            textAlign: 'center',
-            /**
-             * Specific tooltip options for flag series. Flag series tooltips are
-             * different from most other types in that a flag doesn't have a data
-             * value, so the tooltip rather displays the `text` option for each
-             * point.
-             *
-             * @extends   plotOptions.series.tooltip
-             * @excluding changeDecimals, valueDecimals, valuePrefix, valueSuffix
-             * @product   highstock
-             */
-            tooltip: {
-                pointFormat: '{point.text}<br/>'
-            },
-            threshold: null,
-            /**
-             * The text to display on each flag. This can be defined on series
-             * level, or individually for each point. Defaults to `"A"`.
-             *
-             * @type      {string}
-             * @default   A
-             * @product   highstock
-             * @apioption plotOptions.flags.title
-             */
-            /**
-             * The y position of the top left corner of the flag relative to either
-             * the series (if onSeries is defined), or the x axis. Defaults to
-             * `-30`.
-             *
-             * @product highstock
-             */
-            y: -30,
-            /**
-             * Whether to use HTML to render the flag texts. Using HTML allows for
-             * advanced formatting, images and reliable bi-directional text
-             * rendering. Note that exported images won't respect the HTML, and that
-             * HTML won't respect Z-index settings.
-             *
-             * @type      {boolean}
-             * @default   false
-             * @since     1.3
-             * @product   highstock
-             * @apioption plotOptions.flags.useHTML
-             */
-            /**
-             * Fixed width of the flag's shape. By default, width is autocalculated
-             * according to the flag's title.
-             *
-             * @sample {highstock} stock/demo/flags-shapes/
-             *         Flags with fixed width
-             *
-             * @type      {number}
-             * @product   highstock
-             * @apioption plotOptions.flags.width
-             */
-            /**
-             * Fixed height of the flag's shape. By default, height is
-             * autocalculated according to the flag's title.
-             *
-             * @type      {number}
-             * @product   highstock
-             * @apioption plotOptions.flags.height
-             */
-            /**
-             * The fill color for the flags.
-             *
-             * @type    {Highcharts.ColorString|Highcharts.GradientColorObject|Highcharts.PatternObject}
-             * @product highstock
-             */
-            fillColor: '#ffffff',
-            /**
-             * The color of the line/border of the flag.
-             *
-             * In styled mode, the stroke is set in the
-             * `.highcharts-flag-series.highcharts-point` rule.
-             *
-             * @type      {Highcharts.ColorString|Highcharts.GradientColorObject|Highcharts.PatternObject}
-             * @default   #000000
-             * @product   highstock
-             * @apioption plotOptions.flags.lineColor
-             */
-            /**
-             * The pixel width of the flag's line/border.
-             *
-             * @product highstock
-             */
-            lineWidth: 1,
-            states: {
-                /**
-                 * @extends plotOptions.column.states.hover
-                 * @product highstock
-                 */
-                hover: {
-                    /**
-                     * The color of the line/border of the flag.
-                     *
-                     * @type    {Highcharts.ColorString|Highcharts.GradientColorObject|Highcharts.PatternObject}
-                     * @product highstock
-                     */
-                    lineColor: '#000000',
-                    /**
-                     * The fill or background color of the flag.
-                     *
-                     * @type    {Highcharts.ColorString|Highcharts.GradientColorObject|Highcharts.PatternObject}
-                     * @product highstock
-                     */
-                    fillColor: '#ccd6eb'
-                }
-            },
-            /**
-             * The text styles of the flag.
-             *
-             * In styled mode, the styles are set in the
-             * `.highcharts-flag-series .highcharts-point` rule.
-             *
-             * @type    {Highcharts.CSSObject}
-             * @default {"fontSize": "11px", "fontWeight": "bold"}
-             * @product highstock
-             */
-            style: {
-                /** @ignore-option */
-                fontSize: '11px',
-                /** @ignore-option */
-                fontWeight: 'bold'
+            var FlagsSeries = /** @class */ (function (_super) {
+                __extends(FlagsSeries, _super);
+            function FlagsSeries() {
+                /* *
+                 *
+                 *  Static Properties
+                 *
+                 * */
+                var _this = _super !== null && _super.apply(this,
+                    arguments) || this;
+                /* *
+                 *
+                 *  Properties
+                 *
+                 * */
+                _this.data = void 0;
+                _this.options = void 0;
+                _this.points = void 0;
+                return _this;
+                /* eslint-enable valid-jsdoc */
             }
-        }, 
-        /**
-         * @lends seriesTypes.flags.prototype
-         */
-        {
-            sorted: false,
-            noSharedTooltip: true,
-            allowDG: false,
-            takeOrdinalPosition: false,
-            trackerGroups: ['markerGroup'],
-            forceCrop: true,
-            /* eslint-disable no-invalid-this, valid-jsdoc */
+            /* *
+             *
+             *  Functions
+             *
+             * */
+            /* eslint-disable valid-jsdoc */
             /**
-             * Inherit the initialization from base Series.
-             *
+             * Disable animation, but keep clipping (#8546).
              * @private
-             * @borrows Highcharts.Series#init as Highcharts.seriesTypes.flags#init
              */
-            init: Series.prototype.init,
-            /**
-             * Get presentational attributes
-             *
-             * @private
-             * @function Highcharts.seriesTypes.flags#pointAttribs
-             *
-             * @param {Highcharts.Point} point
-             *
-             * @param {string} [state]
-             *
-             * @return {Highcharts.SVGAttributes}
-             */
-            pointAttribs: function (point, state) {
-                var options = this.options,
-                    color = (point && point.color) || this.color,
-                    lineColor = options.lineColor,
-                    lineWidth = (point && point.lineWidth),
-                    fill = (point && point.fillColor) || options.fillColor;
-                if (state) {
-                    fill = options.states[state].fillColor;
-                    lineColor = options.states[state].lineColor;
-                    lineWidth = options.states[state].lineWidth;
+            FlagsSeries.prototype.animate = function (init) {
+                if (init) {
+                    this.setClip();
                 }
-                return {
-                    fill: fill || color,
-                    stroke: lineColor || color,
-                    'stroke-width': lineWidth || options.lineWidth || 0
-                };
-            },
-            translate: OnSeriesMixin.translate,
-            getPlotBox: OnSeriesMixin.getPlotBox,
+            };
             /**
              * Draw the markers.
-             *
              * @private
-             * @function Highcharts.seriesTypes.flags#drawPoints
-             * @return {void}
              */
-            drawPoints: function () {
+            FlagsSeries.prototype.drawPoints = function () {
                 var series = this,
                     points = series.points,
                     chart = series.chart,
@@ -7053,19 +7126,289 @@
                     wrap(series.markerGroup, 'on', function (proceed) {
                         return SVGElement.prototype.on.apply(
                         // for HTML
+                        // eslint-disable-next-line no-invalid-this
                         proceed.apply(this, [].slice.call(arguments, 1)), 
                         // and for SVG
                         [].slice.call(arguments, 1));
                     });
                 }
-            },
+            };
+            /**
+             * Get presentational attributes
+             * @private
+             */
+            FlagsSeries.prototype.pointAttribs = function (point, state) {
+                var options = this.options,
+                    color = (point && point.color) || this.color,
+                    lineColor = options.lineColor,
+                    lineWidth = (point && point.lineWidth),
+                    fill = (point && point.fillColor) || options.fillColor;
+                if (state) {
+                    fill = options.states[state].fillColor;
+                    lineColor = options.states[state].lineColor;
+                    lineWidth = options.states[state].lineWidth;
+                }
+                return {
+                    fill: fill || color,
+                    stroke: lineColor || color,
+                    'stroke-width': lineWidth || options.lineWidth || 0
+                };
+            };
+            /**
+             * @private
+             */
+            FlagsSeries.prototype.setClip = function () {
+                LineSeries.prototype.setClip.apply(this, arguments);
+                if (this.options.clip !== false && this.sharedClipKey) {
+                    this.markerGroup
+                        .clip(this.chart[this.sharedClipKey]);
+                }
+            };
+            /**
+             * Flags are used to mark events in stock charts. They can be added on the
+             * timeline, or attached to a specific series.
+             *
+             * @sample stock/demo/flags-general/
+             *         Flags on a line series
+             *
+             * @extends      plotOptions.column
+             * @excluding    animation, borderColor, borderRadius, borderWidth,
+             *               colorByPoint, dataGrouping, pointPadding, pointWidth,
+             *               turboThreshold
+             * @product      highstock
+             * @optionparent plotOptions.flags
+             */
+            FlagsSeries.defaultOptions = merge(ColumnSeries.defaultOptions, {
+                /**
+                 * In case the flag is placed on a series, on what point key to place
+                 * it. Line and columns have one key, `y`. In range or OHLC-type series,
+                 * however, the flag can optionally be placed on the `open`, `high`,
+                 * `low` or `close` key.
+                 *
+                 * @sample {highstock} stock/plotoptions/flags-onkey/
+                 *         Range series, flag on high
+                 *
+                 * @type       {string}
+                 * @default    y
+                 * @since      4.2.2
+                 * @product    highstock
+                 * @validvalue ["y", "open", "high", "low", "close"]
+                 * @apioption  plotOptions.flags.onKey
+                 */
+                /**
+                 * The id of the series that the flags should be drawn on. If no id
+                 * is given, the flags are drawn on the x axis.
+                 *
+                 * @sample {highstock} stock/plotoptions/flags/
+                 *         Flags on series and on x axis
+                 *
+                 * @type      {string}
+                 * @product   highstock
+                 * @apioption plotOptions.flags.onSeries
+                 */
+                pointRange: 0,
+                /**
+                 * Whether the flags are allowed to overlap sideways. If `false`, the
+                 * flags are moved sideways using an algorithm that seeks to place every
+                 * flag as close as possible to its original position.
+                 *
+                 * @sample {highstock} stock/plotoptions/flags-allowoverlapx
+                 *         Allow sideways overlap
+                 *
+                 * @since 6.0.4
+                 */
+                allowOverlapX: false,
+                /**
+                 * The shape of the marker. Can be one of "flag", "circlepin",
+                 * "squarepin", or an image of the format `url(/path-to-image.jpg)`.
+                 * Individual shapes can also be set for each point.
+                 *
+                 * @sample {highstock} stock/plotoptions/flags/
+                 *         Different shapes
+                 *
+                 * @type    {Highcharts.FlagsShapeValue}
+                 * @product highstock
+                 */
+                shape: 'flag',
+                /**
+                 * When multiple flags in the same series fall on the same value, this
+                 * number determines the vertical offset between them.
+                 *
+                 * @sample {highstock} stock/plotoptions/flags-stackdistance/
+                 *         A greater stack distance
+                 *
+                 * @product highstock
+                 */
+                stackDistance: 12,
+                /**
+                 * Text alignment for the text inside the flag.
+                 *
+                 * @since      5.0.0
+                 * @product    highstock
+                 * @validvalue ["left", "center", "right"]
+                 */
+                textAlign: 'center',
+                /**
+                 * Specific tooltip options for flag series. Flag series tooltips are
+                 * different from most other types in that a flag doesn't have a data
+                 * value, so the tooltip rather displays the `text` option for each
+                 * point.
+                 *
+                 * @extends   plotOptions.series.tooltip
+                 * @excluding changeDecimals, valueDecimals, valuePrefix, valueSuffix
+                 * @product   highstock
+                 */
+                tooltip: {
+                    pointFormat: '{point.text}<br/>'
+                },
+                threshold: null,
+                /**
+                 * The text to display on each flag. This can be defined on series
+                 * level, or individually for each point. Defaults to `"A"`.
+                 *
+                 * @type      {string}
+                 * @default   A
+                 * @product   highstock
+                 * @apioption plotOptions.flags.title
+                 */
+                /**
+                 * The y position of the top left corner of the flag relative to either
+                 * the series (if onSeries is defined), or the x axis. Defaults to
+                 * `-30`.
+                 *
+                 * @product highstock
+                 */
+                y: -30,
+                /**
+                 * Whether to use HTML to render the flag texts. Using HTML allows for
+                 * advanced formatting, images and reliable bi-directional text
+                 * rendering. Note that exported images won't respect the HTML, and that
+                 * HTML won't respect Z-index settings.
+                 *
+                 * @type      {boolean}
+                 * @default   false
+                 * @since     1.3
+                 * @product   highstock
+                 * @apioption plotOptions.flags.useHTML
+                 */
+                /**
+                 * Fixed width of the flag's shape. By default, width is autocalculated
+                 * according to the flag's title.
+                 *
+                 * @sample {highstock} stock/demo/flags-shapes/
+                 *         Flags with fixed width
+                 *
+                 * @type      {number}
+                 * @product   highstock
+                 * @apioption plotOptions.flags.width
+                 */
+                /**
+                 * Fixed height of the flag's shape. By default, height is
+                 * autocalculated according to the flag's title.
+                 *
+                 * @type      {number}
+                 * @product   highstock
+                 * @apioption plotOptions.flags.height
+                 */
+                /**
+                 * The fill color for the flags.
+                 *
+                 * @type    {Highcharts.ColorString|Highcharts.GradientColorObject|Highcharts.PatternObject}
+                 * @product highstock
+                 */
+                fillColor: palette.backgroundColor,
+                /**
+                 * The color of the line/border of the flag.
+                 *
+                 * In styled mode, the stroke is set in the
+                 * `.highcharts-flag-series.highcharts-point` rule.
+                 *
+                 * @type      {Highcharts.ColorString|Highcharts.GradientColorObject|Highcharts.PatternObject}
+                 * @default   #000000
+                 * @product   highstock
+                 * @apioption plotOptions.flags.lineColor
+                 */
+                /**
+                 * The pixel width of the flag's line/border.
+                 *
+                 * @product highstock
+                 */
+                lineWidth: 1,
+                states: {
+                    /**
+                     * @extends plotOptions.column.states.hover
+                     * @product highstock
+                     */
+                    hover: {
+                        /**
+                         * The color of the line/border of the flag.
+                         *
+                         * @type    {Highcharts.ColorString|Highcharts.GradientColorObject|Highcharts.PatternObject}
+                         * @product highstock
+                         */
+                        lineColor: palette.neutralColor100,
+                        /**
+                         * The fill or background color of the flag.
+                         *
+                         * @type    {Highcharts.ColorString|Highcharts.GradientColorObject|Highcharts.PatternObject}
+                         * @product highstock
+                         */
+                        fillColor: palette.highlightColor20
+                    }
+                },
+                /**
+                 * The text styles of the flag.
+                 *
+                 * In styled mode, the styles are set in the
+                 * `.highcharts-flag-series .highcharts-point` rule.
+                 *
+                 * @type    {Highcharts.CSSObject}
+                 * @default {"fontSize": "11px", "fontWeight": "bold"}
+                 * @product highstock
+                 */
+                style: {
+                    /** @ignore-option */
+                    fontSize: '11px',
+                    /** @ignore-option */
+                    fontWeight: 'bold'
+                }
+            });
+            return FlagsSeries;
+        }(ColumnSeries));
+        extend(FlagsSeries.prototype, {
+            allowDG: false,
+            /**
+             * @private
+             * @function Highcharts.seriesTypes.flags#buildKDTree
+             */
+            buildKDTree: noop,
+            forceCrop: true,
+            getPlotBox: OnSeriesMixin.getPlotBox,
+            /**
+             * Inherit the initialization from base Series.
+             *
+             * @private
+             * @borrows Highcharts.Series#init as Highcharts.seriesTypes.flags#init
+             */
+            init: LineSeries.prototype.init,
+            /**
+             * Don't invert the flag marker group (#4960).
+             *
+             * @private
+             * @function Highcharts.seriesTypes.flags#invertGroups
+             */
+            invertGroups: noop,
+            noSharedTooltip: true,
+            pointClass: FlagsPoint,
+            sorted: false,
+            takeOrdinalPosition: false,
+            trackerGroups: ['markerGroup'],
+            translate: OnSeriesMixin.translate,
+            /* eslint-disable no-invalid-this, valid-jsdoc */
             /**
              * Extend the column trackers with listeners to expand and contract
              * stacks.
-             *
              * @private
-             * @function Highcharts.seriesTypes.flags#drawTracker
-             * @return {void}
              */
             drawTracker: function () {
                 var series = this,
@@ -7103,129 +7446,29 @@
                         });
                     }
                 });
-            },
-            /**
-             * Disable animation, but keep clipping (#8546).
-             *
-             * @private
-             * @function Highcharts.seriesTypes.flags#animate
-             * @param {boolean} [init]
-             * @return {void}
-             */
-            animate: function (init) {
-                if (init) {
-                    this.setClip();
-                }
-            },
-            /**
-             * @private
-             * @function Highcharts.seriesTypes.flags#setClip
-             * @return {void}
-             */
-            setClip: function () {
-                Series.prototype.setClip.apply(this, arguments);
-                if (this.options.clip !== false && this.sharedClipKey) {
-                    this.markerGroup
-                        .clip(this.chart[this.sharedClipKey]);
-                }
-            },
-            /**
-             * @private
-             * @function Highcharts.seriesTypes.flags#buildKDTree
-             */
-            buildKDTree: noop,
-            /**
-             * Don't invert the flag marker group (#4960).
-             *
-             * @private
-             * @function Highcharts.seriesTypes.flags#invertGroups
-             */
-            invertGroups: noop
-            /* eslint-enable no-invalid-this, valid-jsdoc */
-        }, 
-        /**
-         * @lends Highcharts.seriesTypes.flag.prototype.pointClass.prototype
-         */
-        {
-            isValid: function () {
-                // #9233 - Prevent from treating flags as null points (even if
-                // they have no y values defined).
-                return isNumber(this.y) || typeof this.y === 'undefined';
             }
+            /* eslint-enable no-invalid-this, valid-jsdoc */
         });
-        // create the flag icon with anchor
-        symbols.flag = function (x, y, w, h, options) {
-            var anchorX = (options && options.anchorX) || x,
-                anchorY = (options && options.anchorY) || y;
-            // To do: unwanted any cast because symbols.circle has wrong type, it
-            // actually returns an SVGPathArray
-            var path = symbols.circle(anchorX - 1,
-                anchorY - 1, 2, 2);
-            path.push(['M', anchorX, anchorY], ['L', x, y + h], ['L', x, y], ['L', x + w, y], ['L', x + w, y + h], ['L', x, y + h], ['Z']);
-            return path;
-        };
+        BaseSeries.registerSeriesType('flags', FlagsSeries);
+        /* *
+         *
+         *  Default Export
+         *
+         * */
+        /* *
+         *
+         *  API Declarations
+         *
+         * */
         /**
-         * Create the circlepin and squarepin icons with anchor.
-         * @private
-         * @param {string} shape - circle or square
-         * @return {void}
+         * @typedef {"circlepin"|"flag"|"squarepin"} Highcharts.FlagsShapeValue
          */
-        function createPinSymbol(shape) {
-            symbols[shape + 'pin'] = function (x, y, w, h, options) {
-                var anchorX = options && options.anchorX,
-                    anchorY = options && options.anchorY,
-                    path;
-                // For single-letter flags, make sure circular flags are not taller
-                // than their width
-                if (shape === 'circle' && h > w) {
-                    x -= Math.round((h - w) / 2);
-                    w = h;
-                }
-                path = (symbols[shape])(x, y, w, h);
-                if (anchorX && anchorY) {
-                    /**
-                     * If the label is below the anchor, draw the connecting line from
-                     * the top edge of the label, otherwise start drawing from the
-                     * bottom edge
-                     */
-                    var labelX = anchorX;
-                    if (shape === 'circle') {
-                        labelX = x + w / 2;
-                    }
-                    else {
-                        var startSeg = path[0];
-                        var endSeg = path[1];
-                        if (startSeg[0] === 'M' && endSeg[0] === 'L') {
-                            labelX = (startSeg[1] + endSeg[1]) / 2;
-                        }
-                    }
-                    var labelY = (y > anchorY) ? y : y + h;
-                    path.push([
-                        'M',
-                        labelX,
-                        labelY
-                    ], [
-                        'L',
-                        anchorX,
-                        anchorY
-                    ]);
-                    path = path.concat(symbols.circle(anchorX - 1, anchorY - 1, 2, 2));
-                }
-                return path;
-            };
-        }
-        createPinSymbol('circle');
-        createPinSymbol('square');
-        /**
-         * The symbol callbacks are generated on the SVGRenderer object in all browsers.
-         * Even VML browsers need this in order to generate shapes in export. Now share
-         * them with the VMLRenderer.
-         */
-        if (Renderer === VMLRenderer) {
-            ['circlepin', 'flag', 'squarepin'].forEach(function (shape) {
-                VMLRenderer.prototype.symbols[shape] = symbols[shape];
-            });
-        }
+        ''; // detach doclets above
+        /* *
+         *
+         *  API Option
+         *
+         * */
         /**
          * A `flags` series. If the [type](#series.flags.type) option is not
          * specified, it is inherited from [chart.type](#chart.type).
@@ -7289,8 +7532,9 @@
          */
         ''; // adds doclets above to transpiled file
 
+        return FlagsSeries;
     });
-    _registerModule(_modules, 'Extensions/RangeSelector.js', [_modules['Core/Axis/Axis.js'], _modules['Core/Chart/Chart.js'], _modules['Core/Globals.js'], _modules['Core/Options.js'], _modules['Core/Renderer/SVG/SVGElement.js'], _modules['Core/Utilities.js']], function (Axis, Chart, H, O, SVGElement, U) {
+    _registerModule(_modules, 'Extensions/RangeSelector.js', [_modules['Core/Axis/Axis.js'], _modules['Core/Chart/Chart.js'], _modules['Core/Globals.js'], _modules['Core/Options.js'], _modules['Core/Color/Palette.js'], _modules['Core/Renderer/SVG/SVGElement.js'], _modules['Core/Utilities.js']], function (Axis, Chart, H, O, palette, SVGElement, U) {
         /* *
          *
          *  (c) 2010-2020 Torstein Honsi
@@ -7379,25 +7623,31 @@
                  * buttons: [{
                  *     type: 'month',
                  *     count: 1,
-                 *     text: '1m'
+                 *     text: '1m',
+                 *     title: 'View 1 month'
                  * }, {
                  *     type: 'month',
                  *     count: 3,
-                 *     text: '3m'
+                 *     text: '3m',
+                 *     title: 'View 3 months'
                  * }, {
                  *     type: 'month',
                  *     count: 6,
-                 *     text: '6m'
+                 *     text: '6m',
+                 *     title: 'View 6 months'
                  * }, {
                  *     type: 'ytd',
-                 *     text: 'YTD'
+                 *     text: 'YTD',
+                 *     title: 'View year to date'
                  * }, {
                  *     type: 'year',
                  *     count: 1,
-                 *     text: '1y'
+                 *     text: '1y',
+                 *     title: 'View 1 year'
                  * }, {
                  *     type: 'all',
-                 *     text: 'All'
+                 *     text: 'All',
+                 *     title: 'View all'
                  * }]
                  * ```
                  *
@@ -7488,6 +7738,13 @@
                  *
                  * @type      {string}
                  * @apioption rangeSelector.buttons.text
+                 */
+                /**
+                 * Explanation for the button, shown as a tooltip on hover, and used by
+                 * assistive technology.
+                 *
+                 * @type      {string}
+                 * @apioption rangeSelector.buttons.title
                  */
                 /**
                  * Defined the time span for the button. Can be one of `millisecond`,
@@ -7767,7 +8024,7 @@
                  */
                 labelStyle: {
                     /** @ignore */
-                    color: '#666666'
+                    color: palette.neutralColor60
                 }
             }
         });
@@ -8188,15 +8445,23 @@
             RangeSelector.prototype.setInputValue = function (name, inputTime) {
                 var options = this.chart.options.rangeSelector,
                     time = this.chart.time,
-                    input = this[name + 'Input'];
-                if (defined(inputTime)) {
-                    input.previousValue = input.HCTime;
-                    input.HCTime = inputTime;
+                    input = name === 'min' ? this.minInput : this.maxInput;
+                if (input) {
+                    var hcTimeAttr = input.getAttribute('data-hc-time');
+                    var updatedTime = defined(hcTimeAttr) ? Number(hcTimeAttr) : void 0;
+                    if (defined(inputTime)) {
+                        var previousTime = updatedTime;
+                        if (previousTime) {
+                            input.setAttribute('data-hc-time-previous', previousTime);
+                        }
+                        input.setAttribute('data-hc-time', inputTime);
+                        updatedTime = inputTime;
+                    }
+                    input.value = time.dateFormat(options.inputEditDateFormat || '%Y-%m-%d', updatedTime);
+                    this[name + 'DateBox'].attr({
+                        text: time.dateFormat(options.inputDateFormat || '%b %e, %Y', updatedTime)
+                    });
                 }
-                input.value = time.dateFormat(options.inputEditDateFormat || '%Y-%m-%d', input.HCTime);
-                this[name + 'DateBox'].attr({
-                    text: time.dateFormat(options.inputDateFormat || '%b %e, %Y', input.HCTime)
-                });
             };
             /**
              * @private
@@ -8233,15 +8498,35 @@
              * @private
              * @function Highcharts.RangeSelector#defaultInputDateParser
              */
-            RangeSelector.prototype.defaultInputDateParser = function (inputDate, useUTC) {
-                var date = new Date();
-                if (H.isSafari) {
-                    return Date.parse(inputDate.split(' ').join('T'));
+            RangeSelector.prototype.defaultInputDateParser = function (inputDate, useUTC, time) {
+                var hasTimezone = function (str) {
+                        return str.length > 6 &&
+                            (str.lastIndexOf('-') === str.length - 6 ||
+                                str.lastIndexOf('+') === str.length - 6);
+                };
+                var input = inputDate.split('/').join('-').split(' ').join('T');
+                if (input.indexOf('T') === -1) {
+                    input += 'T00:00';
                 }
                 if (useUTC) {
-                    return Date.parse(inputDate + 'Z');
+                    input += 'Z';
                 }
-                return Date.parse(inputDate) - date.getTimezoneOffset() * 60 * 1000;
+                else if (H.isSafari && !hasTimezone(input)) {
+                    var offset = new Date(input).getTimezoneOffset() / 60;
+                    input += offset <= 0 ? "+" + H.pad(-offset) + ":00" : "-" + H.pad(offset) + ":00";
+                }
+                var date = Date.parse(input);
+                // If the value isn't parsed directly to a value by the
+                // browser's Date.parse method, like YYYY-MM-DD in IE8, try
+                // parsing it a different way
+                if (!isNumber(date)) {
+                    var parts = inputDate.split('-');
+                    date = Date.UTC(pInt(parts[0]), pInt(parts[1]) - 1, pInt(parts[2]));
+                }
+                if (time && useUTC) {
+                    date += time.getTimezoneOffset(date) * 60 * 1000;
+                }
+                return date;
             };
             /**
              * Draw either the 'from' or the 'to' HTML input box of the range selector
@@ -8252,19 +8537,20 @@
              * @return {void}
              */
             RangeSelector.prototype.drawInput = function (name) {
+                var _a = this,
+                    chart = _a.chart,
+                    defaultInputDateParser = _a.defaultInputDateParser,
+                    div = _a.div,
+                    inputGroup = _a.inputGroup;
                 var rangeSelector = this,
-                    chart = rangeSelector.chart,
                     chartStyle = chart.renderer.style || {},
                     renderer = chart.renderer,
                     options = chart.options.rangeSelector,
                     lang = defaultOptions.lang,
-                    div = rangeSelector.div,
                     isMin = name === 'min',
                     input,
                     label,
-                    dateBox,
-                    inputGroup = this.inputGroup,
-                    defaultInputDateParser = this.defaultInputDateParser;
+                    dateBox;
                 /**
                  * @private
                  */
@@ -8277,44 +8563,33 @@
                             chartAxis,
                         dataMin = dataAxis.dataMin,
                         dataMax = dataAxis.dataMax;
-                    value = (options.inputDateParser || defaultInputDateParser)(inputValue, chart.time.useUTC);
-                    if (value !== input.previousValue) {
-                        input.previousValue = value;
-                        // If the value isn't parsed directly to a value by the
-                        // browser's Date.parse method, like YYYY-MM-DD in IE, try
-                        // parsing it a different way
-                        if (!isNumber(value)) {
-                            value = inputValue.split('-');
-                            value = Date.UTC(pInt(value[0]), pInt(value[1]) - 1, pInt(value[2]));
+                    var maxInput = rangeSelector.maxInput,
+                        minInput = rangeSelector.minInput;
+                    value = (options.inputDateParser || defaultInputDateParser)(inputValue, chart.time.useUTC, chart.time);
+                    if (value !== Number(input.getAttribute('data-hc-time-previous')) &&
+                        isNumber(value)) {
+                        input.setAttribute('data-hc-time-previous', value);
+                        // Validate the extremes. If it goes beyound the data min or
+                        // max, use the actual data extreme (#2438).
+                        if (isMin && maxInput && isNumber(dataMin)) {
+                            if (value > Number(maxInput.getAttribute('data-hc-time'))) {
+                                value = void 0;
+                            }
+                            else if (value < dataMin) {
+                                value = dataMin;
+                            }
                         }
-                        if (isNumber(value)) {
-                            // Correct for timezone offset (#433)
-                            if (!chart.time.useUTC) {
-                                value =
-                                    value + new Date().getTimezoneOffset() * 60 * 1000;
+                        else if (minInput && isNumber(dataMax)) {
+                            if (value < Number(minInput.getAttribute('data-hc-time'))) {
+                                value = void 0;
                             }
-                            // Validate the extremes. If it goes beyound the data min or
-                            // max, use the actual data extreme (#2438).
-                            if (isMin) {
-                                if (value > rangeSelector.maxInput.HCTime) {
-                                    value = void 0;
-                                }
-                                else if (value < dataMin) {
-                                    value = dataMin;
-                                }
+                            else if (value > dataMax) {
+                                value = dataMax;
                             }
-                            else {
-                                if (value < rangeSelector.minInput.HCTime) {
-                                    value = void 0;
-                                }
-                                else if (value > dataMax) {
-                                    value = dataMax;
-                                }
-                            }
-                            // Set the extremes
-                            if (typeof value !== 'undefined') { // @todo typof undefined
-                                chartAxis.setExtremes(isMin ? value : chartAxis.min, isMin ? chartAxis.max : value, void 0, void 0, { trigger: 'rangeSelectorInput' });
-                            }
+                        }
+                        // Set the extremes
+                        if (typeof value !== 'undefined') { // @todo typof undefined
+                            chartAxis.setExtremes(isMin ? value : chartAxis.min, isMin ? chartAxis.max : value, void 0, void 0, { trigger: 'rangeSelectorInput' });
                         }
                     }
                 }
@@ -8346,7 +8621,7 @@
                 });
                 if (!chart.styledMode) {
                     dateBox.attr({
-                        stroke: options.inputBoxBorderColor || '#cccccc',
+                        stroke: options.inputBoxBorderColor || palette.neutralColor20,
                         'stroke-width': 1
                     });
                 }
@@ -8365,7 +8640,7 @@
                     // Styles
                     label.css(merge(chartStyle, options.labelStyle));
                     dateBox.css(merge({
-                        color: '#333333'
+                        color: palette.neutralColor80
                     }, chartStyle, options.inputStyle));
                     css(input, extend({
                         position: 'absolute',
@@ -8551,6 +8826,9 @@
                             'text-align': 'center'
                         })
                             .add(buttonGroup);
+                        if (rangeOptions.title) {
+                            buttons[i].attr('title', rangeOptions.title);
+                        }
                     });
                     // first create a wrapper outside the container in order to make
                     // the inputs work and make export correct
@@ -8731,10 +9009,12 @@
                 }
                 rangeSelector.group.translate(options.x, options.y + Math.floor(translateY));
                 // translate HTML inputs
-                if (inputEnabled !== false) {
-                    rangeSelector.minInput.style.marginTop =
+                var minInput = rangeSelector.minInput,
+                    maxInput = rangeSelector.maxInput;
+                if (inputEnabled !== false && minInput && maxInput) {
+                    minInput.style.marginTop =
                         rangeSelector.group.translateY + 'px';
-                    rangeSelector.maxInput.style.marginTop =
+                    maxInput.style.marginTop =
                         rangeSelector.group.translateY + 'px';
                 }
                 rangeSelector.rendered = true;
@@ -8849,25 +9129,31 @@
         RangeSelector.prototype.defaultButtons = [{
                 type: 'month',
                 count: 1,
-                text: '1m'
+                text: '1m',
+                title: 'View 1 month'
             }, {
                 type: 'month',
                 count: 3,
-                text: '3m'
+                text: '3m',
+                title: 'View 3 months'
             }, {
                 type: 'month',
                 count: 6,
-                text: '6m'
+                text: '6m',
+                title: 'View 6 months'
             }, {
                 type: 'ytd',
-                text: 'YTD'
+                text: 'YTD',
+                title: 'View year to date'
             }, {
                 type: 'year',
                 count: 1,
-                text: '1y'
+                text: '1y',
+                title: 'View 1 year'
             }, {
                 type: 'all',
-                text: 'All'
+                text: 'All',
+                title: 'View all'
             }];
         /**
          * Get the axis min value based on the range option and the current max. For
@@ -9081,7 +9367,7 @@
 
         return H.RangeSelector;
     });
-    _registerModule(_modules, 'Core/Chart/StockChart.js', [_modules['Core/Axis/Axis.js'], _modules['Core/Chart/Chart.js'], _modules['Core/Globals.js'], _modules['Series/LineSeries.js'], _modules['Core/Series/Point.js'], _modules['Core/Renderer/SVG/SVGRenderer.js'], _modules['Core/Utilities.js']], function (Axis, Chart, H, LineSeries, Point, SVGRenderer, U) {
+    _registerModule(_modules, 'Core/Chart/StockChart.js', [_modules['Core/Axis/Axis.js'], _modules['Core/Chart/Chart.js'], _modules['Core/Globals.js'], _modules['Series/Line/LineSeries.js'], _modules['Core/Color/Palette.js'], _modules['Core/Series/Point.js'], _modules['Core/Renderer/SVG/SVGRenderer.js'], _modules['Core/Utilities.js']], function (Axis, Chart, H, LineSeries, palette, Point, SVGRenderer, U) {
         /* *
          *
          *  (c) 2010-2020 Torstein Honsi
@@ -9091,6 +9377,10 @@
          *  !!!!!!! SOURCE GETS TRANSPILED BY TYPESCRIPT. EDIT TS FILE ONLY. !!!!!!!
          *
          * */
+        var _a = LineSeries.prototype,
+            seriesInit = _a.init,
+            seriesProcessData = _a.processData;
+        var pointTooltipFormatter = Point.prototype.tooltipFormatter;
         var addEvent = U.addEvent,
             arrayMax = U.arrayMax,
             arrayMin = U.arrayMin,
@@ -9111,63 +9401,12 @@
         // defaultOptions.scrollbar
         // Has a dependency on RangeSelector due to the use of
         // defaultOptions.rangeSelector
-        var seriesProto = LineSeries.prototype,
-            seriesInit = seriesProto.init,
-            seriesProcessData = seriesProto.processData,
-            pointTooltipFormatter = Point.prototype.tooltipFormatter;
-        /**
-         * Compare the values of the series against the first non-null, non-
-         * zero value in the visible range. The y axis will show percentage
-         * or absolute change depending on whether `compare` is set to `"percent"`
-         * or `"value"`. When this is applied to multiple series, it allows
-         * comparing the development of the series against each other. Adds
-         * a `change` field to every point object.
-         *
-         * @see [compareBase](#plotOptions.series.compareBase)
-         * @see [Axis.setCompare()](/class-reference/Highcharts.Axis#setCompare)
-         *
-         * @sample {highstock} stock/plotoptions/series-compare-percent/
-         *         Percent
-         * @sample {highstock} stock/plotoptions/series-compare-value/
-         *         Value
-         *
-         * @type      {string}
-         * @since     1.0.1
-         * @product   highstock
-         * @apioption plotOptions.series.compare
-         */
-        /**
-         * Defines if comparison should start from the first point within the visible
-         * range or should start from the first point **before** the range.
-         *
-         * In other words, this flag determines if first point within the visible range
-         * will have 0% (`compareStart=true`) or should have been already calculated
-         * according to the previous point (`compareStart=false`).
-         *
-         * @sample {highstock} stock/plotoptions/series-comparestart/
-         *         Calculate compare within visible range
-         *
-         * @type      {boolean}
-         * @default   false
-         * @since     6.0.0
-         * @product   highstock
-         * @apioption plotOptions.series.compareStart
-         */
-        /**
-         * When [compare](#plotOptions.series.compare) is `percent`, this option
-         * dictates whether to use 0 or 100 as the base of comparison.
-         *
-         * @sample {highstock} stock/plotoptions/series-comparebase/
-         *         Compare base is 100
-         *
-         * @type       {number}
-         * @default    0
-         * @since      5.0.6
-         * @product    highstock
-         * @validvalue [0, 100]
-         * @apioption  plotOptions.series.compareBase
-         */
         /* eslint-disable no-invalid-this, valid-jsdoc */
+        /* *
+         *
+         *  Factory
+         *
+         * */
         /**
          * Factory function for creating new stock charts. Creates a new
          * {@link Highcharts.Chart|Chart} object with different default options than the
@@ -9204,7 +9443,7 @@
          * @return {Highcharts.Chart}
          *         The chart object.
          */
-        H.StockChart = H.stockChart = function (a, b, c) {
+        function stockChart(a, b, c) {
             var hasRenderToArg = isString(a) || a.nodeName,
                 options = arguments[hasRenderToArg ? 1 : 0],
                 userOptions = options, 
@@ -9307,7 +9546,12 @@
             return hasRenderToArg ?
                 new Chart(a, options, c) :
                 new Chart(options, b);
-        };
+        }
+        /* *
+         *
+         *  Compositions
+         *
+         * */
         // Handle som Stock-specific series defaults, override the plotOptions before
         // series options are handled.
         addEvent(LineSeries, 'setOptions', function (e) {
@@ -9572,12 +9816,12 @@
                         .attr({
                         fill: options.backgroundColor ||
                             (this.series[0] && this.series[0].color) ||
-                            '#666666',
+                            palette.neutralColor60,
                         stroke: options.borderColor || '',
                         'stroke-width': options.borderWidth || 0
                     })
                         .css(extend({
-                        color: '#ffffff',
+                        color: palette.backgroundColor,
                         fontWeight: 'normal',
                         fontSize: '11px',
                         textAlign: 'center'
@@ -9674,7 +9918,7 @@
          * @ignore
          * @function Highcharts.Series#init
          */
-        seriesProto.init = function () {
+        LineSeries.prototype.init = function () {
             // Call base method
             seriesInit.apply(this, arguments);
             // Set comparison mode
@@ -9691,7 +9935,7 @@
          * @param {string} [compare]
          *        Can be one of `null` (default), `"percent"` or `"value"`.
          */
-        seriesProto.setCompare = function (compare) {
+        LineSeries.prototype.setCompare = function (compare) {
             // Set or unset the modifyValue method
             this.modifyValue = (compare === 'value' || compare === 'percent') ?
                 function (value, point) {
@@ -9730,7 +9974,7 @@
          * @ignore
          * @function Highcharts.Series#processData
          */
-        seriesProto.processData = function (force) {
+        LineSeries.prototype.processData = function (force) {
             var series = this,
                 i,
                 keyIndex = -1,
@@ -9884,7 +10128,77 @@
                 delete options.scrollbar;
             }
         });
+        /* *
+         *
+         *  Compatibility
+         *
+         * */
+        H.StockChart = H.stockChart = stockChart;
+        /* *
+         *
+         *  Default Export
+         *
+         * */
+        /* *
+         *
+         *  API Options
+         *
+         * */
+        /**
+         * Compare the values of the series against the first non-null, non-
+         * zero value in the visible range. The y axis will show percentage
+         * or absolute change depending on whether `compare` is set to `"percent"`
+         * or `"value"`. When this is applied to multiple series, it allows
+         * comparing the development of the series against each other. Adds
+         * a `change` field to every point object.
+         *
+         * @see [compareBase](#plotOptions.series.compareBase)
+         * @see [Axis.setCompare()](/class-reference/Highcharts.Axis#setCompare)
+         *
+         * @sample {highstock} stock/plotoptions/series-compare-percent/
+         *         Percent
+         * @sample {highstock} stock/plotoptions/series-compare-value/
+         *         Value
+         *
+         * @type      {string}
+         * @since     1.0.1
+         * @product   highstock
+         * @apioption plotOptions.series.compare
+         */
+        /**
+         * Defines if comparison should start from the first point within the visible
+         * range or should start from the first point **before** the range.
+         *
+         * In other words, this flag determines if first point within the visible range
+         * will have 0% (`compareStart=true`) or should have been already calculated
+         * according to the previous point (`compareStart=false`).
+         *
+         * @sample {highstock} stock/plotoptions/series-comparestart/
+         *         Calculate compare within visible range
+         *
+         * @type      {boolean}
+         * @default   false
+         * @since     6.0.0
+         * @product   highstock
+         * @apioption plotOptions.series.compareStart
+         */
+        /**
+         * When [compare](#plotOptions.series.compare) is `percent`, this option
+         * dictates whether to use 0 or 100 as the base of comparison.
+         *
+         * @sample {highstock} stock/plotoptions/series-comparebase/
+         *         Compare base is 100
+         *
+         * @type       {number}
+         * @default    0
+         * @since      5.0.6
+         * @product    highstock
+         * @validvalue [0, 100]
+         * @apioption  plotOptions.series.compareBase
+         */
+        ''; // keeps doclets above in transpiled file
 
+        return stockChart;
     });
     _registerModule(_modules, 'masters/modules/stock.src.js', [], function () {
 

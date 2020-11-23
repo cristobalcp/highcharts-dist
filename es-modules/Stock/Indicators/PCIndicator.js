@@ -5,7 +5,9 @@
  *  !!!!!!! SOURCE GETS TRANSPILED BY TYPESCRIPT. EDIT TS FILE ONLY. !!!!!!!
  *
  * */
+'use strict';
 import BaseSeries from '../../Core/Series/Series.js';
+import palette from '../../Core/Color/Palette.js';
 import MultipleLinesMixin from '../../Mixins/MultipleLines.js';
 import ReduceArrayMixin from '../../Mixins/ReduceArray.js';
 import U from '../../Core/Utilities.js';
@@ -56,7 +58,7 @@ BaseSeries.seriesType('pc', 'sma',
              *
              * @type {Highcharts.ColorString}
              */
-            lineColor: '#7cb5ec #434348 #90ed7d #f7a35c #8085e9 #f15c80 #e4d354 #2b908f #f45b5b #91e8e1'.split(' ')[2],
+            lineColor: palette.colors[2],
             /**
              * Pixel width of the line.
              */
@@ -71,7 +73,7 @@ BaseSeries.seriesType('pc', 'sma',
              *
              * @type {Highcharts.ColorString}
              */
-            lineColor: '#7cb5ec #434348 #90ed7d #f7a35c #8085e9 #f15c80 #e4d354 #2b908f #f45b5b #91e8e1'.split(' ')[8],
+            lineColor: palette.colors[8],
             /**
              * Pixel width of the line.
              */

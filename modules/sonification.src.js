@@ -1,5 +1,5 @@
 /**
- * @license Highcharts JS v8.2.2 (2020-10-22)
+ * @license Highcharts JS v8.2.2 (2020-11-23)
  *
  * Sonification module
  *
@@ -3247,7 +3247,7 @@
 
         return options;
     });
-    _registerModule(_modules, 'Extensions/Sonification/Sonification.js', [_modules['Core/Chart/Chart.js'], _modules['Core/Globals.js'], _modules['Core/Options.js'], _modules['Core/Series/Point.js'], _modules['Core/Utilities.js'], _modules['Extensions/Sonification/Instrument.js'], _modules['Extensions/Sonification/InstrumentDefinitions.js'], _modules['Extensions/Sonification/Earcon.js'], _modules['Extensions/Sonification/PointSonify.js'], _modules['Extensions/Sonification/ChartSonify.js'], _modules['Extensions/Sonification/Utilities.js'], _modules['Extensions/Sonification/Timeline.js'], _modules['Extensions/Sonification/Options.js']], function (Chart, H, O, Point, U, Instrument, instruments, Earcon, pointSonifyFunctions, chartSonifyFunctions, utilities, TimelineClasses, sonificationOptions) {
+    _registerModule(_modules, 'Extensions/Sonification/Sonification.js', [_modules['Core/Chart/Chart.js'], _modules['Core/Globals.js'], _modules['Series/Line/LineSeries.js'], _modules['Core/Options.js'], _modules['Core/Series/Point.js'], _modules['Core/Utilities.js'], _modules['Extensions/Sonification/Instrument.js'], _modules['Extensions/Sonification/InstrumentDefinitions.js'], _modules['Extensions/Sonification/Earcon.js'], _modules['Extensions/Sonification/PointSonify.js'], _modules['Extensions/Sonification/ChartSonify.js'], _modules['Extensions/Sonification/Utilities.js'], _modules['Extensions/Sonification/Timeline.js'], _modules['Extensions/Sonification/Options.js']], function (Chart, H, LineSeries, O, Point, U, Instrument, instruments, Earcon, pointSonifyFunctions, chartSonifyFunctions, utilities, TimelineClasses, sonificationOptions) {
         /* *
          *
          *  (c) 2009-2020 Øystein Moseng
@@ -3334,7 +3334,7 @@
         // Chart specific
         Point.prototype.sonify = pointSonifyFunctions.pointSonify;
         Point.prototype.cancelSonify = pointSonifyFunctions.pointCancelSonify;
-        H.Series.prototype.sonify = chartSonifyFunctions.seriesSonify;
+        LineSeries.prototype.sonify = chartSonifyFunctions.seriesSonify;
         extend(Chart.prototype, {
             sonify: chartSonifyFunctions.chartSonify,
             pauseSonify: chartSonifyFunctions.pause,

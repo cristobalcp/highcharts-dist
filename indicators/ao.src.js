@@ -1,5 +1,5 @@
 /**
- * @license Highstock JS v8.2.2 (2020-10-22)
+ * @license Highstock JS v8.2.2 (2020-11-23)
  *
  * Indicator series type for Highstock
  *
@@ -92,6 +92,9 @@
              * @since 7.0.0
              */
             lowerBarColor: '#F21313',
+            /**
+             * @type {number|null}
+             */
             threshold: 0,
             groupPadding: 0.2,
             pointPadding: 0.2,

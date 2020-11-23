@@ -7,17 +7,27 @@
  *  !!!!!!! SOURCE GETS TRANSPILED BY TYPESCRIPT. EDIT TS FILE ONLY. !!!!!!!
  *
  * */
+'use strict';
 import BaseSeries from '../Core/Series/Series.js';
+var _a = BaseSeries.seriesTypes, areaRangeProto = _a.arearange.prototype, columnRangeProto = _a.columnrange.prototype;
+import ColumnSeries from './Column/ColumnSeries.js';
+var colProto = ColumnSeries.prototype;
+import LineSeries from './Line/LineSeries.js';
+var seriesProto = LineSeries.prototype;
+import palette from '../Core/Color/Palette.js';
 import SVGRenderer from '../Core/Renderer/SVG/SVGRenderer.js';
 import H from '../Core/Globals.js';
 var noop = H.noop;
 import U from '../Core/Utilities.js';
 var extend = U.extend, pick = U.pick;
-import './AreaRangeSeries.js';
 import './ColumnRangeSeries.js';
-import './ColumnSeries.js';
 import '../Core/Interaction.js';
-var seriesProto = H.Series.prototype, seriesTypes = BaseSeries.seriesTypes, areaRangeProto = seriesTypes.arearange.prototype, columnRangeProto = seriesTypes.columnrange.prototype, colProto = seriesTypes.column.prototype, areaRangePointProto = areaRangeProto.pointClass.prototype, TrackerMixin = H.TrackerMixin; // Interaction
+var areaRangePointProto = areaRangeProto.pointClass.prototype, TrackerMixin = H.TrackerMixin; // Interaction
+/* *
+ *
+ *  Class
+ *
+ * */
 /**
  * The dumbbell series is a cartesian series with higher and lower values for
  * each point along an X axis, connected with a line between the values.
@@ -62,7 +72,7 @@ BaseSeries.seriesType('dumbbell', 'arearange', {
      * @since 8.0.0
      * @product   highcharts highstock
      */
-    lowColor: '#333333',
+    lowColor: palette.neutralColor80,
     /**
      * Color of the line that connects the dumbbell point's values.
      * By default it is the series' color.
@@ -435,7 +445,7 @@ BaseSeries.seriesType('dumbbell', 'arearange', {
  *
  * @type        {Highcharts.ColorString|Highcharts.GradientColorObject|Highcharts.PatternObject}
  * @since       8.0.0
- * @default     #333333
+ * @default     ${palette.neutralColor80}
  * @product     highcharts highstock
  * @apioption   series.dumbbell.data.lowColor
  */

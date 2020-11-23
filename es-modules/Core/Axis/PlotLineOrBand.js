@@ -10,6 +10,7 @@
 'use strict';
 import Axis from './Axis.js';
 import H from '../Globals.js';
+import palette from '../../Core/Color/Palette.js';
 /**
  * Options for plot bands on axes.
  *
@@ -74,7 +75,7 @@ var PlotLineOrBand = /** @class */ (function () {
         // Set the presentational attributes
         if (!axis.chart.styledMode) {
             if (isLine) {
-                attribs.stroke = color || '#999999';
+                attribs.stroke = color || palette.neutralColor40;
                 attribs['stroke-width'] = pick(options.width, 1);
                 if (options.dashStyle) {
                     attribs.dashstyle =
@@ -82,7 +83,7 @@ var PlotLineOrBand = /** @class */ (function () {
                 }
             }
             else if (isBand) { // plot band
-                attribs.fill = color || '#e6ebf5';
+                attribs.fill = color || palette.highlightColor10;
                 if (options.borderWidth) {
                     attribs.stroke = options.borderColor;
                     attribs['stroke-width'] = options.borderWidth;
@@ -312,7 +313,7 @@ extend(Axis.prototype, /** @lends Highcharts.Axis.prototype */ {
      *         Plot band on Y axis
      *
      * @type      {Highcharts.ColorString|Highcharts.GradientColorObject|Highcharts.PatternObject}
-     * @default   #e6ebf5
+     * @default   ${palette.highlightColor10}
      * @apioption xAxis.plotBands.color
      */
     /**
@@ -560,7 +561,7 @@ extend(Axis.prototype, /** @lends Highcharts.Axis.prototype */ {
      *         Plot line on Y axis
      *
      * @type      {Highcharts.ColorString}
-     * @default   #999999
+     * @default   ${palette.neutralColor40}
      * @apioption xAxis.plotLines.color
      */
     /**

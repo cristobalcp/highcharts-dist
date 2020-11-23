@@ -7,8 +7,10 @@
  *  !!!!!!! SOURCE GETS TRANSPILED BY TYPESCRIPT. EDIT TS FILE ONLY. !!!!!!!
  *
  * */
+'use strict';
 import Color from '../../Color/Color.js';
 import H from '../../Globals.js';
+import palette from '../../Color/Palette.js';
 import SVGElement from './SVGElement.js';
 import SVGLabel from './SVGLabel.js';
 import U from '../../Utilities.js';
@@ -91,7 +93,7 @@ var addEvent = U.addEvent, attr = U.attr, createElement = U.createElement, css =
 * The shadow color.
 * @name    Highcharts.ShadowOptionsObject#color
 * @type    {Highcharts.ColorString|undefined}
-* @default #000000
+* @default ${palette.neutralColor100}
 */ /**
 * The horizontal offset from the element.
 *
@@ -1024,11 +1026,11 @@ var SVGRenderer = /** @class */ (function () {
             var normalStyle, hoverStyle, pressedStyle, disabledStyle;
             // Normal state - prepare the attributes
             normalState = merge({
-                fill: '#f7f7f7',
-                stroke: '#cccccc',
+                fill: palette.neutralColor3,
+                stroke: palette.neutralColor20,
                 'stroke-width': 1,
                 style: {
-                    color: '#333333',
+                    color: palette.neutralColor80,
                     cursor: 'pointer',
                     fontWeight: 'normal'
                 }
@@ -1039,15 +1041,15 @@ var SVGRenderer = /** @class */ (function () {
             delete normalState.style;
             // Hover state
             hoverState = merge(normalState, {
-                fill: '#e6e6e6'
+                fill: palette.neutralColor10
             }, hoverState);
             hoverStyle = hoverState.style;
             delete hoverState.style;
             // Pressed state
             pressedState = merge(normalState, {
-                fill: '#e6ebf5',
+                fill: palette.highlightColor10,
                 style: {
-                    color: '#000000',
+                    color: palette.neutralColor100,
                     fontWeight: 'bold'
                 }
             }, pressedState);
@@ -1056,7 +1058,7 @@ var SVGRenderer = /** @class */ (function () {
             // Disabled state
             disabledState = merge(normalState, {
                 style: {
-                    color: '#cccccc'
+                    color: palette.neutralColor20
                 }
             }, disabledState);
             disabledStyle = disabledState.style;

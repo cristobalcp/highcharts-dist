@@ -1,5 +1,5 @@
 /**
- * @license Highcharts JS v8.2.2 (2020-10-22)
+ * @license Highcharts JS v8.2.2 (2020-11-23)
  *
  * Item series type for Highcharts
  *
@@ -346,7 +346,7 @@
                     cellHeight = this.chart.plotHeight / rows,
                     itemSize = this.itemSize || Math.min(cellWidth,
                     cellHeight);
-                /*
+                /* @todo: remove if not needed
                 this.slots.forEach(slot => {
                     this.chart.renderer.circle(slot.x, slot.y, 6)
                         .attr({
@@ -469,8 +469,14 @@
             connectorShapes: piePoint.connectorShapes,
             getConnectorPath: piePoint.getConnectorPath,
             setVisible: piePoint.setVisible,
-            getTranslate: piePoint.getTranslate
+            getTranslate: piePoint.getTranslate,
+            isValid: piePoint.isValid
         });
+        /* *
+         *
+         *  API Options
+         *
+         * */
         /**
          * An `item` series. If the [type](#series.item.type) option is not specified,
          * it is inherited from [chart.type](#chart.type).

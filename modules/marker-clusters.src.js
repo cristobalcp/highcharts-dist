@@ -1,5 +1,5 @@
 /**
- * @license Highcharts JS v8.2.2 (2020-10-22)
+ * @license Highcharts JS v8.2.2 (2020-11-23)
  *
  * Marker clusters module for Highcharts
  *
@@ -28,7 +28,7 @@
             obj[path] = fn.apply(null, args);
         }
     }
-    _registerModule(_modules, 'Extensions/MarkerClusters.js', [_modules['Core/Animation/AnimationUtilities.js'], _modules['Core/Series/Series.js'], _modules['Core/Chart/Chart.js'], _modules['Core/Globals.js'], _modules['Core/Options.js'], _modules['Core/Series/Point.js'], _modules['Core/Renderer/SVG/SVGRenderer.js'], _modules['Core/Utilities.js'], _modules['Core/Axis/Axis.js']], function (A, BaseSeries, Chart, H, O, Point, SVGRenderer, U, Axis) {
+    _registerModule(_modules, 'Extensions/MarkerClusters.js', [_modules['Core/Animation/AnimationUtilities.js'], _modules['Core/Series/Series.js'], _modules['Core/Chart/Chart.js'], _modules['Series/Line/LineSeries.js'], _modules['Core/Options.js'], _modules['Core/Color/Palette.js'], _modules['Core/Series/Point.js'], _modules['Core/Renderer/SVG/SVGRenderer.js'], _modules['Core/Utilities.js'], _modules['Core/Axis/Axis.js']], function (A, BaseSeries, Chart, LineSeries, O, palette, Point, SVGRenderer, U, Axis) {
         /* *
          *
          *  Marker clusters module.
@@ -43,6 +43,7 @@
          *
          * */
         var animObject = A.animObject;
+        var seriesTypes = BaseSeries.seriesTypes;
         var defaultOptions = O.defaultOptions;
         var addEvent = U.addEvent,
             defined = U.defined,
@@ -68,9 +69,8 @@
          */
         ''; // detach doclets from following code
         /* eslint-disable no-invalid-this */
-        var Series = H.Series,
-            Scatter = BaseSeries.seriesTypes.scatter,
-            baseGeneratePoints = Series.prototype.generatePoints,
+        var Scatter = seriesTypes.scatter,
+            baseGeneratePoints = LineSeries.prototype.generatePoints,
             stateIdCounter = 0, 
             // Points that ids are included in the oldPointsStateId array
             // are hidden before animation. Other ones are destroyed.
@@ -281,7 +281,7 @@
                     /** @internal */
                     lineWidth: 0,
                     /** @internal */
-                    lineColor: '#ffffff'
+                    lineColor: palette.backgroundColor
                 },
                 /**
                  * Fires when the cluster point is clicked and `drillToCluster` is enabled.
@@ -650,7 +650,9 @@
                         oldPointObj.point.plotX !== newPointObj.point.plotX &&
                         oldPointObj.point.plotY !== newPointObj.point.plotY) {
                         newPointBBox = newPointObj.point.graphic.getBBox();
-                        offset = newPointBBox.width / 2;
+                        // Marker image does not have the offset (#14342).
+                        offset = newPointObj.point.graphic && newPointObj.point.graphic.isImg ?
+                            0 : newPointBBox.width / 2;
                         newPointObj.point.graphic.attr({
                             x: oldPointObj.point.plotX - offset,
                             y: oldPointObj.point.plotY - offset
@@ -1531,7 +1533,9 @@
             if (clusterOptions &&
                 clusterOptions.enabled &&
                 series.xData &&
+                series.xData.length &&
                 series.yData &&
+                series.yData.length &&
                 !chart.polar) {
                 type = clusterOptions.layoutAlgorithm.type;
                 layoutAlgOptions = clusterOptions.layoutAlgorithm;
@@ -1704,9 +1708,9 @@
             }
         });
         // Destroy grouped data on series destroy.
-        addEvent(Series, 'destroy', Scatter.prototype.destroyClusteredData);
+        addEvent(LineSeries, 'destroy', Scatter.prototype.destroyClusteredData);
         // Add classes, change mouse cursor.
-        addEvent(Series, 'afterRender', function () {
+        addEvent(LineSeries, 'afterRender', function () {
             var series = this,
                 clusterZoomEnabled = (series.options.cluster || {}).drillToCluster;
             if (series.markerClusterInfo && series.markerClusterInfo.clusters) {

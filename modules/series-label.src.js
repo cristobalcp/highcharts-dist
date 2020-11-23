@@ -1,5 +1,5 @@
 /**
- * @license Highcharts JS v8.2.2 (2020-10-22)
+ * @license Highcharts JS v8.2.2 (2020-11-23)
  *
  * (c) 2009-2019 Torstein Honsi
  *
@@ -26,7 +26,7 @@
             obj[path] = fn.apply(null, args);
         }
     }
-    _registerModule(_modules, 'Extensions/SeriesLabel.js', [_modules['Core/Animation/AnimationUtilities.js'], _modules['Core/Chart/Chart.js'], _modules['Core/Globals.js'], _modules['Core/Renderer/SVG/SVGRenderer.js'], _modules['Core/Utilities.js']], function (A, Chart, H, SVGRenderer, U) {
+    _registerModule(_modules, 'Extensions/SeriesLabel.js', [_modules['Core/Animation/AnimationUtilities.js'], _modules['Core/Chart/Chart.js'], _modules['Series/Line/LineSeries.js'], _modules['Core/Renderer/SVG/SVGRenderer.js'], _modules['Core/Utilities.js']], function (A, Chart, LineSeries, SVGRenderer, U) {
         /* *
          *
          *  (c) 2009-2020 Torstein Honsi
@@ -76,8 +76,7 @@
          * https://jsfiddle.net/highcharts/y5A37/
          */
         ''; // detach doclets above
-        var labelDistance = 3,
-            Series = H.Series;
+        var labelDistance = 3;
         setOptions({
             /**
              * @optionparent plotOptions
@@ -273,7 +272,7 @@
          * @private
          * @function Highcharts.Series#getPointsOnGraph
          */
-        Series.prototype.getPointsOnGraph = function () {
+        LineSeries.prototype.getPointsOnGraph = function () {
             if (!this.xAxis && !this.yAxis) {
                 return;
             }
@@ -412,7 +411,7 @@
          * @private
          * @function Highcharts.Series#labelFontSize
          */
-        Series.prototype.labelFontSize = function (minFontSize, maxFontSize) {
+        LineSeries.prototype.labelFontSize = function (minFontSize, maxFontSize) {
             return minFontSize + ((this.sum / this.chart.labelSeriesMaxSum) *
                 (maxFontSize - minFontSize)) + 'px';
         };
@@ -422,7 +421,7 @@
          * @private
          * @function Highcharts.Series#checkClearPoint
          */
-        Series.prototype.checkClearPoint = function (x, y, bBox, checkDistance) {
+        LineSeries.prototype.checkClearPoint = function (x, y, bBox, checkDistance) {
             var distToOthersSquared = Number.MAX_VALUE, // distance to other graphs
                 distToPointSquared = Number.MAX_VALUE,
                 dist,

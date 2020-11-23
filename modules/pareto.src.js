@@ -1,5 +1,5 @@
 /**
- * @license Highcharts JS v8.2.2 (2020-10-22)
+ * @license Highcharts JS v8.2.2 (2020-11-23)
  *
  * Pareto series type for Highcharts
  *
@@ -28,16 +28,15 @@
             obj[path] = fn.apply(null, args);
         }
     }
-    _registerModule(_modules, 'Mixins/DerivedSeries.js', [_modules['Core/Globals.js'], _modules['Core/Utilities.js']], function (H, U) {
+    _registerModule(_modules, 'Mixins/DerivedSeries.js', [_modules['Core/Globals.js'], _modules['Series/Line/LineSeries.js'], _modules['Core/Utilities.js']], function (H, LineSeries, U) {
         /* *
          *
          *  !!!!!!! SOURCE GETS TRANSPILED BY TYPESCRIPT. EDIT TS FILE ONLY. !!!!!!!
          *
          * */
+        var noop = H.noop;
         var addEvent = U.addEvent,
             defined = U.defined;
-        var Series = H.Series,
-            noop = H.noop;
         /* ************************************************************************** *
          *
          * DERIVED SERIES MIXIN
@@ -61,7 +60,7 @@
                  * @return {void}
                  */
                 init: function () {
-                    Series.prototype.init.apply(this,
+                    LineSeries.prototype.init.apply(this,
             arguments);
                 this.initialised = false;
                 this.baseSeries = null;
@@ -146,7 +145,7 @@
                 this.eventRemovers.forEach(function (remover) {
                     remover();
                 });
-                Series.prototype.destroy.apply(this, arguments);
+                LineSeries.prototype.destroy.apply(this, arguments);
             }
             /* eslint-disable valid-jsdoc */
         };
@@ -165,6 +164,11 @@
          * */
         var correctFloat = U.correctFloat,
             merge = U.merge;
+        /* *
+         *
+         *  Class
+         *
+         * */
         /**
          * The pareto series type.
          *

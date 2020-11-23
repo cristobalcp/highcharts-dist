@@ -1,5 +1,5 @@
 /**
- * @license Highcharts JS v8.2.2 (2020-10-22)
+ * @license Highcharts JS v8.2.2 (2020-11-23)
  *
  * Exporting module
  *
@@ -41,10 +41,8 @@
          *
          * */
         var win = Highcharts.win,
-            nav = win.navigator,
             doc = win.document,
-            domurl = win.URL || win.webkitURL || win,
-            isEdgeBrowser = /Edge\/\d+/.test(nav.userAgent);
+            domurl = win.URL || win.webkitURL || win;
         /**
          * Convert base64 dataURL to Blob if supported, otherwise returns undefined.
          * @private
@@ -89,8 +87,9 @@
          */
         var downloadURL = Highcharts.downloadURL = function (dataURL,
             filename) {
-                var a = doc.createElement('a'),
-            windowRef;
+                var nav = win.navigator;
+            var a = doc.createElement('a'),
+                windowRef;
             // IE specific blob implementation
             // Don't use for normal dataURLs
             if (typeof dataURL !== 'string' &&
@@ -102,6 +101,7 @@
             dataURL = "" + dataURL;
             // Some browsers have limitations for data URL lengths. Try to convert to
             // Blob or fall back. Edge always needs that blob.
+            var isEdgeBrowser = /Edge\/\d+/.test(nav.userAgent);
             if (isEdgeBrowser || dataURL.length > 2000000) {
                 dataURL = dataURLtoBlob(dataURL) || '';
                 if (!dataURL) {

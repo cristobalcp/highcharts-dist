@@ -1,5 +1,5 @@
 /**
- * @license Highcharts JS v8.2.2 (2020-10-22)
+ * @license Highcharts JS v8.2.2 (2020-11-23)
  *
  * Force directed graph module
  *
@@ -28,7 +28,7 @@
             obj[path] = fn.apply(null, args);
         }
     }
-    _registerModule(_modules, 'Mixins/Nodes.js', [_modules['Core/Globals.js'], _modules['Core/Series/Point.js'], _modules['Core/Utilities.js']], function (H, Point, U) {
+    _registerModule(_modules, 'Mixins/Nodes.js', [_modules['Core/Globals.js'], _modules['Series/Line/LineSeries.js'], _modules['Core/Series/Point.js'], _modules['Core/Utilities.js']], function (H, LineSeries, Point, U) {
         /* *
          *
          *  !!!!!!! SOURCE GETS TRANSPILED BY TYPESCRIPT. EDIT TS FILE ONLY. !!!!!!!
@@ -131,7 +131,7 @@
             generatePoints: function () {
                 var chart = this.chart,
                     nodeLookup = {};
-                H.Series.prototype.generatePoints.call(this);
+                LineSeries.prototype.generatePoints.call(this);
                 if (!this.nodes) {
                     this.nodes = []; // List of Point-like node items
                 }
@@ -179,14 +179,14 @@
                     });
                     this.nodes.length = 0;
                 }
-                H.Series.prototype.setData.apply(this, arguments);
+                LineSeries.prototype.setData.apply(this, arguments);
             },
             // Destroy alll nodes and links
             destroy: function () {
                 // Nodes must also be destroyed (#8682, #9300)
                 this.data = []
                     .concat(this.points || [], this.nodes);
-                return H.Series.prototype.destroy.apply(this, arguments);
+                return LineSeries.prototype.destroy.apply(this, arguments);
             },
             /**
              * When hovering node, highlight all connected links. When hovering a link,
@@ -1686,7 +1686,7 @@
         });
 
     });
-    _registerModule(_modules, 'Series/Networkgraph/Networkgraph.js', [_modules['Core/Series/Series.js'], _modules['Core/Globals.js'], _modules['Mixins/Nodes.js'], _modules['Core/Series/Point.js'], _modules['Core/Utilities.js']], function (BaseSeries, H, NodesMixin, Point, U) {
+    _registerModule(_modules, 'Series/Networkgraph/Networkgraph.js', [_modules['Core/Series/Series.js'], _modules['Core/Globals.js'], _modules['Series/Line/LineSeries.js'], _modules['Mixins/Nodes.js'], _modules['Core/Series/Point.js'], _modules['Core/Utilities.js']], function (BaseSeries, H, LineSeries, NodesMixin, Point, U) {
         /* *
          *
          *  Networkgraph series
@@ -1698,13 +1698,12 @@
          *  !!!!!!! SOURCE GETS TRANSPILED BY TYPESCRIPT. EDIT TS FILE ONLY. !!!!!!!
          *
          * */
+        var seriesTypes = BaseSeries.seriesTypes;
         var addEvent = U.addEvent,
             css = U.css,
             defined = U.defined,
             pick = U.pick;
-        var Series = H.Series,
-            seriesTypes = BaseSeries.seriesTypes,
-            dragNodesMixin = H.dragNodesMixin;
+        var dragNodesMixin = H.dragNodesMixin;
         /**
          * Formatter callback function.
          *
@@ -1741,6 +1740,11 @@
         * @since 7.0.0
         */
         ''; // detach doclets above
+        /* *
+         *
+         *  Class
+         *
+         * */
         /**
          * @private
          * @class
@@ -2154,7 +2158,7 @@
              * @private
              */
             init: function () {
-                Series.prototype.init.apply(this, arguments);
+                LineSeries.prototype.init.apply(this, arguments);
                 addEvent(this, 'updatedData', function () {
                     if (this.layout) {
                         this.layout.stop();
@@ -2222,7 +2226,7 @@
              * @private
              */
             markerAttribs: function (point, state) {
-                var attribs = Series.prototype.markerAttribs.call(this,
+                var attribs = LineSeries.prototype.markerAttribs.call(this,
                     point,
                     state);
                 // series.render() is called before initial positions are set:
@@ -2331,12 +2335,12 @@
             drawDataLabels: function () {
                 var textPath = this.options.dataLabels.textPath;
                 // Render node labels:
-                Series.prototype.drawDataLabels.apply(this, arguments);
+                LineSeries.prototype.drawDataLabels.apply(this, arguments);
                 // Render link labels:
                 this.points = this.data;
                 this.options.dataLabels.textPath =
                     this.options.dataLabels.linkTextPath;
-                Series.prototype.drawDataLabels.apply(this, arguments);
+                LineSeries.prototype.drawDataLabels.apply(this, arguments);
                 // Restore nodes
                 this.points = this.nodes;
                 this.options.dataLabels.textPath = textPath;
@@ -2345,7 +2349,7 @@
             pointAttribs: function (point, state) {
                 // By default, only `selected` state is passed on
                 var pointState = state || point && point.state || 'normal',
-                    attribs = Series.prototype.pointAttribs.call(this,
+                    attribs = LineSeries.prototype.pointAttribs.call(this,
                     point,
                     pointState),
                     stateOptions = this.options.states[pointState];
@@ -2400,11 +2404,11 @@
             setState: function (state, inherit) {
                 if (inherit) {
                     this.points = this.nodes.concat(this.data);
-                    Series.prototype.setState.apply(this, arguments);
+                    LineSeries.prototype.setState.apply(this, arguments);
                     this.points = this.data;
                 }
                 else {
-                    Series.prototype.setState.apply(this, arguments);
+                    LineSeries.prototype.setState.apply(this, arguments);
                 }
                 // If simulation is done, re-render points with new states:
                 if (!this.layout.simulation && !state) {
@@ -2608,7 +2612,7 @@
                             linkFromTo.toNode.linksTo.splice(index, 1);
                         }
                         // Remove link from data/points collections
-                        Series.prototype.removePoint.call(series, series.data.indexOf(linkFromTo), false, false);
+                        LineSeries.prototype.removePoint.call(series, series.data.indexOf(linkFromTo), false, false);
                     });
                     // Restore points array, after links are removed
                     series.points = series.data.slice();

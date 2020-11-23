@@ -1,5 +1,5 @@
 /**
- * @license Highcharts JS v8.2.2 (2020-10-22)
+ * @license Highcharts JS v8.2.2 (2020-11-23)
  *
  * X-range series
  *
@@ -28,7 +28,7 @@
             obj[path] = fn.apply(null, args);
         }
     }
-    _registerModule(_modules, 'Series/XRangeSeries.js', [_modules['Core/Axis/Axis.js'], _modules['Core/Series/Series.js'], _modules['Core/Globals.js'], _modules['Core/Color/Color.js'], _modules['Core/Series/Point.js'], _modules['Core/Utilities.js']], function (Axis, BaseSeries, H, Color, Point, U) {
+    _registerModule(_modules, 'Series/XRangeSeries.js', [_modules['Core/Axis/Axis.js'], _modules['Core/Series/Series.js'], _modules['Core/Globals.js'], _modules['Core/Color/Color.js'], _modules['Series/Column/ColumnSeries.js'], _modules['Series/Line/LineSeries.js'], _modules['Core/Series/Point.js'], _modules['Core/Utilities.js']], function (Axis, BaseSeries, H, Color, ColumnSeries, LineSeries, Point, U) {
         /* *
          *
          *  X-range series module
@@ -41,6 +41,7 @@
          *
          * */
         var color = Color.parse;
+        var columnProto = ColumnSeries.prototype;
         var addEvent = U.addEvent,
             clamp = U.clamp,
             correctFloat = U.correctFloat,
@@ -58,9 +59,7 @@
         * @type {number|undefined}
         * @requires modules/xrange
         */
-        var Series = H.Series,
-            seriesTypes = BaseSeries.seriesTypes,
-            columnType = seriesTypes.column;
+        var seriesTypes = BaseSeries.seriesTypes;
         /**
          * Return color of a point based on its category.
          *
@@ -215,7 +214,7 @@
                     });
                 }
                 swapAxes();
-                metrics = columnType.prototype.getColumnMetrics.call(this);
+                metrics = columnProto.getColumnMetrics.call(this);
                 swapAxes();
                 return metrics;
             },
@@ -240,7 +239,7 @@
              */
             cropData: function (xData, yData, min, max) {
                 // Replace xData with x2Data to find the appropriate cropStart
-                var cropData = Series.prototype.cropData,
+                var cropData = LineSeries.prototype.cropData,
                     crop = cropData.call(this,
                     this.x2Data,
                     yData,
@@ -413,7 +412,7 @@
              * @function Highcharts.Series#translate
              */
             translate: function () {
-                columnType.prototype.translate.apply(this, arguments);
+                columnProto.translate.apply(this, arguments);
                 this.points.forEach(function (point) {
                     this.translatePoint(point);
                 }, this);

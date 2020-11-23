@@ -7,16 +7,23 @@
  *  !!!!!!! SOURCE GETS TRANSPILED BY TYPESCRIPT. EDIT TS FILE ONLY. !!!!!!!
  *
  * */
+'use strict';
 import BaseSeries from '../Core/Series/Series.js';
 import H from '../Core/Globals.js';
 var noop = H.noop;
+import LineSeries from '../Series/Line/LineSeries.js';
+import palette from '../Core/Color/Palette.js';
 import U from '../Core/Utilities.js';
 var clamp = U.clamp, isNumber = U.isNumber, merge = U.merge, pick = U.pick, pInt = U.pInt;
 import '../Core/Options.js';
 import '../Core/Series/Point.js';
-import '../Series/LineSeries.js';
 import '../Core/Interaction.js';
-var Series = H.Series, TrackerMixin = H.TrackerMixin;
+var TrackerMixin = H.TrackerMixin;
+/* *
+ *
+ *  Class
+ *
+ * */
 /**
  * Gauges are circular plots displaying one or more values with a dial pointing
  * to values along the perimeter.
@@ -57,7 +64,7 @@ BaseSeries.seriesType('gauge', 'line', {
      * @product highcharts
      */
     dataLabels: {
-        borderColor: '#cccccc',
+        borderColor: palette.neutralColor20,
         borderRadius: 3,
         borderWidth: 1,
         crop: false,
@@ -356,7 +363,7 @@ BaseSeries.seriesType('gauge', 'line', {
                     stroke: dialOptions.borderColor || 'none',
                     'stroke-width': dialOptions.borderWidth || 0,
                     fill: dialOptions.backgroundColor ||
-                        '#000000'
+                        palette.neutralColor100
                 });
             }
         });
@@ -381,9 +388,9 @@ BaseSeries.seriesType('gauge', 'line', {
                 series.pivot.attr({
                     'stroke-width': pivotOptions.borderWidth || 0,
                     stroke: pivotOptions.borderColor ||
-                        '#cccccc',
+                        palette.neutralColor20,
                     fill: pivotOptions.backgroundColor ||
-                        '#000000'
+                        palette.neutralColor100
                 });
             }
         }
@@ -415,7 +422,7 @@ BaseSeries.seriesType('gauge', 'line', {
      */
     render: function () {
         this.group = this.plotGroup('group', 'series', this.visible ? 'visible' : 'hidden', this.options.zIndex, this.chart.seriesGroup);
-        Series.prototype.render.call(this);
+        LineSeries.prototype.render.call(this);
         this.group.clip(this.chart.clipRect);
     },
     /**
@@ -424,7 +431,7 @@ BaseSeries.seriesType('gauge', 'line', {
      * @private
      */
     setData: function (data, redraw) {
-        Series.prototype.setData.call(this, data, false);
+        LineSeries.prototype.setData.call(this, data, false);
         this.processData();
         this.generatePoints();
         if (pick(redraw, true)) {

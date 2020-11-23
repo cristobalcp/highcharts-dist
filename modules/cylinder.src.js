@@ -1,5 +1,5 @@
 /**
- * @license Highcharts JS v8.2.2 (2020-10-22)
+ * @license Highcharts JS v8.2.2 (2020-11-23)
  *
  * Highcharts cylinder module
  *
@@ -28,7 +28,7 @@
             obj[path] = fn.apply(null, args);
         }
     }
-    _registerModule(_modules, 'Series/CylinderSeries.js', [_modules['Core/Color/Color.js'], _modules['Core/Globals.js'], _modules['Extensions/Math3D.js'], _modules['Core/Series/Series.js'], _modules['Core/Utilities.js']], function (Color, H, Math3D, Series, U) {
+    _registerModule(_modules, 'Series/CylinderSeries.js', [_modules['Core/Color/Color.js'], _modules['Series/Column/ColumnSeries.js'], _modules['Core/Globals.js'], _modules['Extensions/Math3D.js'], _modules['Core/Series/Series.js'], _modules['Core/Utilities.js']], function (Color, ColumnSeries, H, Math3D, Series, U) {
         /* *
          *
          *  Highcharts cylinder - a 3D series
@@ -43,6 +43,7 @@
          *
          * */
         var color = Color.parse;
+        var columnProto = ColumnSeries.prototype;
         var charts = H.charts,
             deg2rad = H.deg2rad,
             RendererProto = H.Renderer.prototype;
@@ -87,10 +88,7 @@
         /** @lends Highcharts.seriesTypes.cylinder#pointClass# */
         {
             shapeType: 'cylinder',
-            hasNewShapeType: H
-                .seriesTypes.column.prototype
-                .pointClass.prototype
-                .hasNewShapeType
+            hasNewShapeType: columnProto.pointClass.prototype.hasNewShapeType
         });
         /**
          * A `cylinder` series. If the [type](#series.cylinder.type) option is not

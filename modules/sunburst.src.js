@@ -1,5 +1,5 @@
 /**
- * @license Highcharts JS v8.2.2 (2020-10-22)
+ * @license Highcharts JS v8.2.2 (2020-11-23)
  *
  * (c) 2016-2019 Highsoft AS
  * Authors: Jon Arild Nygard
@@ -365,8 +365,6 @@
                  * Color points have a value option that determines whether or not it is
                  * a null point
                  * @private
-                 * @function Highcharts.colorMapPointMixin.isValid
-                 * @return {boolean}
                  */
                 isValid: function () {
                     // undefined is allowed
@@ -376,9 +374,6 @@
             },
             /**
              * @private
-             * @function Highcharts.colorMapPointMixin.setState
-             * @param {string} state
-             * @return {void}
              */
             setState: function (state) {
                 Point.prototype.setState.call(this, state);
@@ -425,7 +420,7 @@
 
         return exports;
     });
-    _registerModule(_modules, 'Series/TreemapSeries.js', [_modules['Core/Series/Series.js'], _modules['Core/Color/Color.js'], _modules['Mixins/ColorMapSeries.js'], _modules['Mixins/DrawPoint.js'], _modules['Core/Globals.js'], _modules['Mixins/LegendSymbol.js'], _modules['Core/Series/Point.js'], _modules['Mixins/TreeSeries.js'], _modules['Core/Utilities.js']], function (BaseSeries, Color, ColorMapMixin, DrawPointMixin, H, LegendSymbolMixin, Point, TreeSeriesMixin, U) {
+    _registerModule(_modules, 'Series/TreemapSeries.js', [_modules['Core/Series/Series.js'], _modules['Core/Color/Color.js'], _modules['Mixins/ColorMapSeries.js'], _modules['Mixins/DrawPoint.js'], _modules['Core/Globals.js'], _modules['Mixins/LegendSymbol.js'], _modules['Series/Line/LineSeries.js'], _modules['Core/Color/Palette.js'], _modules['Core/Series/Point.js'], _modules['Mixins/TreeSeries.js'], _modules['Core/Utilities.js']], function (BaseSeries, Color, ColorMapMixin, DrawPointMixin, H, LegendSymbolMixin, LineSeries, palette, Point, TreeSeriesMixin, U) {
         /* *
          *
          *  (c) 2014-2020 Highsoft AS
@@ -464,7 +459,7 @@
         // @todo Similar to eachObject, this function is likely redundant
         var isBoolean = function (x) {
                 return typeof x === 'boolean';
-        }, Series = H.Series, 
+        }, 
         // @todo Similar to recursive, this function is likely redundant
         eachObject = function (list, func, context) {
             context = context || this;
@@ -900,7 +895,7 @@
              *
              * @type {Highcharts.ColorString}
              */
-            borderColor: '#e6e6e6',
+            borderColor: palette.neutralColor10,
             /**
              * The width of the border surrounding each tree map item.
              */
@@ -929,7 +924,7 @@
                     /**
                      * The border color for the hovered state.
                      */
-                    borderColor: '#999999',
+                    borderColor: palette.neutralColor40,
                     /**
                      * Brightness for the hovered point. Defaults to 0 if the
                      * heatmap series is loaded first, otherwise 0.1.
@@ -1040,7 +1035,7 @@
                         delete options.drillUpButton;
                     }
                 });
-                Series.prototype.init.call(series, chart, options);
+                LineSeries.prototype.init.call(series, chart, options);
                 // Treemap's opacity is a different option from other series
                 delete series.opacity;
                 // Handle deprecated options.
@@ -1474,7 +1469,7 @@
                     tree,
                     val;
                 // Call prototype function
-                Series.prototype.translate.call(series);
+                LineSeries.prototype.translate.call(series);
                 // @todo Only if series.isDirtyData is true
                 tree = series.tree = series.getTree();
                 rootNode = series.nodeMap[rootId];
@@ -1592,7 +1587,7 @@
                     // Merge custom options with point options
                     point.dlOptions = merge(options, point.options.dataLabels);
                 });
-                Series.prototype.drawDataLabels.call(this);
+                LineSeries.prototype.drawDataLabels.call(this);
             },
             // Over the alignment method by setting z index
             alignDataLabel: function (point, dataLabel, labelOptions) {
@@ -1919,7 +1914,7 @@
             drawLegendSymbol: LegendSymbolMixin.drawRectangle,
             getExtremes: function () {
                 // Get the extremes from the value data
-                var _a = Series.prototype.getExtremes
+                var _a = LineSeries.prototype.getExtremes
                         .call(this,
                     this.colorValueData),
                     dataMin = _a.dataMin,
@@ -1927,7 +1922,7 @@
                 this.valueMin = dataMin;
                 this.valueMax = dataMax;
                 // Get the extremes from the y data
-                return Series.prototype.getExtremes.call(this);
+                return LineSeries.prototype.getExtremes.call(this);
             },
             getExtremesFromAll: true,
             /**
@@ -1939,7 +1934,7 @@
              */
             setState: function (state) {
                 this.options.inactiveOtherPoints = true;
-                Series.prototype.setState.call(this, state, false);
+                LineSeries.prototype.setState.call(this, state, false);
                 this.options.inactiveOtherPoints = false;
             },
             utils: {
@@ -1990,7 +1985,7 @@
                 return isNumber(this.plotY) && this.y !== null;
             }
         });
-        addEvent(H.Series, 'afterBindAxes', function () {
+        addEvent(LineSeries, 'afterBindAxes', function () {
             var series = this,
                 xAxis = series.xAxis,
                 yAxis = series.yAxis,
@@ -2108,7 +2103,7 @@
         ''; // adds doclets above to transpiled file
 
     });
-    _registerModule(_modules, 'Series/SunburstSeries.js', [_modules['Core/Series/Series.js'], _modules['Mixins/CenteredSeries.js'], _modules['Mixins/DrawPoint.js'], _modules['Core/Globals.js'], _modules['Mixins/TreeSeries.js'], _modules['Core/Utilities.js']], function (BaseSeries, CenteredSeriesMixin, DrawPointMixin, H, TreeSeriesMixin, U) {
+    _registerModule(_modules, 'Series/SunburstSeries.js', [_modules['Core/Series/Series.js'], _modules['Mixins/CenteredSeries.js'], _modules['Mixins/DrawPoint.js'], _modules['Core/Globals.js'], _modules['Series/Line/LineSeries.js'], _modules['Mixins/TreeSeries.js'], _modules['Core/Utilities.js']], function (BaseSeries, CenteredSeriesMixin, DrawPointMixin, H, LineSeries, TreeSeriesMixin, U) {
         /* *
          *
          *  This module implements sunburst charts in Highcharts.
@@ -2139,8 +2134,7 @@
             isString = U.isString,
             merge = U.merge,
             splat = U.splat;
-        var Series = H.Series,
-            isBoolean = function (x) {
+        var isBoolean = function (x) {
                 return typeof x === 'boolean';
         }, rad2deg = 180 / Math.PI;
         // TODO introduce step, which should default to 1.
@@ -2628,6 +2622,16 @@
                  * @apioption plotOptions.sunburst.levels.dataLabels
                  */
                 /**
+                 * Decides which level takes effect from the options set in the levels
+                 * object.
+                 *
+                 * @sample highcharts/demo/sunburst
+                 *         Sunburst chart
+                 *
+                 * @type      {number}
+                 * @apioption plotOptions.sunburst.levels.level
+                 */
+                /**
                  * Can set a `levelSize` on all points which lies on the same level.
                  *
                  * @type      {object}
@@ -2894,7 +2898,7 @@
                 if (hackDataLabelAnimation && addedHack) {
                     series.hasRendered = false;
                     series.options.dataLabels.defer = true;
-                    Series.prototype.drawDataLabels.call(series);
+                    LineSeries.prototype.drawDataLabels.call(series);
                     series.hasRendered = true;
                     // If animateLabels is called before labels were hidden, then call
                     // it again.
@@ -2903,7 +2907,7 @@
                     }
                 }
                 else {
-                    Series.prototype.drawDataLabels.call(series);
+                    LineSeries.prototype.drawDataLabels.call(series);
                 }
             },
             pointAttribs: seriesTypes.column.prototype.pointAttribs,
@@ -2976,7 +2980,7 @@
                     nodeIds = {};
                 series.shapeRoot = nodeRoot && nodeRoot.shapeArgs;
                 // Call prototype function
-                Series.prototype.translate.call(series);
+                LineSeries.prototype.translate.call(series);
                 // @todo Only if series.isDirtyData is true
                 tree = series.tree = series.getTree();
                 // Render traverseUpButton, after series.nodeMap i calculated.

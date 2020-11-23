@@ -9,12 +9,13 @@
  *  !!!!!!! SOURCE GETS TRANSPILED BY TYPESCRIPT. EDIT TS FILE ONLY. !!!!!!!
  *
  * */
+'use strict';
 import BaseSeries from '../Core/Series/Series.js';
+var base = BaseSeries.seriesTypes.sankey.prototype;
 import H from '../Core/Globals.js';
+import palette from '../Core/Color/Palette.js';
 import U from '../Core/Utilities.js';
 var css = U.css, pick = U.pick, wrap = U.wrap;
-import './SankeySeries.js';
-var base = BaseSeries.seriesTypes.sankey.prototype;
 /**
  * Layout value for the child nodes in an organization chart. If `hanging`, this
  * node's children will hang below their parent, allowing a tighter packing of
@@ -23,6 +24,11 @@ var base = BaseSeries.seriesTypes.sankey.prototype;
  * @typedef {"normal"|"hanging"} Highcharts.SeriesOrganizationNodesLayoutValue
  */
 ''; // detach doclets above
+/* *
+ *
+ *  Class
+ *
+ * */
 /**
  * @private
  * @class
@@ -59,7 +65,7 @@ BaseSeries.seriesType('organization', 'sankey',
      * @type {Highcharts.ColorString}
      * @private
      */
-    borderColor: '#666666',
+    borderColor: palette.neutralColor60,
     /**
      * The border radius of the node cards.
      *
@@ -189,7 +195,7 @@ BaseSeries.seriesType('organization', 'sankey',
      * @type {Highcharts.ColorString}
      * @private
      */
-    linkColor: '#666666',
+    linkColor: palette.neutralColor60,
     /**
      * The line width of the links connecting nodes, in pixels.
      *

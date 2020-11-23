@@ -1,5 +1,5 @@
 /**
- * @license Highcharts JS v8.2.2 (2020-10-22)
+ * @license Highcharts JS v8.2.2 (2020-11-23)
  *
  * Timeline series
  *
@@ -29,7 +29,7 @@
             obj[path] = fn.apply(null, args);
         }
     }
-    _registerModule(_modules, 'Series/TimelineSeries.js', [_modules['Core/Series/Series.js'], _modules['Core/Globals.js'], _modules['Mixins/LegendSymbol.js'], _modules['Core/Series/Point.js'], _modules['Core/Renderer/SVG/SVGElement.js'], _modules['Core/Utilities.js']], function (BaseSeries, H, LegendSymbolMixin, Point, SVGElement, U) {
+    _registerModule(_modules, 'Series/TimelineSeries.js', [_modules['Core/Series/Series.js'], _modules['Core/Globals.js'], _modules['Mixins/LegendSymbol.js'], _modules['Series/Line/LineSeries.js'], _modules['Core/Color/Palette.js'], _modules['Core/Series/Point.js'], _modules['Core/Renderer/SVG/SVGElement.js'], _modules['Core/Utilities.js']], function (BaseSeries, H, LegendSymbolMixin, LineSeries, palette, Point, SVGElement, U) {
         /* *
          *
          *  Timeline Series.
@@ -52,8 +52,7 @@
             merge = U.merge,
             objectEach = U.objectEach,
             pick = U.pick;
-        var TrackerMixin = H.TrackerMixin,
-            Series = H.Series;
+        var TrackerMixin = H.TrackerMixin;
         /**
          * Callback JavaScript function to format the data label as a string. Note that
          * if a `format` is defined, the format takes precedence and the formatter is
@@ -148,11 +147,11 @@
                  *         Alternate disabled
                  */
                 alternate: true,
-                backgroundColor: '#ffffff',
+                backgroundColor: palette.backgroundColor,
                 borderWidth: 1,
-                borderColor: '#999999',
+                borderColor: palette.neutralColor40,
                 borderRadius: 3,
-                color: '#333333',
+                color: palette.neutralColor80,
                 /**
                  * The color of the line connecting the data label to the point.
                  * The default color is the same as the point's color.
@@ -253,8 +252,8 @@
             drawTracker: TrackerMixin.drawTrackerPoint,
             init: function () {
                 var series = this;
-                Series.prototype.init.apply(series, arguments);
-                addEvent(series, 'afterTranslate', function () {
+                LineSeries.prototype.init.apply(series, arguments);
+                series.eventsToUnbind.push(addEvent(series, 'afterTranslate', function () {
                     var lastPlotX,
                         closestPointRangePx = Number.MAX_VALUE;
                     series.points.forEach(function (point) {
@@ -272,15 +271,15 @@
                         }
                     });
                     series.closestPointRangePx = closestPointRangePx;
-                });
+                }));
                 // Distribute data labels before rendering them. Distribution is
                 // based on the 'dataLabels.distance' and 'dataLabels.alternate'
                 // property.
-                addEvent(series, 'drawDataLabels', function () {
+                series.eventsToUnbind.push(addEvent(series, 'drawDataLabels', function () {
                     // Distribute data labels basing on defined algorithm.
                     series.distributeDL(); // @todo use this scope for series
-                });
-                addEvent(series, 'afterDrawDataLabels', function () {
+                }));
+                series.eventsToUnbind.push(addEvent(series, 'afterDrawDataLabels', function () {
                     var dataLabel; // @todo use this scope for series
                         // Draw or align connector for each point.
                         series.points.forEach(function (point) {
@@ -307,8 +306,8 @@
                             return point.drawConnector();
                         }
                     });
-                });
-                addEvent(series.chart, 'afterHideOverlappingLabel', function () {
+                }));
+                series.eventsToUnbind.push(addEvent(series.chart, 'afterHideOverlappingLabel', function () {
                     series.points.forEach(function (p) {
                         if (p.connector &&
                             p.dataLabel &&
@@ -316,7 +315,7 @@
                             p.alignConnector();
                         }
                     });
-                });
+                }));
             },
             alignDataLabel: function (point, dataLabel, options, alignTo) {
                 var series = this,
@@ -357,7 +356,7 @@
                         dataLabel.shadow(dataLabelsOptions.shadow);
                     }
                 }
-                Series.prototype.alignDataLabel.apply(series, arguments);
+                LineSeries.prototype.alignDataLabel.apply(series, arguments);
             },
             processData: function () {
                 var series = this,
@@ -374,7 +373,7 @@
                 for (i = 0; i < series.xData.length; i++) {
                     series.yData[i] = 1;
                 }
-                Series.prototype.processData.call(this, arguments);
+                LineSeries.prototype.processData.call(this, arguments);
                 return;
             },
             getXExtremes: function (xData) {
@@ -391,7 +390,7 @@
             },
             generatePoints: function () {
                 var series = this;
-                Series.prototype.generatePoints.apply(series);
+                LineSeries.prototype.generatePoints.apply(series);
                 series.points.forEach(function (point, i) {
                     point.applyOptions({
                         x: series.xData[i]
@@ -471,7 +470,7 @@
             },
             bindAxes: function () {
                 var series = this;
-                Series.prototype.bindAxes.call(series);
+                LineSeries.prototype.bindAxes.call(series);
                 ['xAxis', 'yAxis'].forEach(function (axis) {
                     // Initially set the linked xAxis type to category.
                     if (axis === 'xAxis' && !series[axis].userOptions.type) {
@@ -507,7 +506,7 @@
                 }
             },
             setState: function () {
-                var proceed = Series.prototype.pointClass.prototype.setState;
+                var proceed = LineSeries.prototype.pointClass.prototype.setState;
                 // Prevent triggering the setState method on null points.
                 if (!this.isNull) {
                     proceed.apply(this, arguments);

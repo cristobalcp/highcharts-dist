@@ -1,5 +1,5 @@
 /**
- * @license Highcharts JS v8.2.2 (2020-10-22)
+ * @license Highcharts JS v8.2.2 (2020-11-23)
  * Organization chart series type
  *
  * (c) 2019-2019 Torstein Honsi
@@ -27,7 +27,7 @@
             obj[path] = fn.apply(null, args);
         }
     }
-    _registerModule(_modules, 'Series/OrganizationSeries.js', [_modules['Core/Series/Series.js'], _modules['Core/Globals.js'], _modules['Core/Utilities.js']], function (BaseSeries, H, U) {
+    _registerModule(_modules, 'Series/OrganizationSeries.js', [_modules['Core/Series/Series.js'], _modules['Core/Globals.js'], _modules['Core/Color/Palette.js'], _modules['Core/Utilities.js']], function (BaseSeries, H, palette, U) {
         /* *
          *
          *  Organization chart module
@@ -39,10 +39,10 @@
          *  !!!!!!! SOURCE GETS TRANSPILED BY TYPESCRIPT. EDIT TS FILE ONLY. !!!!!!!
          *
          * */
+        var base = BaseSeries.seriesTypes.sankey.prototype;
         var css = U.css,
             pick = U.pick,
             wrap = U.wrap;
-        var base = BaseSeries.seriesTypes.sankey.prototype;
         /**
          * Layout value for the child nodes in an organization chart. If `hanging`, this
          * node's children will hang below their parent, allowing a tighter packing of
@@ -51,6 +51,11 @@
          * @typedef {"normal"|"hanging"} Highcharts.SeriesOrganizationNodesLayoutValue
          */
         ''; // detach doclets above
+        /* *
+         *
+         *  Class
+         *
+         * */
         /**
          * @private
          * @class
@@ -87,7 +92,7 @@
              * @type {Highcharts.ColorString}
              * @private
              */
-            borderColor: '#666666',
+            borderColor: palette.neutralColor60,
             /**
              * The border radius of the node cards.
              *
@@ -222,7 +227,7 @@
              * @type {Highcharts.ColorString}
              * @private
              */
-            linkColor: '#666666',
+            linkColor: palette.neutralColor60,
             /**
              * The line width of the links connecting nodes, in pixels.
              *

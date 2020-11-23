@@ -5,8 +5,10 @@
  *  !!!!!!! SOURCE GETS TRANSPILED BY TYPESCRIPT. EDIT TS FILE ONLY. !!!!!!!
  *
  * */
+'use strict';
 import BaseSeries from '../../Core/Series/Series.js';
 var seriesTypes = BaseSeries.seriesTypes;
+import palette from '../../Core/Color/Palette.js';
 import U from '../../Core/Utilities.js';
 var correctFloat = U.correctFloat, isArray = U.isArray, merge = U.merge, objectEach = U.objectEach;
 // im port './ATRIndicator.js';
@@ -77,7 +79,7 @@ BaseSeries.seriesType('supertrend', 'sma',
      *
      * @type {Highcharts.ColorString|Highcharts.GradientColorObject|Highcharts.PatternObject}
      */
-    risingTrendColor: '#06B535',
+    risingTrendColor: palette.indicatorPositiveLine,
     /**
      * Color of the Supertrend series line that is above the main series.
      *
@@ -86,7 +88,7 @@ BaseSeries.seriesType('supertrend', 'sma',
      *
      * @type {Highcharts.ColorString|Highcharts.GradientColorObject|Highcharts.PatternObject}
      */
-    fallingTrendColor: '#F21313',
+    fallingTrendColor: palette.indicatorNegativeLine,
     /**
      * The styles for the Supertrend line that intersect main series.
      *
@@ -104,7 +106,7 @@ BaseSeries.seriesType('supertrend', 'sma',
              *
              * @type {Highcharts.ColorString}
              */
-            lineColor: '#333333',
+            lineColor: palette.neutralColor80,
             /**
              * The dash or dot style of the grid lines. For possible
              * values, see

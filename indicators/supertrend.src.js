@@ -1,5 +1,5 @@
 /**
- * @license Highstock JS v8.2.2 (2020-10-22)
+ * @license Highstock JS v8.2.2 (2020-11-23)
  *
  * Indicator series type for Highstock
  *
@@ -28,7 +28,7 @@
             obj[path] = fn.apply(null, args);
         }
     }
-    _registerModule(_modules, 'Stock/Indicators/SupertrendIndicator.js', [_modules['Core/Series/Series.js'], _modules['Core/Utilities.js']], function (BaseSeries, U) {
+    _registerModule(_modules, 'Stock/Indicators/SupertrendIndicator.js', [_modules['Core/Series/Series.js'], _modules['Core/Color/Palette.js'], _modules['Core/Utilities.js']], function (BaseSeries, palette, U) {
         /* *
          *
          *  License: www.highcharts.com/license
@@ -110,7 +110,7 @@
              *
              * @type {Highcharts.ColorString|Highcharts.GradientColorObject|Highcharts.PatternObject}
              */
-            risingTrendColor: '#06B535',
+            risingTrendColor: palette.indicatorPositiveLine,
             /**
              * Color of the Supertrend series line that is above the main series.
              *
@@ -119,7 +119,7 @@
              *
              * @type {Highcharts.ColorString|Highcharts.GradientColorObject|Highcharts.PatternObject}
              */
-            fallingTrendColor: '#F21313',
+            fallingTrendColor: palette.indicatorNegativeLine,
             /**
              * The styles for the Supertrend line that intersect main series.
              *
@@ -137,7 +137,7 @@
                      *
                      * @type {Highcharts.ColorString}
                      */
-                    lineColor: '#333333',
+                    lineColor: palette.neutralColor80,
                     /**
                      * The dash or dot style of the grid lines. For possible
                      * values, see

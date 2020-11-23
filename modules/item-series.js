@@ -1,5 +1,5 @@
 /*
- Highcharts JS v8.2.2 (2020-10-22)
+ Highcharts JS v8.2.2 (2020-11-23)
 
  Item series type for Highcharts
 
@@ -14,5 +14,5 @@ D(this.options.endAngle)?(d.seriesTypes.pie.prototype.translate.apply(this,argum
 c,m.push({x:r,y:x,angle:l})},this);m.sort(function(a,b){return a.angle-b.angle});this.itemSize=h;return m}},getRows:function(){var a=this.options.rows;if(!a){var b=this.chart.plotWidth/this.chart.plotHeight;a=Math.sqrt(this.total);if(1<b)for(a=Math.ceil(a);0<a;){var c=this.total/a;if(c/a>b)break;a--}else for(a=Math.floor(a);a<this.total;){c=this.total/a;if(c/a<b)break;a++}}return a},drawPoints:function(){var a=this,b=this.options,c=a.chart.renderer,d=b.marker,q=this.borderWidth%2?.5:1,m=0,r=this.getRows(),
 x=Math.ceil(this.total/r),t=this.chart.plotWidth/x,u=this.chart.plotHeight/r,v=this.itemSize||Math.min(t,u);this.points.forEach(function(f){var l,w,h=f.marker||{},n=h.symbol||d.symbol;h=K(h.radius,d.radius);var y=F(h)?2*h:v,p=y*b.itemPadding,z;f.graphics=l=f.graphics||{};a.chart.styledMode||(w=a.pointAttribs(f,f.selected&&"select"));if(!f.isNull&&f.visible){f.graphic||(f.graphic=c.g("point").add(a.group));for(var e=0;e<f.y;e++){if(a.center&&a.slots){var k=a.slots.shift();var g=k.x-v/2;k=k.y-v/2}else"horizontal"===
 b.layout?(g=m%x*t,k=u*Math.floor(m/x)):(g=t*Math.floor(m/r),k=m%r*u);g+=p;k+=p;var B=z=Math.round(y-2*p);a.options.crisp&&(g=Math.round(g)-q,k=Math.round(k)+q);g={x:g,y:k,width:z,height:B};"undefined"!==typeof h&&(g.r=h);l[e]?l[e].animate(g):l[e]=c.symbol(n,null,null,null,null,{backgroundSize:"within"}).attr(G(g,w)).add(f.graphic);l[e].isActive=!0;m++}}J(l,function(a,b){a.isActive?a.isActive=!1:(a.destroy(),delete l[b])})})},drawDataLabels:function(){this.center&&this.slots?d.seriesTypes.pie.prototype.drawDataLabels.call(this):
-this.points.forEach(function(a){a.destroyElements({dataLabel:1})})},animate:function(a){a?this.group.attr({opacity:0}):this.group.animate({opacity:1},this.options.animation)}},{connectorShapes:c.connectorShapes,getConnectorPath:c.getConnectorPath,setVisible:c.setVisible,getTranslate:c.getTranslate});""});d(b,"masters/modules/item-series.src.js",[],function(){})});
+this.points.forEach(function(a){a.destroyElements({dataLabel:1})})},animate:function(a){a?this.group.attr({opacity:0}):this.group.animate({opacity:1},this.options.animation)}},{connectorShapes:c.connectorShapes,getConnectorPath:c.getConnectorPath,setVisible:c.setVisible,getTranslate:c.getTranslate,isValid:c.isValid});""});d(b,"masters/modules/item-series.src.js",[],function(){})});
 //# sourceMappingURL=item-series.js.map

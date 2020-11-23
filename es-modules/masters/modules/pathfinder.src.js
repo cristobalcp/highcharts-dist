@@ -1,5 +1,5 @@
 /**
- * @license Highcharts Gantt JS v8.2.2 (2020-10-22)
+ * @license Highcharts Gantt JS v8.2.2 (2020-11-23)
  * @module highcharts/modules/pathfinder
  * @requires highcharts
  *

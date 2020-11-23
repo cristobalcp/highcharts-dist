@@ -1,5 +1,5 @@
 /**
- * @license Highcharts JS v8.2.2 (2020-10-22)
+ * @license Highcharts JS v8.2.2 (2020-11-23)
  *
  * (c) 2010-2019 Highsoft AS
  * Author: Sebastian Domas
@@ -27,16 +27,15 @@
             obj[path] = fn.apply(null, args);
         }
     }
-    _registerModule(_modules, 'Mixins/DerivedSeries.js', [_modules['Core/Globals.js'], _modules['Core/Utilities.js']], function (H, U) {
+    _registerModule(_modules, 'Mixins/DerivedSeries.js', [_modules['Core/Globals.js'], _modules['Series/Line/LineSeries.js'], _modules['Core/Utilities.js']], function (H, LineSeries, U) {
         /* *
          *
          *  !!!!!!! SOURCE GETS TRANSPILED BY TYPESCRIPT. EDIT TS FILE ONLY. !!!!!!!
          *
          * */
+        var noop = H.noop;
         var addEvent = U.addEvent,
             defined = U.defined;
-        var Series = H.Series,
-            noop = H.noop;
         /* ************************************************************************** *
          *
          * DERIVED SERIES MIXIN
@@ -60,7 +59,7 @@
                  * @return {void}
                  */
                 init: function () {
-                    Series.prototype.init.apply(this,
+                    LineSeries.prototype.init.apply(this,
             arguments);
                 this.initialised = false;
                 this.baseSeries = null;
@@ -145,7 +144,7 @@
                 this.eventRemovers.forEach(function (remover) {
                     remover();
                 });
-                Series.prototype.destroy.apply(this, arguments);
+                LineSeries.prototype.destroy.apply(this, arguments);
             }
             /* eslint-disable valid-jsdoc */
         };
@@ -270,7 +269,7 @@
             },
             derivedData: function (baseData, binsNumber, binWidth) {
                 var series = this,
-                    max = arrayMax(baseData), 
+                    max = correctFloat(arrayMax(baseData)), 
                     // Float correction needed, because first frequency value is not
                     // corrected when generating frequencies (within for loop).
                     min = correctFloat(arrayMin(baseData)),
@@ -304,8 +303,8 @@
                     bins[x] = 0;
                 }
                 if (bins[min] !== 0) {
-                    frequencies.push(correctFloat(min));
-                    bins[correctFloat(min)] = 0;
+                    frequencies.push(min);
+                    bins[min] = 0;
                 }
                 fitToBin = fitToBinLeftClosed(frequencies.map(function (elem) {
                     return parseFloat(elem);
@@ -324,6 +323,7 @@
                 data.sort(function (a, b) {
                     return a.x - b.x;
                 });
+                data[data.length - 1].x2 = max;
                 return data;
             },
             binsNumber: function () {

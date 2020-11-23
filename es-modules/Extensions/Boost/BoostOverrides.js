@@ -10,18 +10,20 @@
  *
  * */
 'use strict';
+import BaseSeries from '../../Core/Series/Series.js';
+var seriesTypes = BaseSeries.seriesTypes;
 import Chart from '../../Core/Chart/Chart.js';
-import H from '../../Core/Globals.js';
+import LineSeries from '../../Series/Line/LineSeries.js';
 import Point from '../../Core/Series/Point.js';
 import U from '../../Core/Utilities.js';
 var addEvent = U.addEvent, error = U.error, getOptions = U.getOptions, isArray = U.isArray, isNumber = U.isNumber, pick = U.pick, wrap = U.wrap;
-import '../../Series/LineSeries.js';
+import '../../Series/Line/LineSeries.js';
 import '../../Core/Options.js';
 import '../../Core/Interaction.js';
 import butils from './BoostUtils.js';
 import boostable from './Boostables.js';
 import boostableMap from './BoostableMap.js';
-var boostEnabled = butils.boostEnabled, shouldForceChartSeriesBoosting = butils.shouldForceChartSeriesBoosting, Series = H.Series, seriesTypes = H.seriesTypes, plotOptions = getOptions().plotOptions;
+var boostEnabled = butils.boostEnabled, shouldForceChartSeriesBoosting = butils.shouldForceChartSeriesBoosting, plotOptions = getOptions().plotOptions;
 /**
  * Returns true if the chart is in series boost mode.
  *
@@ -60,10 +62,14 @@ Chart.prototype.getBoostClipRect = function (target) {
         height: this.plotHeight
     };
     if (target === this) {
-        this.yAxis.forEach(function (yAxis) {
-            clipBox.y = Math.min(yAxis.pos, clipBox.y);
-            clipBox.height = Math.max(yAxis.pos - this.plotTop + yAxis.len, clipBox.height);
-        }, this);
+        var verticalAxes = this.inverted ? this.xAxis : this.yAxis; // #14444
+        if (verticalAxes.length <= 1) {
+            clipBox.y = Math.min(verticalAxes[0].pos, clipBox.y);
+            clipBox.height = verticalAxes[0].pos - this.plotTop + verticalAxes[0].len;
+        }
+        else {
+            clipBox.height = this.plotHeight;
+        }
     }
     return clipBox;
 };
@@ -79,7 +85,7 @@ Chart.prototype.getBoostClipRect = function (target) {
  * @return {Highcharts.Point}
  *         A Point object as per https://api.highcharts.com/highcharts#Point
  */
-Series.prototype.getPoint = function (boostPoint) {
+LineSeries.prototype.getPoint = function (boostPoint) {
     var point = boostPoint, xData = (this.xData || this.options.xData || this.processedXData ||
         false);
     if (boostPoint && !(boostPoint instanceof this.pointClass)) {
@@ -100,7 +106,7 @@ Series.prototype.getPoint = function (boostPoint) {
 };
 /* eslint-disable no-invalid-this */
 // Return a point instance from the k-d-tree
-wrap(Series.prototype, 'searchPoint', function (proceed) {
+wrap(LineSeries.prototype, 'searchPoint', function (proceed) {
     return this.getPoint(proceed.apply(this, [].slice.call(arguments, 1)));
 });
 // For inverted series, we need to swap X-Y values before running base methods
@@ -117,7 +123,7 @@ wrap(Point.prototype, 'haloPath', function (proceed) {
     }
     return halo;
 });
-wrap(Series.prototype, 'markerAttribs', function (proceed, point) {
+wrap(LineSeries.prototype, 'markerAttribs', function (proceed, point) {
     var attribs, series = this, chart = series.chart, plotX = point.plotX, plotY = point.plotY, inverted = chart.inverted;
     if (series.isSeriesBoosting && inverted) {
         point.plotX = series.yAxis.len - plotY;
@@ -135,7 +141,7 @@ wrap(Series.prototype, 'markerAttribs', function (proceed, point) {
  * Normally this is handled by Series.destroy that calls Point.destroy,
  * but the fake search points are not registered like that.
  */
-addEvent(Series, 'destroy', function () {
+addEvent(LineSeries, 'destroy', function () {
     var series = this, chart = series.chart;
     if (chart.markerGroup === series.markerGroup) {
         series.markerGroup = null;
@@ -154,7 +160,7 @@ addEvent(Series, 'destroy', function () {
  * If we use this in the core, we can add the hook
  * to hasExtremes to the methods directly.
  */
-wrap(Series.prototype, 'getExtremes', function (proceed) {
+wrap(LineSeries.prototype, 'getExtremes', function (proceed) {
     if (!this.isSeriesBoosting || (!this.hasExtremes || !this.hasExtremes())) {
         return proceed.apply(this, Array.prototype.slice.call(arguments, 1));
     }
@@ -194,7 +200,7 @@ wrap(Series.prototype, 'getExtremes', function (proceed) {
             this[method + 'Canvas']();
         }
     }
-    wrap(Series.prototype, method, branch);
+    wrap(LineSeries.prototype, method, branch);
     // A special case for some types - their translate method is already wrapped
     if (method === 'translate') {
         [
@@ -213,7 +219,7 @@ wrap(Series.prototype, 'getExtremes', function (proceed) {
 });
 // If the series is a heatmap or treemap, or if the series is not boosting
 // do the default behaviour. Otherwise, process if the series has no extremes.
-wrap(Series.prototype, 'processData', function (proceed) {
+wrap(LineSeries.prototype, 'processData', function (proceed) {
     var series = this, dataToMeasure = this.options.data, firstPoint;
     /**
      * Used twice in this function, first on this.options.data, the second
@@ -259,7 +265,7 @@ wrap(Series.prototype, 'processData', function (proceed) {
         proceed.apply(this, Array.prototype.slice.call(arguments, 1));
     }
 });
-addEvent(Series, 'hide', function () {
+addEvent(LineSeries, 'hide', function () {
     if (this.canvas && this.renderTarget) {
         if (this.ogl) {
             this.ogl.clear();
@@ -272,7 +278,7 @@ addEvent(Series, 'hide', function () {
  *
  * @function Highcharts.Series#enterBoost
  */
-Series.prototype.enterBoost = function () {
+LineSeries.prototype.enterBoost = function () {
     this.alteredByBoost = [];
     // Save the original values, including whether it was an own property or
     // inherited from the prototype.
@@ -298,7 +304,7 @@ Series.prototype.enterBoost = function () {
  *
  * @function Highcharts.Series#exitBoost
  */
-Series.prototype.exitBoost = function () {
+LineSeries.prototype.exitBoost = function () {
     // Reset instance properties and/or delete instance properties and go back
     // to prototype
     (this.alteredByBoost || []).forEach(function (setting) {
@@ -323,7 +329,7 @@ Series.prototype.exitBoost = function () {
  *
  * @return {boolean}
  */
-Series.prototype.hasExtremes = function (checkX) {
+LineSeries.prototype.hasExtremes = function (checkX) {
     var options = this.options, data = options.data, xAxis = this.xAxis && this.xAxis.options, yAxis = this.yAxis && this.yAxis.options, colorAxis = this.colorAxis && this.colorAxis.options;
     return data.length > (options.boostThreshold || Number.MAX_VALUE) &&
         // Defined yAxis extremes
@@ -342,7 +348,7 @@ Series.prototype.hasExtremes = function (checkX) {
  *
  * @function Highcharts.Series#destroyGraphics
  */
-Series.prototype.destroyGraphics = function () {
+LineSeries.prototype.destroyGraphics = function () {
     var series = this, points = this.points, point, i;
     if (points) {
         for (i = 0; i < points.length; i = i + 1) {

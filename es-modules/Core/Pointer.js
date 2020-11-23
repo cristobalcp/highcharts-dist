@@ -12,6 +12,7 @@ import Color from './Color/Color.js';
 var color = Color.parse;
 import H from './Globals.js';
 var charts = H.charts, noop = H.noop;
+import palette from '../Core/Color/Palette.js';
 import Tooltip from './Tooltip.js';
 import U from './Utilities.js';
 var addEvent = U.addEvent, attr = U.attr, css = U.css, defined = U.defined, extend = U.extend, find = U.find, fireEvent = U.fireEvent, isNumber = U.isNumber, isObject = U.isObject, objectEach = U.objectEach, offset = U.offset, pick = U.pick, splat = U.splat;
@@ -211,10 +212,6 @@ var Pointer = /** @class */ (function () {
      *
      * @private
      * @function Highcharts.Pointer#drag
-     *
-     * @param {Highcharts.PointerEventObject} e
-     *
-     * @return {void}
      */
     Pointer.prototype.drag = function (e) {
         var chart = this.chart, chartOptions = chart.options.chart, chartX = e.chartX, chartY = e.chartY, zoomHor = this.zoomHor, zoomVert = this.zoomVert, plotLeft = chart.plotLeft, plotTop = chart.plotTop, plotWidth = chart.plotWidth, plotHeight = chart.plotHeight, clickedInside, size, selectionMarker = this.selectionMarker, mouseDownX = (this.mouseDownX || 0), mouseDownY = (this.mouseDownY || 0), panningEnabled = isObject(chartOptions.panning) ?
@@ -261,7 +258,7 @@ var Pointer = /** @class */ (function () {
                     if (!chart.styledMode) {
                         selectionMarker.attr({
                             fill: (chartOptions.selectionMarkerFill ||
-                                color('#335cad')
+                                color(palette.highlightColor80)
                                     .setOpacity(0.25).get())
                         });
                     }
@@ -296,10 +293,6 @@ var Pointer = /** @class */ (function () {
      *
      * @private
      * @function Highcharts.Pointer#dragStart
-     *
-     * @param {Highcharts.PointerEventObject} e
-     *
-     * @return {void}
      */
     Pointer.prototype.dragStart = function (e) {
         var chart = this.chart;
@@ -633,10 +626,6 @@ var Pointer = /** @class */ (function () {
     /**
      * @private
      * @function Highcharts.Pointer#onTrackerMouseOut
-     *
-     * @param {Highcharts.PointerEventObject} e
-     *
-     * @return {void}
      */
     Pointer.prototype.onTrackerMouseOut = function (e) {
         var chart = this.chart;
@@ -1245,12 +1234,6 @@ var Pointer = /** @class */ (function () {
      * @private
      * @function Highcharts.Pointer#runPointActions
      *
-     * @param {global.Event} e
-     *
-     * @param {Highcharts.PointerEventObject} [p]
-     *
-     * @return {void}
-     *
      * @fires Highcharts.Point#event:mouseOut
      * @fires Highcharts.Point#event:mouseOver
      */
@@ -1368,12 +1351,6 @@ var Pointer = /** @class */ (function () {
      *
      * @private
      * @function Highcharts.Pointer#scaleGroups
-     *
-     * @param {Highcharts.SeriesPlotBoxObject} [attribs]
-     *
-     * @param {boolean} [clip]
-     *
-     * @return {void}
      */
     Pointer.prototype.scaleGroups = function (attribs, clip) {
         var chart = this.chart, seriesAttribs;
@@ -1402,8 +1379,6 @@ var Pointer = /** @class */ (function () {
      *
      * @private
      * @function Highcharts.Pointer#setDOMEvents
-     *
-     * @return {void}
      */
     Pointer.prototype.setDOMEvents = function () {
         var container = this.chart.container, ownerDoc = container.ownerDocument;
@@ -1416,10 +1391,10 @@ var Pointer = /** @class */ (function () {
             H.unbindDocumentMouseUp = addEvent(ownerDoc, 'mouseup', this.onDocumentMouseUp.bind(this));
         }
         if (H.hasTouch) {
-            addEvent(container, 'touchstart', this.onContainerTouchStart.bind(this));
-            addEvent(container, 'touchmove', this.onContainerTouchMove.bind(this));
+            addEvent(container, 'touchstart', this.onContainerTouchStart.bind(this), { passive: false });
+            addEvent(container, 'touchmove', this.onContainerTouchMove.bind(this), { passive: false });
             if (!H.unbindDocumentTouchEnd) {
-                H.unbindDocumentTouchEnd = addEvent(ownerDoc, 'touchend', this.onDocumentTouchEnd.bind(this));
+                H.unbindDocumentTouchEnd = addEvent(ownerDoc, 'touchend', this.onDocumentTouchEnd.bind(this), { passive: false });
             }
         }
     };
@@ -1447,12 +1422,6 @@ var Pointer = /** @class */ (function () {
      *
      * @private
      * @function Highcharts.Pointer#touch
-     *
-     * @param {Highcharts.PointerEventObject} e
-     *
-     * @param {boolean} [start]
-     *
-     * @return {void}
      */
     Pointer.prototype.touch = function (e, start) {
         var chart = this.chart, hasMoved, pinchDown, isInside;

@@ -1,5 +1,5 @@
 /**
- * @license Highcharts JS v8.2.2 (2020-10-22)
+ * @license Highcharts JS v8.2.2 (2020-11-23)
  * @module highcharts/highcharts
  *
  * (c) 2009-2018 Torstein Honsi
@@ -23,13 +23,13 @@ import '../Core/Chart/Chart.js';
 import '../Extensions/ScrollablePlotArea.js';
 import '../Extensions/Stacking.js';
 import '../Core/Dynamics.js';
-import '../Series/AreaSeries.js';
-import '../Series/SplineSeries.js';
+import '../Series/Area/AreaSeries.js';
+import '../Series/Spline/SplineSeries.js';
 import '../Series/AreaSplineSeries.js';
-import '../Series/ColumnSeries.js';
-import '../Series/BarSeries.js';
-import '../Series/ScatterSeries.js';
-import '../Series/PieSeries.js';
+import '../Series/Column/ColumnSeries.js';
+import '../Series/Bar/BarSeries.js';
+import '../Series/Scatter/ScatterSeries.js';
+import '../Series/Pie/PieSeries.js';
 import '../Core/Series/DataLabels.js';
 import '../Extensions/OverlappingDataLabels.js';
 import '../Core/Interaction.js';

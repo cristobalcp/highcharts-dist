@@ -9,6 +9,7 @@
  * */
 'use strict';
 import H from './Globals.js';
+var charts = H.charts, doc = H.doc, win = H.win;
 /**
  * An animation configuration. Animation configurations can also be defined as
  * booleans, where `false` turns off animation and `true` defaults to a duration
@@ -216,6 +217,12 @@ import H from './Globals.js';
 * added.
 * @name Highcharts.EventOptionsObject#order
 * @type {number}
+*/ /**
+* Whether an event should be passive or not.
+* When set to `true`, the function specified by listener will never call
+* `preventDefault()`.
+* @name Highcharts.EventOptionsObject#passive
+* @type boolean
 */
 /**
  * Formats data as a string. Usually the data is accessible throught the `this`
@@ -324,7 +331,6 @@ import H from './Globals.js';
  * @namespace Highcharts
  */
 H.timers = [];
-var charts = H.charts, doc = H.doc, win = H.win;
 /**
  * Provide error messages for debugging, with links to online explanation. This
  * function can be overridden to provide custom error handling.
@@ -1281,7 +1287,7 @@ var timeUnits = H.timeUnits = {
 var numberFormat = H.numberFormat = function numberFormat(number, decimals, decimalPoint, thousandsSep) {
     number = +number || 0;
     decimals = +decimals;
-    var lang = H.defaultOptions.lang, origDec = (number.toString().split('.')[1] || '').split('e')[0].length, strinteger, thousands, ret, roundedNumber, exponent = number.toString().split('e'), fractionDigits;
+    var lang = H.defaultOptions.lang, origDec = (number.toString().split('.')[1] || '').split('e')[0].length, strinteger, thousands, ret, roundedNumber, exponent = number.toString().split('e'), fractionDigits, firstDecimals = decimals;
     if (decimals === -1) {
         // Preserve decimals. Not huge numbers (#3793).
         decimals = Math.min(origDec, 20);
@@ -1329,10 +1335,15 @@ var numberFormat = H.numberFormat = function numberFormat(number, decimals, deci
     // Add the leftover after grouping into thousands. For example, in the
     // number 42 000 000, this line adds 42.
     ret += thousands ? strinteger.substr(0, thousands) + thousandsSep : '';
-    // Add the remaining thousands groups, joined by the thousands separator
-    ret += strinteger
-        .substr(thousands)
-        .replace(/(\d{3})(?=\d)/g, '$1' + thousandsSep);
+    if (+exponent[1] < 0 && !firstDecimals) {
+        ret = '0';
+    }
+    else {
+        // Add the remaining thousands groups, joined by the thousands separator
+        ret += strinteger
+            .substr(thousands)
+            .replace(/(\d{3})(?=\d)/g, '$1' + thousandsSep);
+    }
     // Add the decimal point and the decimal component
     if (decimals) {
         // Get the decimal component
@@ -1712,15 +1723,21 @@ var addEvent = H.addEvent = function (el, type, fn, options) {
     }
     // Allow click events added to points, otherwise they will be prevented by
     // the TouchPointer.pinch function after a pinch zoom operation (#7091).
-    if (H.Point &&
+    if (H.Point && // without H a dependency loop occurs
         el instanceof H.Point &&
         el.series &&
         el.series.chart) {
         el.series.chart.runTrackerClick = true;
     }
     // Handle DOM events
+    // If the browser supports passive events, add it to improve performance
+    // on touch events (#11353).
     if (addEventListener) {
-        addEventListener.call(el, type, fn, false);
+        addEventListener.call(el, type, fn, H.supportsPassiveEvents ? {
+            passive: options.passive === void 0 ?
+                type.indexOf('touch') !== -1 : options.passive,
+            capture: false
+        } : false);
     }
     if (!events[type]) {
         events[type] = [];

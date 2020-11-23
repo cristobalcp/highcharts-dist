@@ -9,6 +9,8 @@
  *  !!!!!!! SOURCE GETS TRANSPILED BY TYPESCRIPT. EDIT TS FILE ONLY. !!!!!!!
  *
  * */
+'use strict';
+import palette from '../../Core/Color/Palette.js';
 /**
  * Formatter callback for the accessibility announcement.
  *
@@ -479,7 +481,7 @@ var options = {
                  */
                 style: {
                     /** @internal */
-                    color: '#335cad',
+                    color: palette.highlightColor80,
                     /** @internal */
                     lineWidth: 2,
                     /** @internal */

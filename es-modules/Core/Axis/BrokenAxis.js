@@ -9,7 +9,7 @@
  * */
 'use strict';
 import Axis from './Axis.js';
-import LineSeries from '../../Series/LineSeries.js';
+import LineSeries from '../../Series/Line/LineSeries.js';
 import StackItem from '../../Extensions/Stacking.js';
 import U from '../Utilities.js';
 var addEvent = U.addEvent, find = U.find, fireEvent = U.fireEvent, isArray = U.isArray, isNumber = U.isNumber, pick = U.pick;
@@ -203,8 +203,8 @@ var BrokenAxisAdditions = /** @class */ (function () {
                 }
                 Axis.prototype.setExtremes.call(this, newMin, newMax, redraw, animation, eventArguments);
             };
-            axis.setAxisTranslation = function (saveOld) {
-                Axis.prototype.setAxisTranslation.call(this, saveOld);
+            axis.setAxisTranslation = function () {
+                Axis.prototype.setAxisTranslation.call(this);
                 brokenAxis.unitLength = null;
                 if (brokenAxis.hasBreaks) {
                     var breaks = axis.options.breaks || [], 
